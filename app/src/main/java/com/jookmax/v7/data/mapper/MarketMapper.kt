@@ -1,31 +1,34 @@
 package com.jookmax.v7.data.mapper
 
+
 import com.jookmax.v7.core.model.MarketPrice
 import com.jookmax.v7.core.model.Symbol
+
 
 
 class MarketMapper {
 
 
+
     fun mapToDomain(
-        price: Double,
-        symbol: String,
-        timestamp: Long
+        dto: MarketPriceDto
     ): MarketPrice {
 
 
         return MarketPrice(
 
             symbol = Symbol(
-                code = symbol
+                code = dto.symbol
             ),
 
-            price = price,
+            price = dto.price,
 
-            timestamp = timestamp
+            timestamp = dto.timestamp
 
         )
+
     }
+
 
 
 
@@ -43,18 +46,8 @@ class MarketMapper {
             timestamp = marketPrice.timestamp
 
         )
+
     }
 
+
 }
-
-
-
-data class MarketPriceDto(
-
-    val symbol: String,
-
-    val price: Double,
-
-    val timestamp: Long
-
-)
