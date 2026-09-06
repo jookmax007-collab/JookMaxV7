@@ -2,7 +2,13 @@ plugins {
 
     alias(libs.plugins.android.application)
 
+    alias(libs.plugins.kotlin.android)
+
     alias(libs.plugins.kotlin.compose)
+
+    alias(libs.plugins.ksp)
+
+    alias(libs.plugins.hilt.plugin)
 
 }
 
@@ -26,11 +32,10 @@ android {
 
         versionName = "1.0"
 
-
         testInstrumentationRunner =
             "androidx.test.runner.AndroidJUnitRunner"
-    }
 
+    }
 
 
     buildTypes {
@@ -54,17 +59,13 @@ android {
     }
 
 
-
     compileOptions {
 
-        sourceCompatibility =
-            JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
 
-        targetCompatibility =
-            JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_21
 
     }
-
 
 
     buildFeatures {
@@ -76,11 +77,15 @@ android {
 }
 
 
+kotlin {
+    jvmToolchain(21)
+}
+
 
 dependencies {
 
 
-    // Core
+    // Android Core
 
     implementation(
         libs.androidx.core.ktx
@@ -116,21 +121,28 @@ dependencies {
         libs.androidx.compose.ui
     )
 
-
     implementation(
         libs.androidx.compose.ui.graphics
     )
-
 
     implementation(
         libs.androidx.compose.ui.tooling.preview
     )
 
-
     implementation(
         libs.androidx.compose.material3
     )
 
+
+    // Hilt
+
+    implementation(
+        libs.hilt.android
+    )
+
+    ksp(
+        libs.hilt.compiler
+    )
 
 
     // Testing
@@ -139,11 +151,9 @@ dependencies {
         libs.junit
     )
 
-
     androidTestImplementation(
         libs.androidx.junit
     )
-
 
     androidTestImplementation(
         libs.androidx.espresso.core

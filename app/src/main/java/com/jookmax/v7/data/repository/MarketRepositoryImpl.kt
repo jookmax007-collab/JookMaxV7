@@ -1,9 +1,11 @@
 package com.jookmax.v7.data.repository
 
+
 import com.jookmax.v7.core.model.MarketPrice
 import com.jookmax.v7.data.local.MarketLocalDataSource
 import com.jookmax.v7.data.mapper.MarketMapper
 import com.jookmax.v7.data.remote.MarketRemoteDataSource
+import com.jookmax.v7.domain.repository.MarketRepository
 
 
 class MarketRepositoryImpl(
@@ -14,20 +16,23 @@ class MarketRepositoryImpl(
 
     private val mapper: MarketMapper
 
-) {
+) : MarketRepository {
 
 
 
-    suspend fun getLatestMarketPrice(): MarketPrice? {
+    override suspend fun getLatestMarketPrice(): MarketPrice? {
 
 
-        val remotePrice = remoteDataSource.fetchMarketPrice()
+        val remotePrice =
+            remoteDataSource.fetchMarketPrice()
 
 
         return if (remotePrice != null) {
 
 
-            localDataSource.saveMarketPrice(remotePrice)
+            localDataSource.saveMarketPrice(
+                remotePrice
+            )
 
 
             remotePrice
@@ -46,7 +51,7 @@ class MarketRepositoryImpl(
 
 
 
-    fun getCachedMarketPrice(): MarketPrice? {
+    override fun getCachedMarketPrice(): MarketPrice? {
 
 
         return localDataSource.getMarketPrice()
@@ -57,11 +62,12 @@ class MarketRepositoryImpl(
 
 
 
-    fun clearCache() {
+    override fun clearCache() {
 
 
         localDataSource.clear()
 
     }
+
 
 }
