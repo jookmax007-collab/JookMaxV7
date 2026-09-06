@@ -20,6 +20,7 @@ class MarketRepositoryImpl(
 ) : MarketRepository {
 
 
+
     override suspend fun getLatestMarketPrice(): MarketPrice? {
 
 
@@ -61,7 +62,27 @@ class MarketRepositoryImpl(
     override suspend fun getMarketHistory(): MarketHistory? {
 
 
-        return localDataSource.getMarketHistory()
+        val remoteHistory =
+            remoteDataSource.fetchMarketHistory()
+
+
+        return if (remoteHistory != null) {
+
+
+            localDataSource.saveMarketHistory(
+                remoteHistory
+            )
+
+
+            remoteHistory
+
+
+        } else {
+
+
+            localDataSource.getMarketHistory()
+
+        }
 
     }
 
