@@ -14,6 +14,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+import java.util.concurrent.TimeUnit
+
 import javax.inject.Singleton
 
 
@@ -24,14 +26,21 @@ object NetworkModule {
 
 
 
+    private const val BASE_URL =
+        "https://api.example.com/"
+
+
+
     @Provides
     @Singleton
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+    fun provideHttpLoggingInterceptor()
+            : HttpLoggingInterceptor {
 
 
         return HttpLoggingInterceptor().apply {
 
-            level = HttpLoggingInterceptor.Level.BODY
+            level =
+                HttpLoggingInterceptor.Level.BODY
 
         }
 
@@ -39,18 +48,35 @@ object NetworkModule {
 
 
 
+
     @Provides
     @Singleton
     fun provideOkHttpClient(
-
         loggingInterceptor: HttpLoggingInterceptor
-
-    ): OkHttpClient {
+    )
+            : OkHttpClient {
 
 
         return OkHttpClient.Builder()
 
-            .addInterceptor(loggingInterceptor)
+            .addInterceptor(
+                loggingInterceptor
+            )
+
+            .connectTimeout(
+                30,
+                TimeUnit.SECONDS
+            )
+
+            .readTimeout(
+                30,
+                TimeUnit.SECONDS
+            )
+
+            .writeTimeout(
+                30,
+                TimeUnit.SECONDS
+            )
 
             .build()
 
@@ -58,22 +84,24 @@ object NetworkModule {
 
 
 
+
     @Provides
     @Singleton
     fun provideRetrofit(
-
         okHttpClient: OkHttpClient
-
-    ): Retrofit {
+    )
+            : Retrofit {
 
 
         return Retrofit.Builder()
 
             .baseUrl(
-                "https://example.com/"
+                BASE_URL
             )
 
-            .client(okHttpClient)
+            .client(
+                okHttpClient
+            )
 
             .addConverterFactory(
                 GsonConverterFactory.create()
@@ -85,13 +113,13 @@ object NetworkModule {
 
 
 
+
     @Provides
     @Singleton
     fun provideMarketApiService(
-
         retrofit: Retrofit
-
-    ): MarketApiService {
+    )
+            : MarketApiService {
 
 
         return retrofit.create(
