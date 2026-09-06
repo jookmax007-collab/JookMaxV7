@@ -19,7 +19,6 @@ class MarketRepositoryImpl(
 ) : MarketRepository {
 
 
-
     override suspend fun getLatestMarketPrice(): MarketPrice? {
 
 
@@ -29,45 +28,39 @@ class MarketRepositoryImpl(
 
         return if (remotePrice != null) {
 
-
             localDataSource.saveMarketPrice(
                 remotePrice
             )
 
-
             remotePrice
-
 
         } else {
 
-
             localDataSource.getMarketPrice()
-
 
         }
 
     }
 
 
-
-
     override fun getCachedMarketPrice(): MarketPrice? {
-
 
         return localDataSource.getMarketPrice()
 
     }
 
 
+    override suspend fun getMarketHistory(): List<MarketPrice> {
 
+        return emptyList()
+
+    }
 
 
     override fun clearCache() {
 
-
         localDataSource.clear()
 
     }
-
 
 }
