@@ -1,22 +1,18 @@
 package com.jookmax.v7.data.remote
 
-
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
+import javax.inject.Inject
 
 
-class MarketRemoteDataSource {
+class MarketRemoteDataSource @Inject constructor(
+    private val apiService: MarketApiService
+) {
 
 
     suspend fun fetchMarketPrice(): MarketPrice? {
 
-        // Future:
-        // Retrofit API Call
-        // WebSocket Request
-        // External Market Provider
-
-
-        return null
+        return apiService.getLatestMarketPrice()
 
     }
 
@@ -24,10 +20,7 @@ class MarketRemoteDataSource {
 
     suspend fun fetchMarketHistory(): MarketHistory? {
 
-        // Future:
-        // Receive historical candles
-        // API / WebSocket / Market Provider
-
+        // بعداً API تاریخچه اضافه می‌شود
 
         return null
 
@@ -37,11 +30,9 @@ class MarketRemoteDataSource {
 
     fun isConnected(): Boolean {
 
-        // Future:
-        // Check API/WebSocket connection
+        // بعداً با Network state واقعی جایگزین می‌شود
 
-
-        return false
+        return true
 
     }
 
@@ -49,8 +40,7 @@ class MarketRemoteDataSource {
 
     fun disconnect() {
 
-        // Future:
-        // Close network connection
+        // بعداً برای WebSocket استفاده می‌شود
 
     }
 

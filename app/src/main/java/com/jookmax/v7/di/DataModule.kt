@@ -33,19 +33,6 @@ object DataModule {
 
 
 
-
-    @Provides
-    @Singleton
-    fun provideMarketRemoteDataSource()
-            : MarketRemoteDataSource {
-
-        return MarketRemoteDataSource()
-
-    }
-
-
-
-
     @Provides
     @Singleton
     fun provideMarketMapper()
@@ -54,7 +41,6 @@ object DataModule {
         return MarketMapper()
 
     }
-
 
 
 
@@ -73,11 +59,11 @@ object DataModule {
 
         return MarketRepositoryImpl(
 
-            remoteDataSource,
+            remoteDataSource = remoteDataSource,
 
-            localDataSource,
+            localDataSource = localDataSource,
 
-            mapper
+            mapper = mapper
 
         )
 
