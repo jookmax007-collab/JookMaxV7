@@ -5,16 +5,16 @@ import com.jookmax.v7.domain.repository.MarketRepository
 import javax.inject.Inject
 
 
-class GetCachedMarketPriceUseCase @Inject constructor(
+class GetMarketHistoryUseCase @Inject constructor(
 
     private val repository: MarketRepository
 
 ) {
 
 
-    operator fun invoke(): MarketPrice? {
+    suspend operator fun invoke(): List<MarketPrice> {
 
-        return repository.getCachedMarketPrice()
+        return repository.getMarketHistory()
 
     }
 
