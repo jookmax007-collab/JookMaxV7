@@ -2,9 +2,10 @@ package com.jookmax.v7.domain.usecase
 
 import com.jookmax.v7.core.model.MarketPrice
 import com.jookmax.v7.domain.repository.MarketRepository
+import javax.inject.Inject
 
 
-class GetMarketPriceUseCase(
+class GetLatestMarketPriceUseCase @Inject constructor(
 
     private val repository: MarketRepository
 
@@ -13,10 +14,8 @@ class GetMarketPriceUseCase(
 
     suspend operator fun invoke(): MarketPrice? {
 
-
         return repository.getLatestMarketPrice()
 
     }
-
 
 }
