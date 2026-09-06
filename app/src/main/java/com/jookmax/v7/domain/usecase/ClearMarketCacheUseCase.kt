@@ -1,10 +1,10 @@
 package com.jookmax.v7.domain.usecase
 
+
 import com.jookmax.v7.domain.repository.MarketRepository
-import javax.inject.Inject
 
 
-class ClearMarketCacheUseCase @Inject constructor(
+class ClearMarketCacheUseCase(
 
     private val repository: MarketRepository
 
@@ -16,5 +16,6 @@ class ClearMarketCacheUseCase @Inject constructor(
         repository.clearCache()
 
     }
+
 
 }
