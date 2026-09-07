@@ -4,8 +4,11 @@ package com.jookmax.v7.domain.usecase
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.domain.repository.MarketRepository
 
+import javax.inject.Inject
 
-class GetMarketHistoryUseCase(
+
+
+class GetMarketHistoryUseCase @Inject constructor(
 
     private val repository: MarketRepository
 
@@ -17,6 +20,8 @@ class GetMarketHistoryUseCase(
 
         return repository.getMarketHistory()
 
+
     }
+
 
 }
