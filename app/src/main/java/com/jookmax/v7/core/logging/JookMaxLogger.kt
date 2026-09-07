@@ -9,26 +9,18 @@ import javax.inject.Singleton
 /**
  * Default logger implementation for JookMax.
  *
- * Current:
- * - Keeps logs in memory
- * - Provides central logging point
+ * Responsibilities:
+ * - Create log entries
+ * - Forward logs to storage layer
  *
- * Future:
- * - Room persistence
- * - Log viewer UI
- * - Remote monitoring
+ * Storage responsibility belongs to LogStorage.
  */
 @Singleton
 class JookMaxLogger @Inject constructor(
 
+    private val storage: LogStorage
+
 ) : Logger {
-
-
-
-    private val logs =
-        mutableListOf<LogEntry>()
-
-
 
 
 
@@ -36,7 +28,6 @@ class JookMaxLogger @Inject constructor(
         tag: String,
         message: String
     ) {
-
 
         addLog(
 
@@ -48,10 +39,7 @@ class JookMaxLogger @Inject constructor(
 
         )
 
-
     }
-
-
 
 
 
@@ -61,7 +49,6 @@ class JookMaxLogger @Inject constructor(
         tag: String,
         message: String
     ) {
-
 
         addLog(
 
@@ -73,10 +60,7 @@ class JookMaxLogger @Inject constructor(
 
         )
 
-
     }
-
-
 
 
 
@@ -86,7 +70,6 @@ class JookMaxLogger @Inject constructor(
         tag: String,
         message: String
     ) {
-
 
         addLog(
 
@@ -98,10 +81,7 @@ class JookMaxLogger @Inject constructor(
 
         )
 
-
     }
-
-
 
 
 
@@ -112,7 +92,6 @@ class JookMaxLogger @Inject constructor(
         message: String,
         throwable: Throwable?
     ) {
-
 
         addLog(
 
@@ -126,10 +105,7 @@ class JookMaxLogger @Inject constructor(
 
         )
 
-
     }
-
-
 
 
 
@@ -163,43 +139,13 @@ class JookMaxLogger @Inject constructor(
         )
 
 
-        logs.add(entry)
+        storage.save(entry)
 
 
-
-        // Temporary output
-        // Future replacement:
-        // Database / Monitoring pipeline
 
         println(
             "[${level.name}] $tag : $message"
         )
-
-
-    }
-
-
-
-
-
-
-
-    fun getLogs(): List<LogEntry> {
-
-
-        return logs.toList()
-
-
-    }
-
-
-
-
-
-    fun clear() {
-
-
-        logs.clear()
 
 
     }
