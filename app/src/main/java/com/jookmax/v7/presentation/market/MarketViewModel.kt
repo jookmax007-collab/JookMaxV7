@@ -20,6 +20,30 @@ import javax.inject.Inject
 
 
 
+/**
+ * ViewModel bridge for market presentation layer.
+ *
+ * Responsibilities:
+ * - Execute market use cases
+ * - Handle UI actions
+ * - Manage UI state
+ *
+ * Architecture:
+ *
+ * UI
+ *  |
+ *  v
+ * MarketAction
+ *  |
+ *  v
+ * MarketViewModel
+ *  |
+ *  v
+ * MarketStateMapper
+ *  |
+ *  v
+ * MarketUiState
+ */
 @HiltViewModel
 class MarketViewModel @Inject constructor(
 
@@ -30,7 +54,10 @@ class MarketViewModel @Inject constructor(
     private val getMarketHistoryUseCase: GetMarketHistoryUseCase,
 
 
-    private val clearMarketCacheUseCase: ClearMarketCacheUseCase
+    private val clearMarketCacheUseCase: ClearMarketCacheUseCase,
+
+
+    private val marketStateMapper: MarketStateMapper
 
 
 ) : ViewModel() {
@@ -61,7 +88,7 @@ class MarketViewModel @Inject constructor(
     ) {
 
 
-        when(action) {
+        when (action) {
 
 
             MarketAction.Refresh -> {
@@ -119,7 +146,7 @@ class MarketViewModel @Inject constructor(
 
                 _state.value =
 
-                    MarketUiState.Success(
+                    marketStateMapper.map(
 
                         price = price,
 
@@ -128,15 +155,15 @@ class MarketViewModel @Inject constructor(
                     )
 
 
-            } catch(exception: Exception) {
+            } catch (exception: Exception) {
+
 
 
                 _state.value =
 
-                    MarketUiState.Error(
+                    marketStateMapper.mapError(
 
-                        exception.message
-                            ?: "Unknown error"
+                        exception
 
                     )
 
@@ -155,23 +182,45 @@ class MarketViewModel @Inject constructor(
 
 
 
+
     private fun clearCache() {
 
 
         viewModelScope.launch {
 
 
-            clearMarketCacheUseCase()
+            try {
+
+
+                clearMarketCacheUseCase()
 
 
 
-            refresh()
+                refresh()
+
+
+
+            } catch (exception: Exception) {
+
+
+
+                _state.value =
+
+                    marketStateMapper.mapError(
+
+                        exception
+
+                    )
+
+
+            }
 
 
         }
 
 
     }
+
 
 
 }
