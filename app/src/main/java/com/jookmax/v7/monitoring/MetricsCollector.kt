@@ -1,4 +1,4 @@
-package com.jookmax.v7.core.monitoring
+package com.jookmax.v7.monitoring
 
 
 import javax.inject.Inject

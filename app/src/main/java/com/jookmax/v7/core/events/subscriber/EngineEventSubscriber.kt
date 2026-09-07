@@ -7,8 +7,8 @@ import com.jookmax.v7.core.events.SystemEvent
 
 import com.jookmax.v7.core.logging.Logger
 
-import com.jookmax.v7.core.monitoring.EngineHealth
-import com.jookmax.v7.core.monitoring.EngineMonitor
+import com.jookmax.v7.monitoring.EngineHealth
+import com.jookmax.v7.monitoring.EngineMonitor
 
 import javax.inject.Inject
 import javax.inject.Singleton

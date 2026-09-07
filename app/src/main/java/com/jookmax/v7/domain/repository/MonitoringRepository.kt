@@ -1,7 +1,7 @@
 package com.jookmax.v7.domain.repository
 
 
-import com.jookmax.v7.core.monitoring.PerformanceSnapshot
+import com.jookmax.v7.monitoring.PerformanceSnapshot
 
 import kotlinx.coroutines.flow.StateFlow
 

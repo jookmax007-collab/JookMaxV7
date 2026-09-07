@@ -1,8 +1,8 @@
 package com.jookmax.v7.data.repository
 
 
-import com.jookmax.v7.core.monitoring.MetricsHistory
-import com.jookmax.v7.core.monitoring.PerformanceSnapshot
+import com.jookmax.v7.monitoring.MetricsHistory
+import com.jookmax.v7.monitoring.PerformanceSnapshot
 
 import com.jookmax.v7.domain.repository.MonitoringRepository
 

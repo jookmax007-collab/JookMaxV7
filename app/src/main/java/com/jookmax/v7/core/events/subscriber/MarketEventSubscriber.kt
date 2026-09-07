@@ -6,7 +6,7 @@ import com.jookmax.v7.core.events.EventSubscriber
 import com.jookmax.v7.core.events.MarketEvent
 
 import com.jookmax.v7.core.logging.Logger
-import com.jookmax.v7.core.monitoring.RuntimeObserver
+import com.jookmax.v7.monitoring.RuntimeObserver
 
 import javax.inject.Inject
 import javax.inject.Singleton

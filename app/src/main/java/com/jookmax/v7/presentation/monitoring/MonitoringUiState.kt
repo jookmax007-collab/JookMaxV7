@@ -1,7 +1,7 @@
 package com.jookmax.v7.presentation.monitoring
 
 
-import com.jookmax.v7.core.monitoring.PerformanceSnapshot
+import com.jookmax.v7.monitoring.PerformanceSnapshot
 import com.jookmax.v7.domain.monitoring.PerformanceReport
 
 

@@ -1,7 +1,7 @@
 package com.jookmax.v7.domain.monitoring
 
 
-import com.jookmax.v7.core.monitoring.MetricsAnalytics
+import com.jookmax.v7.monitoring.MetricsAnalytics
 
 import javax.inject.Inject
 

@@ -1,8 +1,8 @@
 package com.jookmax.v7.di
 
 
-import com.jookmax.v7.core.monitoring.MetricsCollector
-import com.jookmax.v7.core.monitoring.MetricsHistory
+import com.jookmax.v7.monitoring.MetricsCollector
+import com.jookmax.v7.monitoring.MetricsHistory
 
 import com.jookmax.v7.data.repository.MonitoringRepositoryImpl
 
