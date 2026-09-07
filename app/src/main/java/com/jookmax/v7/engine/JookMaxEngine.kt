@@ -11,6 +11,7 @@ import com.jookmax.v7.core.events.subscriber.MarketEventSubscriber
 
 import com.jookmax.v7.core.monitoring.EngineHealth
 import com.jookmax.v7.core.monitoring.EngineMonitor
+import com.jookmax.v7.core.monitoring.MetricsCollector
 import com.jookmax.v7.core.monitoring.RuntimeObserver
 
 import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
@@ -52,7 +53,10 @@ class JookMaxEngine(
     private val engineMonitor: EngineMonitor,
 
 
-    private val runtimeObserver: RuntimeObserver
+    private val runtimeObserver: RuntimeObserver,
+
+
+    private val metricsCollector: MetricsCollector
 
 
 ) {
@@ -73,12 +77,15 @@ class JookMaxEngine(
     fun start() {
 
 
-
         lifecycleManager.start()
 
 
 
         runtimeTracker.start()
+
+
+
+        metricsCollector.recordEvent()
 
 
 
@@ -147,7 +154,6 @@ class JookMaxEngine(
         )
 
 
-
     }
 
 
@@ -159,7 +165,6 @@ class JookMaxEngine(
 
 
     fun stop() {
-
 
 
         eventBus.publish(
@@ -179,6 +184,10 @@ class JookMaxEngine(
 
 
         runtimeTracker.stop()
+
+
+
+        metricsCollector.recordEvent()
 
 
 
@@ -213,7 +222,6 @@ class JookMaxEngine(
         )
 
 
-
     }
 
 
@@ -227,7 +235,6 @@ class JookMaxEngine(
     fun pause() {
 
 
-
         lifecycleManager.pause()
 
 
@@ -237,6 +244,10 @@ class JookMaxEngine(
             "PAUSED"
 
         )
+
+
+
+        metricsCollector.recordEvent()
 
 
     }
@@ -252,7 +263,6 @@ class JookMaxEngine(
     fun resume() {
 
 
-
         lifecycleManager.resume()
 
 
@@ -262,6 +272,10 @@ class JookMaxEngine(
             "RUNNING"
 
         )
+
+
+
+        metricsCollector.recordEvent()
 
 
     }
@@ -275,7 +289,6 @@ class JookMaxEngine(
 
 
     fun reset() {
-
 
 
         lifecycleManager.reset()
@@ -294,6 +307,9 @@ class JookMaxEngine(
 
 
 
+        metricsCollector.reset()
+
+
     }
 
 
@@ -307,7 +323,6 @@ class JookMaxEngine(
     fun shutdown() {
 
 
-
         stop()
 
 
@@ -315,10 +330,7 @@ class JookMaxEngine(
         coroutineScope.cancel()
 
 
-
     }
-
-
 
 
 

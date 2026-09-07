@@ -9,20 +9,20 @@ import com.jookmax.v7.core.events.subscriber.EngineEventSubscriber
 import com.jookmax.v7.core.events.subscriber.MarketEventSubscriber
 
 import com.jookmax.v7.core.monitoring.EngineMonitor
+import com.jookmax.v7.core.monitoring.MetricsCollector
 import com.jookmax.v7.core.monitoring.RuntimeObserver
 
 import com.jookmax.v7.engine.JookMaxEngine
+import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
 import com.jookmax.v7.engine.manager.EngineManager
 import com.jookmax.v7.engine.runtime.EngineCoroutineScope
 import com.jookmax.v7.engine.runtime.EngineRuntimeTracker
-import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
 
 
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-
 
 import javax.inject.Singleton
 
@@ -31,6 +31,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object EngineModule {
+
 
 
 
@@ -45,6 +46,8 @@ object EngineModule {
 
 
     }
+
+
 
 
 
@@ -70,9 +73,11 @@ object EngineModule {
 
 
 
+
     @Provides
     @Singleton
     fun provideJookMaxEngine(
+
 
 
         lifecycleManager: EngineLifecycleManager,
@@ -102,7 +107,10 @@ object EngineModule {
         engineMonitor: EngineMonitor,
 
 
-        runtimeObserver: RuntimeObserver
+        runtimeObserver: RuntimeObserver,
+
+
+        metricsCollector: MetricsCollector
 
 
 
@@ -142,7 +150,10 @@ object EngineModule {
             engineMonitor = engineMonitor,
 
 
-            runtimeObserver = runtimeObserver
+            runtimeObserver = runtimeObserver,
+
+
+            metricsCollector = metricsCollector
 
 
 
