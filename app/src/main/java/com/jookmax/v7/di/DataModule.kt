@@ -5,6 +5,8 @@ import com.jookmax.v7.data.local.MarketLocalDataSource
 import com.jookmax.v7.data.mapper.MarketEntityMapper
 import com.jookmax.v7.data.remote.MarketRemoteDataSource
 import com.jookmax.v7.data.repository.MarketRepositoryImpl
+
+import com.jookmax.v7.domain.repository.MarketDataSource
 import com.jookmax.v7.domain.repository.MarketRepository
 
 import dagger.Module
@@ -19,6 +21,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
+
 
 
 
@@ -84,11 +87,35 @@ object DataModule {
 
 
 
+    /**
+     * Domain contract binding
+     *
+     * Domain layer depends on abstraction,
+     * not concrete implementation.
+     */
+    @Provides
+    @Singleton
+    fun provideMarketDataSource(
+
+        remoteDataSource: MarketRemoteDataSource
+
+    ): MarketDataSource {
+
+
+        return remoteDataSource
+
+
+    }
+
+
+
+
+
     @Provides
     @Singleton
     fun provideMarketRepository(
 
-        remoteDataSource: MarketRemoteDataSource,
+        remoteDataSource: MarketDataSource,
 
         localDataSource: MarketLocalDataSource
 
@@ -105,6 +132,7 @@ object DataModule {
 
 
     }
+
 
 
 }
