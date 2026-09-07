@@ -31,15 +31,12 @@ class MarketRepositoryImpl @Inject constructor(
     override suspend fun getLatestMarketPrice(): MarketPrice? {
 
 
-        /*
-         * Temporary compatibility layer.
-         *
-         * Until Quote mapper is connected,
-         * fallback to local cache.
-         */
+        val cached =
+            localDataSource.getMarketPrice()
 
 
-        return localDataSource.getMarketPrice()
+
+        return cached
 
 
     }
@@ -87,12 +84,17 @@ class MarketRepositoryImpl @Inject constructor(
             )
 
 
+
             localDataSource.saveMarketHistory(
+
                 history
+
             )
 
 
+
             return history
+
 
         }
 
