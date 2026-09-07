@@ -24,11 +24,15 @@ import javax.inject.Inject
  * Responsible for:
  * - Executing monitoring use cases
  * - Managing UI state
+ * - Handling screen actions
  * - Exposing monitoring data to UI
  *
  * Architecture:
  *
  * UI
+ *  |
+ *  v
+ * MonitoringAction
  *  |
  *  v
  * MonitoringViewModel
@@ -71,7 +75,51 @@ class MonitoringViewModel @Inject constructor(
 
 
 
-    fun refresh() {
+    fun onAction(
+
+        action: MonitoringAction
+
+    ) {
+
+
+        when (action) {
+
+
+            MonitoringAction.Refresh -> {
+
+
+                refresh()
+
+
+            }
+
+
+
+
+
+            MonitoringAction.Reset -> {
+
+
+                reset()
+
+
+            }
+
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+    private fun refresh() {
 
 
         viewModelScope.launch {
@@ -122,12 +170,28 @@ class MonitoringViewModel @Inject constructor(
                     )
 
 
-
             }
 
 
-
         }
+
+
+    }
+
+
+
+
+
+
+
+
+
+    private fun reset() {
+
+
+        _state.value =
+
+            MonitoringUiState.Loading
 
 
     }
