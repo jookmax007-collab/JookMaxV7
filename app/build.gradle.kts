@@ -97,11 +97,6 @@ dependencies {
     )
 
 
-
-    // =========================
-    // Lifecycle
-    // =========================
-
     implementation(
         libs.androidx.lifecycle.runtime.ktx
     )
@@ -146,7 +141,22 @@ dependencies {
 
 
     // =========================
-    // Hilt Dependency Injection
+    // Navigation Compose
+    // =========================
+
+    implementation(
+        libs.androidx.navigation.compose
+    )
+
+
+    implementation(
+        libs.hilt.navigation.compose
+    )
+
+
+
+    // =========================
+    // Hilt
     // =========================
 
     implementation(
@@ -161,7 +171,7 @@ dependencies {
 
 
     // =========================
-    // Network Layer
+    // Network
     // =========================
 
     implementation(
@@ -186,7 +196,7 @@ dependencies {
 
 
     // =========================
-    // Room Persistence
+    // Room
     // =========================
 
     implementation(
