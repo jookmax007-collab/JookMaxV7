@@ -1,6 +1,10 @@
 package com.jookmax.v7.core.monitoring
 
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,6 +16,7 @@ import javax.inject.Singleton
  * Responsible for:
  * - Keeping recent performance snapshots
  * - Providing historical runtime analytics data
+ * - Publishing reactive history updates
  * - Preparing future chart and analytics systems
  */
 @Singleton
@@ -26,6 +31,38 @@ class MetricsHistory @Inject constructor() {
 
     private val maxHistorySize =
         100
+
+
+
+
+
+    private val _historyFlow =
+
+        MutableStateFlow<List<PerformanceSnapshot>>(
+
+            emptyList()
+
+        )
+
+
+
+
+
+    /**
+     * Reactive stream of snapshot history.
+     *
+     * Future usage:
+     * - Live monitoring dashboard
+     * - Charts
+     * - Runtime analytics
+     */
+    val historyFlow:
+
+            StateFlow<List<PerformanceSnapshot>>
+
+        get() = _historyFlow.asStateFlow()
+
+
 
 
 
@@ -55,6 +92,15 @@ class MetricsHistory @Inject constructor() {
         }
 
 
+
+
+
+        _historyFlow.value =
+
+            snapshots.toList()
+
+
+
     }
 
 
@@ -63,7 +109,11 @@ class MetricsHistory @Inject constructor() {
 
 
 
-    fun getHistory(): List<PerformanceSnapshot> {
+
+
+    fun getHistory():
+
+            List<PerformanceSnapshot> {
 
 
         return snapshots.toList()
@@ -77,7 +127,11 @@ class MetricsHistory @Inject constructor() {
 
 
 
-    fun getLatest(): PerformanceSnapshot? {
+
+
+    fun getLatest():
+
+            PerformanceSnapshot? {
 
 
         return snapshots.lastOrNull()
@@ -91,7 +145,11 @@ class MetricsHistory @Inject constructor() {
 
 
 
-    fun size(): Int {
+
+
+    fun size():
+
+            Int {
 
 
         return snapshots.size
@@ -105,10 +163,19 @@ class MetricsHistory @Inject constructor() {
 
 
 
+
+
     fun clear() {
 
 
         snapshots.clear()
+
+
+
+        _historyFlow.value =
+
+            emptyList()
+
 
 
     }
