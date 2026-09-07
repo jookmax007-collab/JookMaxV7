@@ -6,8 +6,8 @@ import com.jookmax.v7.brain.BrainManager
 import com.jookmax.v7.core.events.EventBus
 import com.jookmax.v7.core.events.SystemEvent
 import com.jookmax.v7.core.events.EventDispatcher
-import com.jookmax.v7.core.events.subscriber.EngineEventSubscriber
-import com.jookmax.v7.core.events.subscriber.MarketEventSubscriber
+import com.jookmax.v7.engine.events.subscriber.EngineEventSubscriber
+import com.jookmax.v7.engine.events.subscriber.MarketEventSubscriber
 
 import com.jookmax.v7.monitoring.EngineHealth
 import com.jookmax.v7.monitoring.EngineMonitor
