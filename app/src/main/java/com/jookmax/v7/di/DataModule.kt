@@ -2,11 +2,14 @@ package com.jookmax.v7.di
 
 
 import com.jookmax.v7.data.local.MarketLocalDataSource
+import com.jookmax.v7.data.mapper.CandleMapper
 import com.jookmax.v7.data.mapper.MarketEntityMapper
+import com.jookmax.v7.data.mapper.MarketQuoteMapper
 import com.jookmax.v7.data.mapper.MarketRemoteMapper
+import com.jookmax.v7.data.mapper.TickMapper
+import com.jookmax.v7.data.remote.MarketApiService
 import com.jookmax.v7.data.remote.MarketRemoteDataSource
 import com.jookmax.v7.data.repository.MarketRepositoryImpl
-
 import com.jookmax.v7.domain.repository.MarketDataSource
 import com.jookmax.v7.domain.repository.MarketRepository
 
@@ -29,9 +32,7 @@ object DataModule {
     @Singleton
     fun provideMarketEntityMapper(): MarketEntityMapper {
 
-
         return MarketEntityMapper()
-
 
     }
 
@@ -43,9 +44,43 @@ object DataModule {
     @Singleton
     fun provideMarketRemoteMapper(): MarketRemoteMapper {
 
-
         return MarketRemoteMapper()
 
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideMarketQuoteMapper(): MarketQuoteMapper {
+
+        return MarketQuoteMapper()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideTickMapper(): TickMapper {
+
+        return TickMapper()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideCandleMapper(): CandleMapper {
+
+        return CandleMapper()
 
     }
 
@@ -72,7 +107,6 @@ object DataModule {
 
         )
 
-
     }
 
 
@@ -83,9 +117,15 @@ object DataModule {
     @Singleton
     fun provideMarketRemoteDataSource(
 
-        apiService: com.jookmax.v7.data.remote.MarketApiService,
+        apiService: MarketApiService,
 
-        remoteMapper: MarketRemoteMapper
+        marketRemoteMapper: MarketRemoteMapper,
+
+        marketQuoteMapper: MarketQuoteMapper,
+
+        tickMapper: TickMapper,
+
+        candleMapper: CandleMapper
 
     ): MarketRemoteDataSource {
 
@@ -94,10 +134,15 @@ object DataModule {
 
             apiService = apiService,
 
-            mapper = remoteMapper
+            marketRemoteMapper = marketRemoteMapper,
+
+            marketQuoteMapper = marketQuoteMapper,
+
+            tickMapper = tickMapper,
+
+            candleMapper = candleMapper
 
         )
-
 
     }
 
@@ -105,10 +150,6 @@ object DataModule {
 
 
 
-    /**
-     * Bind remote implementation
-     * to domain contract
-     */
     @Provides
     @Singleton
     fun provideMarketDataSource(
@@ -120,7 +161,6 @@ object DataModule {
 
         return remoteDataSource
 
-
     }
 
 
@@ -131,7 +171,7 @@ object DataModule {
     @Singleton
     fun provideMarketRepository(
 
-        remoteDataSource: MarketDataSource,
+        marketDataSource: MarketDataSource,
 
         localDataSource: MarketLocalDataSource
 
@@ -140,15 +180,13 @@ object DataModule {
 
         return MarketRepositoryImpl(
 
-            remoteDataSource = remoteDataSource,
+            remoteDataSource = marketDataSource,
 
             localDataSource = localDataSource
 
         )
 
-
     }
-
 
 
 }
