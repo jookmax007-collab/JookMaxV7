@@ -7,12 +7,15 @@ import javax.inject.Singleton
 
 
 /**
- * Provides analytical calculations based on engine metrics history.
+ * Provides analytical calculations based on engine monitoring data.
  *
  * Responsible for:
  * - Performance analysis
  * - Runtime statistics
  * - Health metrics calculation
+ *
+ * Data source:
+ * - MonitoringRepository
  *
  * Future connections:
  * - Performance Center UI
@@ -22,9 +25,10 @@ import javax.inject.Singleton
 @Singleton
 class MetricsAnalytics @Inject constructor(
 
-    private val metricsHistory: MetricsHistory
+    private val monitoringRepository: MonitoringRepository
 
 ) {
+
 
 
 
@@ -32,16 +36,20 @@ class MetricsAnalytics @Inject constructor(
     fun getTotalProcessedEvents(): Long {
 
 
-        return metricsHistory
-            .getHistory()
+        return monitoringRepository
+            .getSnapshots()
             .sumOf {
 
+
                 it.processedEvents
+
 
             }
 
 
     }
+
+
 
 
 
@@ -52,11 +60,13 @@ class MetricsAnalytics @Inject constructor(
     fun getTotalFailedEvents(): Long {
 
 
-        return metricsHistory
-            .getHistory()
+        return monitoringRepository
+            .getSnapshots()
             .sumOf {
 
+
                 it.failedEvents
+
 
             }
 
@@ -69,15 +79,19 @@ class MetricsAnalytics @Inject constructor(
 
 
 
+
+
     fun getAverageLatency(): Long {
 
 
-        val history =
-            metricsHistory.getHistory()
+        val snapshots =
+
+            monitoringRepository
+                .getSnapshots()
 
 
 
-        if (history.isEmpty()) {
+        if (snapshots.isEmpty()) {
 
 
             return 0L
@@ -87,10 +101,12 @@ class MetricsAnalytics @Inject constructor(
 
 
 
-        return history
+        return snapshots
             .map {
 
+
                 it.processingLatencyMs
+
 
             }
             .average()
@@ -105,11 +121,13 @@ class MetricsAnalytics @Inject constructor(
 
 
 
+
+
     fun getSnapshotCount(): Int {
 
 
-        return metricsHistory
-            .size()
+        return monitoringRepository
+            .getSnapshotCount()
 
 
     }
@@ -120,21 +138,27 @@ class MetricsAnalytics @Inject constructor(
 
 
 
+
+
     fun getFailureRate(): Double {
 
 
-        val totalProcessed =
+        val processed =
+
             getTotalProcessedEvents()
 
 
 
-        val totalFailed =
+        val failed =
+
             getTotalFailedEvents()
 
 
 
         val total =
-            totalProcessed + totalFailed
+
+            processed + failed
+
 
 
 
@@ -148,7 +172,9 @@ class MetricsAnalytics @Inject constructor(
 
 
 
-        return totalFailed.toDouble() /
+
+        return failed.toDouble() /
+
                 total.toDouble()
 
 
@@ -160,11 +186,13 @@ class MetricsAnalytics @Inject constructor(
 
 
 
+
+
     fun getLatestState(): String {
 
 
-        return metricsHistory
-            .getLatest()
+        return monitoringRepository
+            .getLatestSnapshot()
             ?.engineState
             ?: "UNKNOWN"
 
@@ -177,11 +205,13 @@ class MetricsAnalytics @Inject constructor(
 
 
 
+
+
     fun reset() {
 
 
         // Analytics layer has no internal state.
-        // History owner manages stored data.
+        // Repository owns data management.
 
 
     }
