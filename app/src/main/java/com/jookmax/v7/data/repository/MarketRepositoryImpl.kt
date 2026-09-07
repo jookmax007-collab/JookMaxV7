@@ -3,7 +3,9 @@ package com.jookmax.v7.data.repository
 
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
+
 import com.jookmax.v7.data.local.MarketLocalDataSource
+
 import com.jookmax.v7.domain.repository.MarketDataSource
 import com.jookmax.v7.domain.repository.MarketRepository
 
@@ -31,15 +33,50 @@ class MarketRepositoryImpl @Inject constructor(
     override suspend fun getLatestMarketPrice(): MarketPrice? {
 
 
-        val cached =
-            localDataSource.getMarketPrice()
+        return try {
+
+
+            val remotePrice =
+
+                remoteDataSource.getLatestPrice()
 
 
 
-        return cached
+            if (remotePrice != null) {
+
+
+                localDataSource.saveMarketPrice(
+
+                    remotePrice
+
+                )
+
+
+                remotePrice
+
+
+            } else {
+
+
+                localDataSource.getLatestPrice()
+
+
+            }
+
+
+
+        } catch (exception: Exception) {
+
+
+            localDataSource.getLatestPrice()
+
+
+        }
 
 
     }
+
+
 
 
 
@@ -48,10 +85,12 @@ class MarketRepositoryImpl @Inject constructor(
     override suspend fun getCachedMarketPrice(): MarketPrice? {
 
 
-        return localDataSource.getMarketPrice()
+        return localDataSource.getLatestPrice()
 
 
     }
+
+
 
 
 
@@ -60,50 +99,67 @@ class MarketRepositoryImpl @Inject constructor(
     override suspend fun getMarketHistory(): MarketHistory? {
 
 
-        val candles =
-
-            remoteDataSource.getCandles()
+        return try {
 
 
+            val candles =
 
-        if (candles.isNotEmpty()) {
-
-
-            val history = MarketHistory(
-
-
-                symbol = candles.first().symbol,
-
-
-                candles = candles,
-
-
-                timestamp = System.currentTimeMillis()
-
-
-            )
+                remoteDataSource.getCandles()
 
 
 
-            localDataSource.saveMarketHistory(
+            if (candles.isNotEmpty()) {
+
+
+                val history = MarketHistory(
+
+
+                    symbol = candles.first().symbol,
+
+
+                    candles = candles,
+
+
+                    timestamp = System.currentTimeMillis()
+
+
+                )
+
+
+
+                localDataSource.saveMarketHistory(
+
+                    history
+
+                )
+
+
 
                 history
 
-            )
+
+            } else {
+
+
+                localDataSource.getMarketHistory()
+
+
+            }
 
 
 
-            return history
+        } catch (exception: Exception) {
+
+
+            localDataSource.getMarketHistory()
 
 
         }
 
 
-
-        return localDataSource.getMarketHistory()
-
-
     }
+
+
 
 
 
@@ -116,6 +172,7 @@ class MarketRepositoryImpl @Inject constructor(
 
 
     }
+
 
 
 }
