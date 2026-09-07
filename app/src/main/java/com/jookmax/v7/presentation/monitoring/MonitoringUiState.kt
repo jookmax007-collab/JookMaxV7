@@ -1,6 +1,7 @@
 package com.jookmax.v7.presentation.monitoring
 
 
+import com.jookmax.v7.core.monitoring.PerformanceSnapshot
 import com.jookmax.v7.domain.monitoring.PerformanceReport
 
 
@@ -11,8 +12,14 @@ import com.jookmax.v7.domain.monitoring.PerformanceReport
  * Used by:
  * - MonitoringViewModel
  * - Future Compose UI
+ *
+ * Contains:
+ * - Analytics report
+ * - Reactive monitoring snapshots
  */
 sealed class MonitoringUiState {
+
+
 
 
 
@@ -26,14 +33,22 @@ sealed class MonitoringUiState {
 
 
 
+
     /**
      * Data available state.
+     *
+     * Contains:
+     * - Performance analytics report
+     * - Live monitoring history
      */
     data class Available(
 
-        val report: PerformanceReport
+        val report: PerformanceReport,
+
+        val snapshots: List<PerformanceSnapshot> = emptyList()
 
     ) : MonitoringUiState()
+
 
 
 
