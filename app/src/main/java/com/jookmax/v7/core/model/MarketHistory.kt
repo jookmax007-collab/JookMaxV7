@@ -8,7 +8,7 @@ data class MarketHistory(
 
     val symbol: Symbol,
 
-    val candles: List<MarketCandle>,
+    val candles: List<Candle>,
 
     val timestamp: Long
 
