@@ -64,10 +64,8 @@ class JookMaxEngine(
 
 
 
-
     val state: StateFlow<EngineState>
         get() = lifecycleManager.state
-
 
 
 
@@ -80,14 +78,10 @@ class JookMaxEngine(
         lifecycleManager.start()
 
 
-
         runtimeTracker.start()
 
 
-
         metricsCollector.recordEvent()
-
-
 
 
 
@@ -99,15 +93,11 @@ class JookMaxEngine(
 
 
 
-
-
         eventDispatcher.register(
 
             engineEventSubscriber
 
         )
-
-
 
 
 
@@ -119,11 +109,7 @@ class JookMaxEngine(
 
 
 
-
-
         brainManager.initialize()
-
-
 
 
 
@@ -135,8 +121,6 @@ class JookMaxEngine(
 
 
 
-
-
         runtimeObserver.observe(
 
             "RUNNING"
@@ -144,6 +128,7 @@ class JookMaxEngine(
         )
 
 
+        updatePerformanceSnapshot()
 
 
 
@@ -175,21 +160,14 @@ class JookMaxEngine(
 
 
 
-
-
         lifecycleManager.stop()
-
-
 
 
 
         runtimeTracker.stop()
 
 
-
         metricsCollector.recordEvent()
-
-
 
 
 
@@ -197,11 +175,7 @@ class JookMaxEngine(
 
 
 
-
-
         brainManager.shutdown()
-
-
 
 
 
@@ -213,13 +187,14 @@ class JookMaxEngine(
 
 
 
-
-
         runtimeObserver.observe(
 
             "STOPPED"
 
         )
+
+
+        updatePerformanceSnapshot()
 
 
     }
@@ -250,6 +225,10 @@ class JookMaxEngine(
         metricsCollector.recordEvent()
 
 
+
+        updatePerformanceSnapshot()
+
+
     }
 
 
@@ -276,6 +255,10 @@ class JookMaxEngine(
 
 
         metricsCollector.recordEvent()
+
+
+
+        updatePerformanceSnapshot()
 
 
     }
@@ -328,6 +311,52 @@ class JookMaxEngine(
 
 
         coroutineScope.cancel()
+
+
+    }
+
+
+
+
+
+
+
+
+
+    private fun updatePerformanceSnapshot() {
+
+
+
+        val snapshot =
+
+            engineMonitor.createSnapshot(
+
+
+                engineState =
+                    runtimeObserver.getCurrentState(),
+
+
+                processedEvents =
+                    metricsCollector.getProcessedEvents(),
+
+
+                failedEvents =
+                    metricsCollector.getFailedEvents(),
+
+
+                processingLatencyMs =
+                    metricsCollector.getAverageLatencyMs()
+
+
+            )
+
+
+
+        engineMonitor.updateSnapshot(
+
+            snapshot
+
+        )
 
 
     }
