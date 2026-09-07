@@ -2,6 +2,7 @@ package com.jookmax.v7.di
 
 
 import com.jookmax.v7.core.monitoring.MetricsCollector
+import com.jookmax.v7.core.monitoring.MetricsHistory
 
 import dagger.Module
 import dagger.Provides
@@ -26,6 +27,24 @@ object MonitoringModule {
 
 
         return MetricsCollector()
+
+
+    }
+
+
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideMetricsHistory():
+
+            MetricsHistory {
+
+
+        return MetricsHistory()
 
 
     }
