@@ -4,7 +4,9 @@ package com.jookmax.v7.core.events.subscriber
 import com.jookmax.v7.core.events.EngineEvent
 import com.jookmax.v7.core.events.EventSubscriber
 import com.jookmax.v7.core.events.MarketEvent
+
 import com.jookmax.v7.core.logging.Logger
+import com.jookmax.v7.core.monitoring.RuntimeObserver
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +23,7 @@ import javax.inject.Singleton
  *
  * Connected with:
  * - Central Logger
+ * - Runtime Monitoring
  * - MarketBrain
  * - TechnicalAnalyzer
  * - TickEngine
@@ -29,7 +32,12 @@ import javax.inject.Singleton
 @Singleton
 class MarketEventSubscriber @Inject constructor(
 
-    private val logger: Logger
+
+    private val logger: Logger,
+
+
+    private val runtimeObserver: RuntimeObserver
+
 
 ) : EventSubscriber {
 
@@ -42,6 +50,7 @@ class MarketEventSubscriber @Inject constructor(
         event: EngineEvent
 
     ) {
+
 
 
         when (event) {
@@ -65,6 +74,7 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
             is MarketEvent.CandleClosed -> {
 
 
@@ -76,6 +86,7 @@ class MarketEventSubscriber @Inject constructor(
 
 
             }
+
 
 
 
@@ -99,9 +110,12 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
             else -> Unit
 
+
         }
+
 
 
     }
@@ -121,9 +135,13 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
+
         val price =
 
             event.marketPrice
+
+
+
 
 
 
@@ -138,10 +156,24 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
+
+
+        runtimeObserver.observe(
+
+            "MARKET_PRICE_UPDATED"
+
+        )
+
+
+
+
+
         // Future:
         // Send price update to MarketBrain
         // Update indicators
         // Trigger analysis pipeline
+
 
 
     }
@@ -161,9 +193,13 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
+
         val candle =
 
             event.candle
+
+
+
 
 
 
@@ -178,9 +214,23 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
+
+
+        runtimeObserver.observe(
+
+            "CANDLE_CLOSED"
+
+        )
+
+
+
+
+
         // Future:
         // Update technical analysis
         // Run decision pipeline
+
 
 
     }
@@ -200,9 +250,13 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
+
         val candle =
 
             event.candle
+
+
+
 
 
 
@@ -217,9 +271,23 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
+
+
+        runtimeObserver.observe(
+
+            "CANDLE_UPDATED"
+
+        )
+
+
+
+
+
         // Future:
         // Live chart update
         // Tick aggregation
+
 
 
     }
