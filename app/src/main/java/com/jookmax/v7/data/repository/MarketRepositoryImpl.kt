@@ -3,10 +3,8 @@ package com.jookmax.v7.data.repository
 
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
-
 import com.jookmax.v7.data.local.MarketLocalDataSource
-import com.jookmax.v7.data.remote.MarketRemoteDataSource
-
+import com.jookmax.v7.domain.repository.MarketDataSource
 import com.jookmax.v7.domain.repository.MarketRepository
 
 import javax.inject.Inject
@@ -21,7 +19,7 @@ class MarketRepositoryImpl @Inject constructor(
     private val localDataSource: MarketLocalDataSource,
 
 
-    private val remoteDataSource: MarketRemoteDataSource
+    private val remoteDataSource: MarketDataSource
 
 
 ) : MarketRepository {
@@ -29,37 +27,22 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 
+
     override suspend fun getLatestMarketPrice(): MarketPrice? {
 
 
-        val remotePrice =
-
-            remoteDataSource.fetchMarketPrice()
-
-
-
-        if (remotePrice != null) {
-
-
-            localDataSource.saveMarketPrice(
-
-                remotePrice
-
-            )
-
-
-            return remotePrice
-
-        }
-
+        /*
+         * Temporary compatibility layer.
+         *
+         * Until Quote mapper is connected,
+         * fallback to local cache.
+         */
 
 
         return localDataSource.getMarketPrice()
 
 
     }
-
-
 
 
 
@@ -77,29 +60,39 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 
-
-
-
     override suspend fun getMarketHistory(): MarketHistory? {
 
 
-        val remoteHistory =
+        val candles =
 
-            remoteDataSource.fetchMarketHistory()
-
-
-
-        if (remoteHistory != null) {
+            remoteDataSource.getCandles()
 
 
-            localDataSource.saveMarketHistory(
 
-                remoteHistory
+        if (candles.isNotEmpty()) {
+
+
+            val history = MarketHistory(
+
+
+                symbol = candles.first().symbol,
+
+
+                candles = candles,
+
+
+                timestamp = System.currentTimeMillis()
+
 
             )
 
 
-            return remoteHistory
+            localDataSource.saveMarketHistory(
+                history
+            )
+
+
+            return history
 
         }
 
@@ -114,9 +107,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 
-
-
-
     override suspend fun clearCache() {
 
 
@@ -124,7 +114,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
     }
-
 
 
 }

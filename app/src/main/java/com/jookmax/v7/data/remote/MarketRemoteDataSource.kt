@@ -1,35 +1,44 @@
 package com.jookmax.v7.data.remote
 
 
-import com.jookmax.v7.core.model.MarketHistory
-import com.jookmax.v7.core.model.MarketPrice
+import com.jookmax.v7.core.model.Candle
+import com.jookmax.v7.core.model.MarketQuote
+import com.jookmax.v7.core.model.Tick
+import com.jookmax.v7.domain.repository.MarketDataSource
 
 import javax.inject.Inject
 
 
 
+/**
+ * Remote market data provider.
+ *
+ * Future implementations:
+ * - REST API
+ * - WebSocket
+ * - Streaming market feed
+ */
 class MarketRemoteDataSource @Inject constructor(
 
     private val apiService: MarketApiService
 
-) {
+) : MarketDataSource {
 
 
 
-    suspend fun fetchMarketPrice(): MarketPrice? {
+    override suspend fun getLatestQuote(): MarketQuote? {
 
 
         return try {
 
 
-            apiService.getLatestMarketPrice()
+            apiService.getLatestQuote()
 
 
         } catch (exception: Exception) {
 
 
             null
-
 
         }
 
@@ -39,17 +48,14 @@ class MarketRemoteDataSource @Inject constructor(
 
 
 
-    suspend fun fetchMarketHistory(): MarketHistory? {
+
+    override suspend fun getLatestTick(): Tick? {
 
 
         return try {
 
 
-            // Future:
-            // apiService.getMarketHistory()
-
-
-            null
+            apiService.getLatestTick()
 
 
         } catch (exception: Exception) {
@@ -57,11 +63,34 @@ class MarketRemoteDataSource @Inject constructor(
 
             null
 
+        }
+
+
+    }
+
+
+
+
+
+    override suspend fun getCandles(): List<Candle> {
+
+
+        return try {
+
+
+            apiService.getCandles()
+
+
+        } catch (exception: Exception) {
+
+
+            emptyList()
 
         }
 
 
     }
+
 
 
 
@@ -76,8 +105,8 @@ class MarketRemoteDataSource @Inject constructor(
 
         return true
 
-
     }
+
 
 
 
@@ -86,7 +115,7 @@ class MarketRemoteDataSource @Inject constructor(
 
 
         // Future:
-        // Close WebSocket
+        // Close websocket
         // Release resources
 
 
