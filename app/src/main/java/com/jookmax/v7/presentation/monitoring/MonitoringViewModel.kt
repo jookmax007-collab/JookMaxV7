@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.jookmax.v7.domain.monitoring.GetPerformanceReportUseCase
-import com.jookmax.v7.domain.monitoring.PerformanceReport
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -23,8 +22,9 @@ import javax.inject.Inject
  * ViewModel bridge for monitoring presentation layer.
  *
  * Responsible for:
- * - Receiving monitoring reports
- * - Exposing monitoring state to UI
+ * - Executing monitoring use cases
+ * - Managing UI state
+ * - Exposing monitoring data to UI
  *
  * Architecture:
  *
@@ -34,10 +34,10 @@ import javax.inject.Inject
  * MonitoringViewModel
  *  |
  *  v
- * GetPerformanceReportUseCase
+ * MonitoringUiState
  *  |
  *  v
- * Monitoring Domain
+ * GetPerformanceReportUseCase
  */
 @HiltViewModel
 class MonitoringViewModel @Inject constructor(
@@ -48,13 +48,23 @@ class MonitoringViewModel @Inject constructor(
 
 
 
-    private val _report =
-        MutableStateFlow<PerformanceReport?>(null)
+
+
+    private val _state =
+
+        MutableStateFlow<MonitoringUiState>(
+
+            MonitoringUiState.Loading
+
+        )
 
 
 
-    val report: StateFlow<PerformanceReport?>
-        get() = _report.asStateFlow()
+
+
+    val state: StateFlow<MonitoringUiState>
+        get() = _state.asStateFlow()
+
 
 
 
@@ -67,13 +77,54 @@ class MonitoringViewModel @Inject constructor(
         viewModelScope.launch {
 
 
-            val result =
+            _state.value =
 
-                getPerformanceReportUseCase()
+                MonitoringUiState.Loading
 
 
 
-            _report.value = result
+
+
+            try {
+
+
+
+                val report =
+
+                    getPerformanceReportUseCase()
+
+
+
+
+
+                _state.value =
+
+                    MonitoringUiState.Available(
+
+                        report = report
+
+                    )
+
+
+
+            } catch (exception: Exception) {
+
+
+
+                _state.value =
+
+                    MonitoringUiState.Error(
+
+                        message =
+                            exception.message
+                                ?: "Unknown monitoring error"
+
+                    )
+
+
+
+            }
+
 
 
         }
