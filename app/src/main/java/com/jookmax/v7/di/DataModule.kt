@@ -3,6 +3,7 @@ package com.jookmax.v7.di
 
 import com.jookmax.v7.data.local.MarketLocalDataSource
 import com.jookmax.v7.data.mapper.MarketEntityMapper
+import com.jookmax.v7.data.mapper.MarketRemoteMapper
 import com.jookmax.v7.data.remote.MarketRemoteDataSource
 import com.jookmax.v7.data.repository.MarketRepositoryImpl
 
@@ -24,13 +25,26 @@ object DataModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideMarketEntityMapper(): MarketEntityMapper {
 
 
         return MarketEntityMapper()
+
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideMarketRemoteMapper(): MarketRemoteMapper {
+
+
+        return MarketRemoteMapper()
 
 
     }
@@ -69,14 +83,18 @@ object DataModule {
     @Singleton
     fun provideMarketRemoteDataSource(
 
-        apiService: com.jookmax.v7.data.remote.MarketApiService
+        apiService: com.jookmax.v7.data.remote.MarketApiService,
+
+        remoteMapper: MarketRemoteMapper
 
     ): MarketRemoteDataSource {
 
 
         return MarketRemoteDataSource(
 
-            apiService = apiService
+            apiService = apiService,
+
+            mapper = remoteMapper
 
         )
 
@@ -88,10 +106,8 @@ object DataModule {
 
 
     /**
-     * Domain contract binding
-     *
-     * Domain layer depends on abstraction,
-     * not concrete implementation.
+     * Bind remote implementation
+     * to domain contract
      */
     @Provides
     @Singleton
