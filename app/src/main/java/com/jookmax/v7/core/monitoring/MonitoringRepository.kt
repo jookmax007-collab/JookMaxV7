@@ -1,6 +1,8 @@
 package com.jookmax.v7.core.monitoring
 
 
+import kotlinx.coroutines.flow.StateFlow
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,6 +14,7 @@ import javax.inject.Singleton
  * Responsible for:
  * - Providing monitoring data to upper layers
  * - Hiding storage implementation details
+ * - Exposing reactive monitoring updates
  * - Preparing future database integration
  *
  * Future connections:
@@ -29,6 +32,7 @@ class MonitoringRepository @Inject constructor(
 
 
 
+
     fun getSnapshots():
 
             List<PerformanceSnapshot> {
@@ -38,6 +42,8 @@ class MonitoringRepository @Inject constructor(
 
 
     }
+
+
 
 
 
@@ -61,6 +67,8 @@ class MonitoringRepository @Inject constructor(
 
 
 
+
+
     fun getSnapshotCount():
 
             Int {
@@ -70,6 +78,37 @@ class MonitoringRepository @Inject constructor(
 
 
     }
+
+
+
+
+
+
+
+
+
+    /**
+     * Observe live monitoring history updates.
+     *
+     * Source:
+     * MetricsHistory StateFlow
+     *
+     * Used by:
+     * - Monitoring use cases
+     * - ViewModel
+     * - Future live dashboard
+     */
+    fun observeSnapshots():
+
+            StateFlow<List<PerformanceSnapshot>> {
+
+
+        return metricsHistory.historyFlow
+
+
+    }
+
+
 
 
 
