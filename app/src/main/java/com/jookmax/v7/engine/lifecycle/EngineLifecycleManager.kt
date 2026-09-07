@@ -1,6 +1,5 @@
 package com.jookmax.v7.engine.lifecycle
 
-import com.jookmax.v7.engine.EngineState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,7 +73,8 @@ class EngineLifecycleManager {
     }
 
 
-    fun reset(){
+
+    fun reset() {
 
         _state.value = EngineState.Idle
 

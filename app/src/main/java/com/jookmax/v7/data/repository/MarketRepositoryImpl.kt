@@ -4,18 +4,20 @@ package com.jookmax.v7.data.repository
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
 import com.jookmax.v7.data.local.MarketLocalDataSource
-import com.jookmax.v7.data.mapper.MarketMapper
 import com.jookmax.v7.data.remote.MarketRemoteDataSource
 import com.jookmax.v7.domain.repository.MarketRepository
 
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MarketRepositoryImpl(
 
-    private val remoteDataSource: MarketRemoteDataSource,
+
+@Singleton
+class MarketRepositoryImpl @Inject constructor(
 
     private val localDataSource: MarketLocalDataSource,
 
-    private val mapper: MarketMapper
+    private val remoteDataSource: MarketRemoteDataSource
 
 ) : MarketRepository {
 
@@ -28,7 +30,8 @@ class MarketRepositoryImpl(
             remoteDataSource.fetchMarketPrice()
 
 
-        return if (remotePrice != null) {
+
+        if (remotePrice != null) {
 
 
             localDataSource.saveMarketPrice(
@@ -36,21 +39,10 @@ class MarketRepositoryImpl(
             )
 
 
-            remotePrice
-
-
-        } else {
-
-
-            localDataSource.getMarketPrice()
+            return remotePrice
 
         }
 
-    }
-
-
-
-    override fun getCachedMarketPrice(): MarketPrice? {
 
 
         return localDataSource.getMarketPrice()
@@ -59,36 +51,32 @@ class MarketRepositoryImpl(
 
 
 
-    override suspend fun getMarketHistory(): MarketHistory? {
 
 
-        val remoteHistory =
-            remoteDataSource.fetchMarketHistory()
+    override suspend fun getCachedMarketPrice(): MarketPrice? {
 
 
-        return if (remoteHistory != null) {
-
-
-            localDataSource.saveMarketHistory(
-                remoteHistory
-            )
-
-
-            remoteHistory
-
-
-        } else {
-
-
-            localDataSource.getMarketHistory()
-
-        }
+        return localDataSource.getMarketPrice()
 
     }
 
 
 
-    override fun clearCache() {
+
+
+    override suspend fun getMarketHistory(): MarketHistory? {
+
+
+        return remoteDataSource.fetchMarketHistory()
+            ?: localDataSource.getMarketHistory()
+
+    }
+
+
+
+
+
+    override suspend fun clearCache() {
 
 
         localDataSource.clear()

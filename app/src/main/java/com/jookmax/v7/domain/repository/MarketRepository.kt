@@ -5,19 +5,24 @@ import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
 
 
+
 interface MarketRepository {
 
 
     suspend fun getLatestMarketPrice(): MarketPrice?
 
 
-    fun getCachedMarketPrice(): MarketPrice?
+
+    suspend fun getCachedMarketPrice(): MarketPrice?
+
 
 
     suspend fun getMarketHistory(): MarketHistory?
 
 
-    fun clearCache()
+
+    suspend fun clearCache()
+
 
 
 }

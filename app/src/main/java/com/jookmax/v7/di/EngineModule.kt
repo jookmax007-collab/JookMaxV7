@@ -3,10 +3,13 @@ package com.jookmax.v7.di
 
 import com.jookmax.v7.brain.BrainManager
 import com.jookmax.v7.core.events.EventBus
+import com.jookmax.v7.core.events.EventDispatcher
+import com.jookmax.v7.core.events.subscriber.EngineEventSubscriber
+import com.jookmax.v7.core.events.subscriber.MarketEventSubscriber
 
 import com.jookmax.v7.engine.JookMaxEngine
-import com.jookmax.v7.engine.manager.EngineManager
 import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
+import com.jookmax.v7.engine.manager.EngineManager
 import com.jookmax.v7.engine.runtime.EngineCoroutineScope
 import com.jookmax.v7.engine.runtime.EngineRuntimeTracker
 
@@ -21,12 +24,9 @@ import javax.inject.Singleton
 
 
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object EngineModule {
-
-
 
 
 
@@ -40,8 +40,6 @@ object EngineModule {
 
 
     }
-
-
 
 
 
@@ -62,8 +60,6 @@ object EngineModule {
 
 
 
-
-
     @Provides
     @Singleton
     fun provideEngineCoroutineScope()
@@ -76,6 +72,22 @@ object EngineModule {
     }
 
 
+
+
+
+    @Provides
+    @Singleton
+    fun provideEventDispatcher(
+        eventBus: EventBus
+    ): EventDispatcher {
+
+
+        return EventDispatcher(
+            eventBus = eventBus
+        )
+
+
+    }
 
 
 
@@ -93,7 +105,13 @@ object EngineModule {
 
         brainManager: BrainManager,
 
-        eventBus: EventBus
+        eventBus: EventBus,
+
+        eventDispatcher: EventDispatcher,
+
+        marketEventSubscriber: MarketEventSubscriber,
+
+        engineEventSubscriber: EngineEventSubscriber
 
     ): JookMaxEngine {
 
@@ -109,14 +127,18 @@ object EngineModule {
 
             brainManager = brainManager,
 
-            eventBus = eventBus
+            eventBus = eventBus,
+
+            eventDispatcher = eventDispatcher,
+
+            marketEventSubscriber = marketEventSubscriber,
+
+            engineEventSubscriber = engineEventSubscriber
 
         )
 
 
     }
-
-
 
 
 
@@ -129,7 +151,6 @@ object EngineModule {
         engine: JookMaxEngine
 
     ): EngineManager {
-
 
 
         return EngineManager(

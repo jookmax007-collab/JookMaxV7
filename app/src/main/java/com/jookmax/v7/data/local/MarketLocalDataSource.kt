@@ -3,59 +3,96 @@ package com.jookmax.v7.data.local
 
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
+import com.jookmax.v7.data.local.dao.MarketDao
+import com.jookmax.v7.data.mapper.MarketEntityMapper
 
-
-class MarketLocalDataSource {
-
-
-    private var cachedPrice: MarketPrice? = null
-
-
-    private var cachedHistory: MarketHistory? = null
+import javax.inject.Inject
 
 
 
-    fun saveMarketPrice(
+class MarketLocalDataSource @Inject constructor(
+
+
+    private val marketDao: MarketDao,
+
+
+    private val mapper: MarketEntityMapper
+
+
+) {
+
+
+
+    suspend fun saveMarketPrice(
         price: MarketPrice
     ) {
 
-        cachedPrice = price
+
+        val entity =
+            mapper.mapToEntity(price)
+
+
+        marketDao.insertMarketPrice(
+            entity
+        )
 
     }
 
 
 
-    fun getMarketPrice(): MarketPrice? {
 
-        return cachedPrice
+
+    suspend fun getMarketPrice(): MarketPrice? {
+
+
+        return marketDao
+            .getMarketPrice()
+            ?.let {
+
+                mapper.mapToDomain(it)
+
+            }
+
 
     }
 
 
 
-    fun saveMarketHistory(
+
+
+    suspend fun saveMarketHistory(
         history: MarketHistory
     ) {
 
-        cachedHistory = history
+
+        // بعد از اضافه شدن Entity مربوط به History کامل می‌شود
+
 
     }
 
 
 
-    fun getMarketHistory(): MarketHistory? {
 
-        return cachedHistory
+
+    suspend fun getMarketHistory(): MarketHistory? {
+
+
+        return null
+
 
     }
 
 
 
-    fun clear() {
 
-        cachedPrice = null
 
-        cachedHistory = null
+    suspend fun clear() {
+
+
+        marketDao.clearPrice()
+
+        marketDao.clearCandles()
+
 
     }
 

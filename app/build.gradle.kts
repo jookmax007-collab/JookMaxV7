@@ -97,6 +97,7 @@ dependencies {
     )
 
 
+
     // =========================
     // Lifecycle
     // =========================
@@ -104,6 +105,7 @@ dependencies {
     implementation(
         libs.androidx.lifecycle.runtime.ktx
     )
+
 
 
     // =========================
@@ -179,6 +181,26 @@ dependencies {
 
     implementation(
         libs.okhttp.logging
+    )
+
+
+
+    // =========================
+    // Room Persistence
+    // =========================
+
+    implementation(
+        "androidx.room:room-runtime:2.7.2"
+    )
+
+
+    implementation(
+        "androidx.room:room-ktx:2.7.2"
+    )
+
+
+    ksp(
+        "androidx.room:room-compiler:2.7.2"
     )
 
 

@@ -2,7 +2,7 @@ package com.jookmax.v7.di
 
 
 import com.jookmax.v7.data.local.MarketLocalDataSource
-import com.jookmax.v7.data.mapper.MarketMapper
+import com.jookmax.v7.data.mapper.MarketEntityMapper
 import com.jookmax.v7.data.remote.MarketRemoteDataSource
 import com.jookmax.v7.data.repository.MarketRepositoryImpl
 import com.jookmax.v7.domain.repository.MarketRepository
@@ -24,23 +24,63 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideMarketLocalDataSource()
-            : MarketLocalDataSource {
+    fun provideMarketEntityMapper(): MarketEntityMapper {
 
-        return MarketLocalDataSource()
+
+        return MarketEntityMapper()
+
 
     }
+
+
 
 
 
     @Provides
     @Singleton
-    fun provideMarketMapper()
-            : MarketMapper {
+    fun provideMarketLocalDataSource(
 
-        return MarketMapper()
+        marketDao: com.jookmax.v7.data.local.dao.MarketDao,
+
+        entityMapper: MarketEntityMapper
+
+    ): MarketLocalDataSource {
+
+
+        return MarketLocalDataSource(
+
+            marketDao = marketDao,
+
+            mapper = entityMapper
+
+        )
+
 
     }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideMarketRemoteDataSource(
+
+        apiService: com.jookmax.v7.data.remote.MarketApiService
+
+    ): MarketRemoteDataSource {
+
+
+        return MarketRemoteDataSource(
+
+            apiService = apiService
+
+        )
+
+
+    }
+
+
 
 
 
@@ -50,9 +90,7 @@ object DataModule {
 
         remoteDataSource: MarketRemoteDataSource,
 
-        localDataSource: MarketLocalDataSource,
-
-        mapper: MarketMapper
+        localDataSource: MarketLocalDataSource
 
     ): MarketRepository {
 
@@ -61,11 +99,10 @@ object DataModule {
 
             remoteDataSource = remoteDataSource,
 
-            localDataSource = localDataSource,
-
-            mapper = mapper
+            localDataSource = localDataSource
 
         )
+
 
     }
 
