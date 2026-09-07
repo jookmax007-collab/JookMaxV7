@@ -4,7 +4,11 @@ package com.jookmax.v7.core.events.subscriber
 import com.jookmax.v7.core.events.EngineEvent
 import com.jookmax.v7.core.events.EventSubscriber
 import com.jookmax.v7.core.events.SystemEvent
+import com.jookmax.v7.core.logging.Logger
+
 import javax.inject.Inject
+import javax.inject.Singleton
+
 
 
 /**
@@ -15,15 +19,19 @@ import javax.inject.Inject
  * - Engine Stopped
  * - Engine Errors
  *
- * Future connections:
- * - Logger
+ * Connected with:
+ * - Central Logger
  * - Monitoring
  * - HealthCheck
- * - Runtime analytics
  */
+@Singleton
 class EngineEventSubscriber @Inject constructor(
 
+    private val logger: Logger
+
 ) : EventSubscriber {
+
+
 
 
 
@@ -35,29 +43,47 @@ class EngineEventSubscriber @Inject constructor(
         when (event) {
 
 
+
             is SystemEvent.EngineStarted -> {
+
 
                 handleEngineStarted()
 
+
             }
+
+
+
 
 
 
             is SystemEvent.EngineStopped -> {
 
+
                 handleEngineStopped()
 
+
             }
+
+
+
 
 
 
             is SystemEvent.EngineError -> {
 
+
                 handleEngineError(
+
                     event
+
                 )
 
+
             }
+
+
+
 
 
 
@@ -72,15 +98,27 @@ class EngineEventSubscriber @Inject constructor(
 
 
 
+
+
+
+
     private fun handleEngineStarted() {
 
 
-        // Future:
-        // Logger.info("Engine started")
-        // Monitoring update
+        logger.info(
+
+            tag = "EngineEventSubscriber",
+
+            message = "Engine started event received"
+
+        )
 
 
     }
+
+
+
+
 
 
 
@@ -89,36 +127,46 @@ class EngineEventSubscriber @Inject constructor(
     private fun handleEngineStopped() {
 
 
-        // Future:
-        // Logger.info("Engine stopped")
-        // Release monitoring state
+        logger.info(
+
+            tag = "EngineEventSubscriber",
+
+            message = "Engine stopped event received"
+
+        )
 
 
     }
+
+
+
+
 
 
 
 
 
     private fun handleEngineError(
+
         event: SystemEvent.EngineError
+
     ) {
 
 
-        val message =
-            event.message
 
+        logger.error(
 
-        val throwable =
-            event.throwable
+            tag = "EngineEventSubscriber",
 
+            message = event.message,
 
-        // Future:
-        // Logger.error(message, throwable)
-        // HealthCheck update
+            throwable = event.throwable
+
+        )
 
 
     }
+
 
 
 }

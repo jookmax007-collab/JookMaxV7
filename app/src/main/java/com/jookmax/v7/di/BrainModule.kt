@@ -6,6 +6,7 @@ import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.risk.RiskBrain
+import com.jookmax.v7.core.logging.Logger
 
 import dagger.Module
 import dagger.Provides
@@ -22,14 +23,23 @@ object BrainModule {
 
 
 
+
+
     @Provides
     @Singleton
     fun provideMarketBrain()
             : MarketBrain {
 
+
         return MarketBrain()
 
+
     }
+
+
+
+
+
 
 
 
@@ -39,9 +49,16 @@ object BrainModule {
     fun provideRiskBrain()
             : RiskBrain {
 
+
         return RiskBrain()
 
+
     }
+
+
+
+
+
 
 
 
@@ -51,9 +68,16 @@ object BrainModule {
     fun provideDecisionEngine()
             : DecisionEngine {
 
+
         return DecisionEngine()
 
+
     }
+
+
+
+
+
 
 
 
@@ -63,9 +87,16 @@ object BrainModule {
     fun provideLearningBrain()
             : LearningBrain {
 
+
         return LearningBrain()
 
+
     }
+
+
+
+
+
 
 
 
@@ -74,30 +105,51 @@ object BrainModule {
     @Singleton
     fun provideBrainManager(
 
+
         marketBrain: MarketBrain,
+
 
         riskBrain: RiskBrain,
 
+
         decisionEngine: DecisionEngine,
 
-        learningBrain: LearningBrain
+
+        learningBrain: LearningBrain,
+
+
+        logger: Logger
+
+
 
     ): BrainManager {
 
 
+
         return BrainManager(
+
 
             marketBrain = marketBrain,
 
+
             riskBrain = riskBrain,
+
 
             decisionEngine = decisionEngine,
 
-            learningBrain = learningBrain
+
+            learningBrain = learningBrain,
+
+
+            logger = logger
+
+
 
         )
 
+
     }
+
 
 
 }
