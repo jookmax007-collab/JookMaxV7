@@ -17,9 +17,14 @@ import javax.inject.Singleton
  * - Health status tracking
  * - Performance snapshot management
  * - Runtime observation
+ * - Performance history storage
  */
 @Singleton
-class EngineMonitor @Inject constructor() {
+class EngineMonitor @Inject constructor(
+
+    private val metricsHistory: MetricsHistory
+
+) {
 
 
 
@@ -31,6 +36,7 @@ class EngineMonitor @Inject constructor() {
 
     val health: StateFlow<EngineHealth>
         get() = _health.asStateFlow()
+
 
 
 
@@ -77,6 +83,13 @@ class EngineMonitor @Inject constructor() {
 
 
         _latestSnapshot.value = snapshot
+
+
+        metricsHistory.addSnapshot(
+
+            snapshot
+
+        )
 
 
     }
@@ -138,6 +151,26 @@ class EngineMonitor @Inject constructor() {
 
 
 
+
+
+    fun getSnapshotHistory():
+
+            List<PerformanceSnapshot> {
+
+
+        return metricsHistory.getHistory()
+
+
+    }
+
+
+
+
+
+
+
+
+
     fun reset() {
 
 
@@ -146,6 +179,9 @@ class EngineMonitor @Inject constructor() {
 
 
         _latestSnapshot.value = null
+
+
+        metricsHistory.clear()
 
 
     }
