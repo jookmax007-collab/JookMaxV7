@@ -65,8 +65,17 @@ class MarketLocalDataSource @Inject constructor(
     ) {
 
 
-        // بعد از اضافه شدن Entity مربوط به History کامل می‌شود
+        val entities =
+            history.candles.map {
 
+                mapper.mapCandleToEntity(it)
+
+            }
+
+
+        marketDao.insertCandles(
+            entities
+        )
 
     }
 
@@ -77,7 +86,35 @@ class MarketLocalDataSource @Inject constructor(
     suspend fun getMarketHistory(): MarketHistory? {
 
 
-        return null
+        val candles =
+
+            marketDao
+                .getCandles()
+                .map {
+
+                    mapper.mapCandleToDomain(it)
+
+                }
+
+
+
+        if (candles.isEmpty()) {
+
+            return null
+
+        }
+
+
+
+        return MarketHistory(
+
+            symbol = candles.first().symbol,
+
+            candles = candles,
+
+            timestamp = System.currentTimeMillis()
+
+        )
 
 
     }

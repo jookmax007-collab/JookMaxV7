@@ -3,8 +3,10 @@ package com.jookmax.v7.data.repository
 
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
+
 import com.jookmax.v7.data.local.MarketLocalDataSource
 import com.jookmax.v7.data.remote.MarketRemoteDataSource
+
 import com.jookmax.v7.domain.repository.MarketRepository
 
 import javax.inject.Inject
@@ -15,11 +17,15 @@ import javax.inject.Singleton
 @Singleton
 class MarketRepositoryImpl @Inject constructor(
 
+
     private val localDataSource: MarketLocalDataSource,
+
 
     private val remoteDataSource: MarketRemoteDataSource
 
+
 ) : MarketRepository {
+
 
 
 
@@ -27,6 +33,7 @@ class MarketRepositoryImpl @Inject constructor(
 
 
         val remotePrice =
+
             remoteDataSource.fetchMarketPrice()
 
 
@@ -35,7 +42,9 @@ class MarketRepositoryImpl @Inject constructor(
 
 
             localDataSource.saveMarketPrice(
+
                 remotePrice
+
             )
 
 
@@ -47,7 +56,10 @@ class MarketRepositoryImpl @Inject constructor(
 
         return localDataSource.getMarketPrice()
 
+
     }
+
+
 
 
 
@@ -58,7 +70,11 @@ class MarketRepositoryImpl @Inject constructor(
 
         return localDataSource.getMarketPrice()
 
+
     }
+
+
+
 
 
 
@@ -67,10 +83,35 @@ class MarketRepositoryImpl @Inject constructor(
     override suspend fun getMarketHistory(): MarketHistory? {
 
 
-        return remoteDataSource.fetchMarketHistory()
-            ?: localDataSource.getMarketHistory()
+        val remoteHistory =
+
+            remoteDataSource.fetchMarketHistory()
+
+
+
+        if (remoteHistory != null) {
+
+
+            localDataSource.saveMarketHistory(
+
+                remoteHistory
+
+            )
+
+
+            return remoteHistory
+
+        }
+
+
+
+        return localDataSource.getMarketHistory()
+
 
     }
+
+
+
 
 
 
@@ -81,7 +122,9 @@ class MarketRepositoryImpl @Inject constructor(
 
         localDataSource.clear()
 
+
     }
+
 
 
 }
