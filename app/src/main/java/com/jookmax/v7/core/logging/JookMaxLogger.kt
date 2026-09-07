@@ -1,6 +1,8 @@
 package com.jookmax.v7.core.logging
 
 
+import com.jookmax.v7.domain.logging.LogRepository
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,14 +13,14 @@ import javax.inject.Singleton
  *
  * Responsibilities:
  * - Create log entries
- * - Forward logs to storage layer
+ * - Forward logs to repository layer
  *
- * Storage responsibility belongs to LogStorage.
+ * Storage responsibility belongs to data layer.
  */
 @Singleton
 class JookMaxLogger @Inject constructor(
 
-    private val storage: LogStorage
+    private val repository: LogRepository
 
 ) : Logger {
 
@@ -139,7 +141,7 @@ class JookMaxLogger @Inject constructor(
         )
 
 
-        storage.save(entry)
+        repository.save(entry)
 
 
 
