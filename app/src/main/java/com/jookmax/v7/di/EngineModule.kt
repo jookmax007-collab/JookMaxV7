@@ -8,6 +8,9 @@ import com.jookmax.v7.core.events.EventDispatcher
 import com.jookmax.v7.core.events.subscriber.EngineEventSubscriber
 import com.jookmax.v7.core.events.subscriber.MarketEventSubscriber
 
+import com.jookmax.v7.core.monitoring.EngineMonitor
+import com.jookmax.v7.core.monitoring.RuntimeObserver
+
 import com.jookmax.v7.engine.JookMaxEngine
 import com.jookmax.v7.engine.manager.EngineManager
 import com.jookmax.v7.engine.runtime.EngineCoroutineScope
@@ -28,6 +31,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object EngineModule {
+
 
 
 
@@ -92,7 +96,13 @@ object EngineModule {
         marketEventSubscriber: MarketEventSubscriber,
 
 
-        engineEventSubscriber: EngineEventSubscriber
+        engineEventSubscriber: EngineEventSubscriber,
+
+
+        engineMonitor: EngineMonitor,
+
+
+        runtimeObserver: RuntimeObserver
 
 
 
@@ -100,7 +110,9 @@ object EngineModule {
 
 
 
+
         return JookMaxEngine(
+
 
 
             lifecycleManager = lifecycleManager,
@@ -124,7 +136,14 @@ object EngineModule {
             marketEventSubscriber = marketEventSubscriber,
 
 
-            engineEventSubscriber = engineEventSubscriber
+            engineEventSubscriber = engineEventSubscriber,
+
+
+            engineMonitor = engineMonitor,
+
+
+            runtimeObserver = runtimeObserver
+
 
 
         )
@@ -144,14 +163,19 @@ object EngineModule {
     @Singleton
     fun provideEngineManager(
 
+
         engine: JookMaxEngine
+
 
     ): EngineManager {
 
 
+
         return EngineManager(
 
+
             engine = engine
+
 
         )
 

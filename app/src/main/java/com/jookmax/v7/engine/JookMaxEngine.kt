@@ -9,6 +9,10 @@ import com.jookmax.v7.core.events.EventDispatcher
 import com.jookmax.v7.core.events.subscriber.EngineEventSubscriber
 import com.jookmax.v7.core.events.subscriber.MarketEventSubscriber
 
+import com.jookmax.v7.core.monitoring.EngineHealth
+import com.jookmax.v7.core.monitoring.EngineMonitor
+import com.jookmax.v7.core.monitoring.RuntimeObserver
+
 import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
 import com.jookmax.v7.engine.lifecycle.EngineState
 import com.jookmax.v7.engine.runtime.EngineCoroutineScope
@@ -20,23 +24,40 @@ import kotlinx.coroutines.flow.StateFlow
 
 class JookMaxEngine(
 
+
     private val brainManager: BrainManager,
+
 
     private val eventBus: EventBus,
 
+
     private val eventDispatcher: EventDispatcher,
+
 
     private val marketEventSubscriber: MarketEventSubscriber,
 
+
     private val engineEventSubscriber: EngineEventSubscriber,
+
 
     private val lifecycleManager: EngineLifecycleManager,
 
+
     private val runtimeTracker: EngineRuntimeTracker,
 
-    private val coroutineScope: EngineCoroutineScope
+
+    private val coroutineScope: EngineCoroutineScope,
+
+
+    private val engineMonitor: EngineMonitor,
+
+
+    private val runtimeObserver: RuntimeObserver
+
 
 ) {
+
+
 
 
 
@@ -47,30 +68,49 @@ class JookMaxEngine(
 
 
 
+
+
     fun start() {
 
 
+
         lifecycleManager.start()
+
 
 
         runtimeTracker.start()
 
 
 
+
+
         eventDispatcher.register(
+
             marketEventSubscriber
+
         )
+
+
+
 
 
         eventDispatcher.register(
+
             engineEventSubscriber
+
         )
+
+
 
 
 
         eventDispatcher.start(
+
             coroutineScope.scope
+
         )
+
+
 
 
 
@@ -78,12 +118,41 @@ class JookMaxEngine(
 
 
 
-        eventBus.publish(
-            SystemEvent.EngineStarted
+
+
+        engineMonitor.updateHealth(
+
+            EngineHealth.Healthy
+
         )
 
 
+
+
+
+        runtimeObserver.observe(
+
+            "RUNNING"
+
+        )
+
+
+
+
+
+        eventBus.publish(
+
+            SystemEvent.EngineStarted
+
+        )
+
+
+
     }
+
+
+
+
 
 
 
@@ -92,24 +161,64 @@ class JookMaxEngine(
     fun stop() {
 
 
+
         eventBus.publish(
+
             SystemEvent.EngineStopped
+
         )
+
+
+
 
 
         lifecycleManager.stop()
 
 
+
+
+
         runtimeTracker.stop()
+
+
+
 
 
         eventDispatcher.stop()
 
 
+
+
+
         brainManager.shutdown()
 
 
+
+
+
+        engineMonitor.updateHealth(
+
+            EngineHealth.Offline
+
+        )
+
+
+
+
+
+        runtimeObserver.observe(
+
+            "STOPPED"
+
+        )
+
+
+
     }
+
+
+
+
 
 
 
@@ -117,9 +226,24 @@ class JookMaxEngine(
 
     fun pause() {
 
+
+
         lifecycleManager.pause()
 
+
+
+        runtimeObserver.observe(
+
+            "PAUSED"
+
+        )
+
+
     }
+
+
+
+
 
 
 
@@ -127,9 +251,24 @@ class JookMaxEngine(
 
     fun resume() {
 
+
+
         lifecycleManager.resume()
 
+
+
+        runtimeObserver.observe(
+
+            "RUNNING"
+
+        )
+
+
     }
+
+
+
+
 
 
 
@@ -138,13 +277,28 @@ class JookMaxEngine(
     fun reset() {
 
 
+
         lifecycleManager.reset()
+
 
 
         runtimeTracker.reset()
 
 
+
+        engineMonitor.reset()
+
+
+
+        runtimeObserver.reset()
+
+
+
     }
+
+
+
+
 
 
 
@@ -153,13 +307,19 @@ class JookMaxEngine(
     fun shutdown() {
 
 
+
         stop()
+
 
 
         coroutineScope.cancel()
 
 
+
     }
+
+
+
 
 
 }
