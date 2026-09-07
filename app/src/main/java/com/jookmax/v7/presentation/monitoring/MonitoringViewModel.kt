@@ -38,6 +38,9 @@ import javax.inject.Inject
  * MonitoringViewModel
  *  |
  *  v
+ * MonitoringStateMapper
+ *  |
+ *  v
  * MonitoringUiState
  *  |
  *  v
@@ -46,7 +49,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MonitoringViewModel @Inject constructor(
 
-    private val getPerformanceReportUseCase: GetPerformanceReportUseCase
+    private val getPerformanceReportUseCase: GetPerformanceReportUseCase,
+
+    private val monitoringStateMapper: MonitoringStateMapper
 
 ) : ViewModel() {
 
@@ -147,9 +152,9 @@ class MonitoringViewModel @Inject constructor(
 
                 _state.value =
 
-                    MonitoringUiState.Available(
+                    monitoringStateMapper.map(
 
-                        report = report
+                        report
 
                     )
 
@@ -161,11 +166,9 @@ class MonitoringViewModel @Inject constructor(
 
                 _state.value =
 
-                    MonitoringUiState.Error(
+                    monitoringStateMapper.mapError(
 
-                        message =
-                            exception.message
-                                ?: "Unknown monitoring error"
+                        exception
 
                     )
 
