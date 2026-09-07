@@ -39,8 +39,6 @@ class MarketLocalDataSource @Inject constructor(
 
 
 
-
-
     suspend fun saveMarketPrice(
         price: MarketPrice
     ) {
@@ -55,8 +53,6 @@ class MarketLocalDataSource @Inject constructor(
         )
 
     }
-
-
 
 
 
@@ -77,6 +73,16 @@ class MarketLocalDataSource @Inject constructor(
     }
 
 
+
+
+
+    override suspend fun getLatestPrice(): MarketPrice? {
+
+
+        return getMarketPrice()
+
+
+    }
 
 
 
@@ -105,8 +111,6 @@ class MarketLocalDataSource @Inject constructor(
 
 
     }
-
-
 
 
 
@@ -147,8 +151,6 @@ class MarketLocalDataSource @Inject constructor(
 
 
     }
-
-
 
 
 

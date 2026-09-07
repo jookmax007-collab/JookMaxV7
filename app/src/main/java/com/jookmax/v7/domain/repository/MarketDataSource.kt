@@ -1,8 +1,11 @@
 package com.jookmax.v7.domain.repository
 
+
 import com.jookmax.v7.core.model.Candle
+import com.jookmax.v7.core.model.MarketPrice
 import com.jookmax.v7.core.model.MarketQuote
 import com.jookmax.v7.core.model.Tick
+
 
 
 /**
@@ -14,6 +17,9 @@ import com.jookmax.v7.core.model.Tick
  * - Local cache
  */
 interface MarketDataSource {
+
+
+    suspend fun getLatestPrice(): MarketPrice?
 
 
     suspend fun getLatestQuote(): MarketQuote?

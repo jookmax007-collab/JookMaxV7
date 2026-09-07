@@ -17,36 +17,25 @@ import com.jookmax.v7.domain.repository.MarketDataSource
 import javax.inject.Inject
 
 
-
 class MarketRemoteDataSource @Inject constructor(
-
 
     private val apiService: MarketApiService,
 
-
     private val marketRemoteMapper: MarketRemoteMapper,
-
 
     private val marketQuoteMapper: MarketQuoteMapper,
 
-
     private val tickMapper: TickMapper,
 
-
     private val candleMapper: CandleMapper
-
 
 ) : MarketDataSource {
 
 
 
-
-
     suspend fun fetchMarketPrice(): MarketPrice? {
 
-
         return try {
-
 
             apiService
                 .getLatestMarketPrice()
@@ -56,26 +45,27 @@ class MarketRemoteDataSource @Inject constructor(
 
                 }
 
-
         } catch (exception: Exception) {
-
 
             null
 
         }
 
+    }
+
+
+
+    override suspend fun getLatestPrice(): MarketPrice? {
+
+        return fetchMarketPrice()
 
     }
 
 
 
-
-
     suspend fun fetchMarketQuote(): MarketQuote? {
 
-
         return try {
-
 
             apiService
                 .getMarketQuote()
@@ -85,26 +75,27 @@ class MarketRemoteDataSource @Inject constructor(
 
                 }
 
-
         } catch (exception: Exception) {
-
 
             null
 
         }
 
+    }
+
+
+
+    override suspend fun getLatestQuote(): MarketQuote? {
+
+        return fetchMarketQuote()
 
     }
 
 
 
-
-
     suspend fun fetchLatestTick(): Tick? {
 
-
         return try {
-
 
             apiService
                 .getLatestTick()
@@ -114,34 +105,17 @@ class MarketRemoteDataSource @Inject constructor(
 
                 }
 
-
         } catch (exception: Exception) {
-
 
             null
 
         }
 
-
     }
-
-
-
-
-
-    override suspend fun getLatestQuote(): MarketQuote? {
-
-
-        return fetchMarketQuote()
-
-    }
-
-
 
 
 
     override suspend fun getLatestTick(): Tick? {
-
 
         return fetchLatestTick()
 
@@ -149,13 +123,9 @@ class MarketRemoteDataSource @Inject constructor(
 
 
 
-
-
     override suspend fun getCandles(): List<Candle> {
 
-
         return try {
-
 
             apiService
                 .getCandles()
@@ -165,33 +135,25 @@ class MarketRemoteDataSource @Inject constructor(
 
                 }
 
-
         } catch (exception: Exception) {
-
 
             emptyList()
 
         }
 
-
     }
-
-
 
 
 
     suspend fun fetchMarketHistory(): MarketHistory? {
 
-
         val candles = getCandles()
-
 
         if (candles.isEmpty()) {
 
             return null
 
         }
-
 
 
         return MarketHistory(
@@ -204,15 +166,11 @@ class MarketRemoteDataSource @Inject constructor(
 
         )
 
-
     }
 
 
 
-
-
     fun isConnected(): Boolean {
-
 
         return true
 
@@ -220,10 +178,7 @@ class MarketRemoteDataSource @Inject constructor(
 
 
 
-
-
     fun disconnect() {
-
 
         // Future WebSocket close
 
