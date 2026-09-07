@@ -4,7 +4,11 @@ package com.jookmax.v7.core.events.subscriber
 import com.jookmax.v7.core.events.EngineEvent
 import com.jookmax.v7.core.events.EventSubscriber
 import com.jookmax.v7.core.events.SystemEvent
+
 import com.jookmax.v7.core.logging.Logger
+
+import com.jookmax.v7.core.monitoring.EngineHealth
+import com.jookmax.v7.core.monitoring.EngineMonitor
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +31,12 @@ import javax.inject.Singleton
 @Singleton
 class EngineEventSubscriber @Inject constructor(
 
-    private val logger: Logger
+
+    private val logger: Logger,
+
+
+    private val engineMonitor: EngineMonitor
+
 
 ) : EventSubscriber {
 
@@ -36,8 +45,11 @@ class EngineEventSubscriber @Inject constructor(
 
 
     override suspend fun onEvent(
+
         event: EngineEvent
+
     ) {
+
 
 
         when (event) {
@@ -89,7 +101,9 @@ class EngineEventSubscriber @Inject constructor(
 
             else -> Unit
 
+
         }
+
 
 
     }
@@ -105,6 +119,7 @@ class EngineEventSubscriber @Inject constructor(
     private fun handleEngineStarted() {
 
 
+
         logger.info(
 
             tag = "EngineEventSubscriber",
@@ -112,6 +127,16 @@ class EngineEventSubscriber @Inject constructor(
             message = "Engine started event received"
 
         )
+
+
+
+
+        engineMonitor.updateHealth(
+
+            EngineHealth.Healthy
+
+        )
+
 
 
     }
@@ -127,6 +152,7 @@ class EngineEventSubscriber @Inject constructor(
     private fun handleEngineStopped() {
 
 
+
         logger.info(
 
             tag = "EngineEventSubscriber",
@@ -134,6 +160,16 @@ class EngineEventSubscriber @Inject constructor(
             message = "Engine stopped event received"
 
         )
+
+
+
+
+        engineMonitor.updateHealth(
+
+            EngineHealth.Offline
+
+        )
+
 
 
     }
@@ -163,6 +199,23 @@ class EngineEventSubscriber @Inject constructor(
             throwable = event.throwable
 
         )
+
+
+
+
+
+        engineMonitor.updateHealth(
+
+            EngineHealth.Error(
+
+                message = event.message,
+
+                throwable = event.throwable
+
+            )
+
+        )
+
 
 
     }
