@@ -11,6 +11,23 @@ import javax.inject.Singleton
 
 
 
+/**
+ * Market Intelligence Brain
+ *
+ * Flow:
+ *
+ * MarketCandle
+ *       |
+ *       v
+ * MarketBrain
+ *       |
+ *       v
+ * TechnicalAnalyzer
+ *       |
+ *       v
+ * MarketAnalysis
+ *
+ */
 @Singleton
 class MarketBrain @Inject constructor(
 
@@ -23,14 +40,18 @@ class MarketBrain @Inject constructor(
     private var lastMarketPrice: MarketPrice? = null
 
 
-    private var candles: List<MarketCandle> = emptyList()
+
+    private val candles =
+        mutableListOf<MarketCandle>()
 
 
 
 
 
     fun updateMarket(
+
         price: MarketPrice
+
     ) {
 
         lastMarketPrice = price
@@ -42,13 +63,40 @@ class MarketBrain @Inject constructor(
 
 
 
-    fun updateCandles(
-        marketCandles: List<MarketCandle>
+
+    /**
+     * Receive closed candle from market pipeline
+     */
+    fun updateCandle(
+
+        candle: MarketCandle
+
     ) {
 
-        candles = marketCandles
+
+        candles.add(candle)
+
+
+
+        /*
+         * Keep analysis window stable
+         *
+         * 500 candles is enough for:
+         * RSI
+         * MA
+         * MACD
+         * ATR
+         */
+        if (candles.size > 500) {
+
+            candles.removeAt(0)
+
+        }
+
 
     }
+
+
 
 
 
@@ -66,12 +114,15 @@ class MarketBrain @Inject constructor(
 
 
 
+
+
+
     fun analyze(): MarketAnalysis {
 
 
         return technicalAnalyzer.analyze(
 
-            candles
+            candles.toList()
 
         )
 
@@ -83,12 +134,15 @@ class MarketBrain @Inject constructor(
 
 
 
-    fun reset(){
+
+
+    fun reset() {
 
 
         lastMarketPrice = null
 
-        candles = emptyList()
+
+        candles.clear()
 
 
     }

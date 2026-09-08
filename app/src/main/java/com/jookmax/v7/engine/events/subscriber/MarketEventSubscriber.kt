@@ -2,7 +2,6 @@ package com.jookmax.v7.engine.events.subscriber
 
 
 import com.jookmax.v7.brain.BrainManager
-
 import com.jookmax.v7.brain.market.MarketBrain
 
 import com.jookmax.v7.core.events.EngineEvent
@@ -32,7 +31,18 @@ import javax.inject.Singleton
  * MarketBrain
  *      |
  *      v
- * BrainManager Pipeline
+ * Brain Pipeline
+ *
+ *
+ * Candle Flow:
+ *
+ * CandleClosed
+ *      |
+ *      v
+ * MarketBrain.updateCandle()
+ *      |
+ *      v
+ * TechnicalAnalyzer
  *
  */
 @Singleton
@@ -64,9 +74,7 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
-
         when(event) {
-
 
 
             is MarketEvent.PriceUpdated -> {
@@ -80,8 +88,6 @@ class MarketEventSubscriber @Inject constructor(
 
 
             }
-
-
 
 
 
@@ -101,8 +107,6 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
-
-
             is MarketEvent.CandleUpdated -> {
 
 
@@ -117,13 +121,10 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
-
-
             else -> Unit
 
 
         }
-
 
 
     }
@@ -141,7 +142,6 @@ class MarketEventSubscriber @Inject constructor(
         event: MarketEvent.PriceUpdated
 
     ) {
-
 
 
         val price = event.marketPrice
@@ -184,14 +184,17 @@ class MarketEventSubscriber @Inject constructor(
 
 
         /*
-            Start brain decision pipeline
+            Decision Pipeline
 
             MarketBrain
-                ->
+                |
+                v
             RiskBrain
-                ->
+                |
+                v
             DecisionEngine
-                ->
+                |
+                v
             DecisionEvent
         */
 
@@ -217,8 +220,30 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
-
         val candle = event.candle
+
+
+
+
+
+        /*
+            Candle Stream
+
+            CandleClosed
+                  |
+                  v
+            MarketBrain
+                  |
+                  v
+            TechnicalAnalyzer
+        */
+
+
+        marketBrain.updateCandle(
+
+            candle
+
+        )
 
 
 
@@ -245,17 +270,6 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
-        /*
-            Future:
-
-            1. Technical indicators
-            2. Market condition update
-            3. Decision pipeline
-
-        */
-
-
-
     }
 
 
@@ -271,7 +285,6 @@ class MarketEventSubscriber @Inject constructor(
         event: MarketEvent.CandleUpdated
 
     ) {
-
 
 
         val candle = event.candle
@@ -302,6 +315,8 @@ class MarketEventSubscriber @Inject constructor(
 
 
     }
+
+
 
 
 
