@@ -12,10 +12,9 @@ import javax.inject.Inject
  *
  * Domain layer entry point for monitoring analytics.
  *
- * Future connections:
- * - Dashboard UI
- * - Engine optimization
- * - Learning system
+ * Includes:
+ * - Runtime metrics
+ * - Decision analytics
  */
 class GetPerformanceReportUseCase @Inject constructor(
 
@@ -34,28 +33,82 @@ class GetPerformanceReportUseCase @Inject constructor(
         return PerformanceReport(
 
 
+
             totalProcessedEvents =
+
                 metricsAnalytics.getTotalProcessedEvents(),
 
 
 
+
+
             totalFailedEvents =
+
                 metricsAnalytics.getTotalFailedEvents(),
 
 
 
+
+
             averageLatencyMs =
+
                 metricsAnalytics.getAverageLatency(),
 
 
 
+
+
             failureRate =
+
                 metricsAnalytics.getFailureRate(),
 
 
 
+
+
             currentEngineState =
-                metricsAnalytics.getLatestState()
+
+                metricsAnalytics.getLatestState(),
+
+
+
+
+
+            totalDecisions =
+
+                metricsAnalytics.getTotalDecisions(),
+
+
+
+
+
+            buyDecisions =
+
+                metricsAnalytics.getBuyDecisions(),
+
+
+
+
+
+            sellDecisions =
+
+                metricsAnalytics.getSellDecisions(),
+
+
+
+
+
+            holdDecisions =
+
+                metricsAnalytics.getHoldDecisions(),
+
+
+
+
+
+            averageDecisionConfidence =
+
+                metricsAnalytics.getAverageDecisionConfidence()
 
 
 
