@@ -4,6 +4,7 @@ package com.jookmax.v7.brain.pipeline
 import com.jookmax.v7.analysis.model.MarketAnalysis
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
 import com.jookmax.v7.brain.decision.DecisionEngine
+import com.jookmax.v7.brain.intelligence.IntelligenceAdvisor
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.learning.LearningExperience
 import com.jookmax.v7.brain.learning.LearningExperienceManager
@@ -35,7 +36,10 @@ class BrainPipeline @Inject constructor(
     private val confidenceFeedbackCollector: ConfidenceFeedbackCollector,
 
 
-    private val learningExperienceManager: LearningExperienceManager
+    private val learningExperienceManager: LearningExperienceManager,
+
+
+    private val intelligenceAdvisor: IntelligenceAdvisor
 
 
 ) {
@@ -102,11 +106,47 @@ class BrainPipeline @Inject constructor(
 
 
 
+        val intelligenceAdjustment =
+
+            intelligenceAdvisor.calculateAdjustment()
+
+
+
+
+
+        val adjustedConfidence =
+
+            (
+
+                decision.confidence *
+
+                        intelligenceAdjustment
+
+                )
+
+                .coerceIn(0.0, 1.0)
+
+
+
+
+
+        val adjustedDecision =
+
+            decision.copy(
+
+                confidence = adjustedConfidence
+
+            )
+
+
+
+
+
         val experience =
 
             LearningExperience.from(
 
-                decisionResult = decision,
+                decisionResult = adjustedDecision,
 
                 riskDecision = context.riskDecision,
 
@@ -134,7 +174,7 @@ class BrainPipeline @Inject constructor(
 
             context.copy(
 
-                decisionResult = decision
+                decisionResult = adjustedDecision
 
             )
 
@@ -148,7 +188,7 @@ class BrainPipeline @Inject constructor(
 
             context = finalContext,
 
-            decision = decision
+            decision = adjustedDecision
 
         )
 
