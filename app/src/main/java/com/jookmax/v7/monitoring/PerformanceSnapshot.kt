@@ -1,7 +1,6 @@
 package com.jookmax.v7.monitoring
 
 
-
 /**
  * Represents a snapshot of JookMax engine performance.
  *
@@ -9,7 +8,7 @@ package com.jookmax.v7.monitoring
  * - Runtime analytics
  * - Monitoring dashboard
  * - Performance history
- * - Future optimization systems
+ * - Decision analytics visualization
  */
 data class PerformanceSnapshot(
 
@@ -29,14 +28,14 @@ data class PerformanceSnapshot(
 
 
     /**
-     * Number of processed engine events.
+     * Number of processed events.
      */
     val processedEvents: Long = 0,
 
 
 
     /**
-     * Number of failed engine events.
+     * Number of failed events.
      */
     val failedEvents: Long = 0,
 
@@ -57,7 +56,7 @@ data class PerformanceSnapshot(
 
 
     /**
-     * Total generated trading decisions.
+     * Total generated decisions.
      */
     val totalDecisions: Long = 0,
 
@@ -85,7 +84,7 @@ data class PerformanceSnapshot(
 
 
     /**
-     * Average confidence of generated decisions.
+     * Average confidence of decisions.
      */
     val averageDecisionConfidence: Double = 0.0,
 
