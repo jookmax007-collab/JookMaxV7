@@ -1,20 +1,57 @@
 package com.jookmax.v7.brain.market
 
+
+import com.jookmax.v7.analysis.engine.TechnicalAnalyzer
+import com.jookmax.v7.analysis.model.MarketAnalysis
+import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.core.model.MarketPrice
 
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MarketBrain {
+
+
+@Singleton
+class MarketBrain @Inject constructor(
+
+    private val technicalAnalyzer: TechnicalAnalyzer
+
+) {
+
 
 
     private var lastMarketPrice: MarketPrice? = null
 
 
+    private var candles: List<MarketCandle> = emptyList()
 
-    fun updateMarket(price: MarketPrice) {
+
+
+
+
+    fun updateMarket(
+        price: MarketPrice
+    ) {
 
         lastMarketPrice = price
 
     }
+
+
+
+
+
+
+    fun updateCandles(
+        marketCandles: List<MarketCandle>
+    ) {
+
+        candles = marketCandles
+
+    }
+
+
+
 
 
 
@@ -26,43 +63,36 @@ class MarketBrain {
 
 
 
+
+
+
     fun analyze(): MarketAnalysis {
 
-        val price = lastMarketPrice
+
+        return technicalAnalyzer.analyze(
+
+            candles
+
+        )
 
 
-        return if (price == null) {
-
-            MarketAnalysis(
-                status = "NO_DATA",
-                confidence = 0.0
-            )
-
-        } else {
-
-            MarketAnalysis(
-                status = "READY",
-                confidence = 0.5
-            )
-
-        }
     }
+
+
+
 
 
 
     fun reset(){
 
+
         lastMarketPrice = null
 
+        candles = emptyList()
+
+
     }
+
+
+
 }
-
-
-
-data class MarketAnalysis(
-
-    val status: String,
-
-    val confidence: Double
-
-)

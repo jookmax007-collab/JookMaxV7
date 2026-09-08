@@ -53,6 +53,7 @@ class BrainManager @Inject constructor(
 
 
 
+
     fun initialize() {
 
 
@@ -74,7 +75,11 @@ class BrainManager @Inject constructor(
 
 
 
+
+
         initialized = true
+
+
 
 
 
@@ -136,9 +141,12 @@ class BrainManager @Inject constructor(
 
 
 
+
         val executionResult =
 
             brainPipeline.execute()
+
+
 
 
 
@@ -154,9 +162,12 @@ class BrainManager @Inject constructor(
 
 
 
+
         val decision =
 
             executionResult.decision
+
+
 
 
 
@@ -176,6 +187,40 @@ class BrainManager @Inject constructor(
 
 
         )
+
+
+
+
+
+
+
+
+
+        val marketScore =
+
+
+            when {
+
+
+                context.marketAnalysis.trend == "BULLISH" ->
+
+                    0.8
+
+
+
+                context.marketAnalysis.trend == "BEARISH" ->
+
+                    0.2
+
+
+
+                else ->
+
+                    0.5
+
+
+            }
+
 
 
 
@@ -216,9 +261,7 @@ class BrainManager @Inject constructor(
 
 
 
-                marketScore =
-
-                    context.marketAnalysis.confidence,
+                marketScore = marketScore,
 
 
 
@@ -275,6 +318,7 @@ class BrainManager @Inject constructor(
 
 
 
+
         marketBrain.reset()
 
 
@@ -293,7 +337,11 @@ class BrainManager @Inject constructor(
 
 
 
+
+
         initialized = false
+
+
 
 
 

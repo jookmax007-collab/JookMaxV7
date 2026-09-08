@@ -1,16 +1,9 @@
 package com.jookmax.v7.di
 
 
-import com.jookmax.v7.brain.BrainManager
-import com.jookmax.v7.brain.pipeline.BrainPipeline
-
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.learning.LearningBrain
-import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.risk.RiskBrain
-
-import com.jookmax.v7.core.events.EventBus
-import com.jookmax.v7.core.logging.Logger
 
 import dagger.Module
 import dagger.Provides
@@ -20,18 +13,11 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 
+
 @Module
 @InstallIn(SingletonComponent::class)
 object BrainModule {
 
-
-    @Provides
-    @Singleton
-    fun provideMarketBrain(): MarketBrain {
-
-        return MarketBrain()
-
-    }
 
 
     @Provides
@@ -43,6 +29,9 @@ object BrainModule {
     }
 
 
+
+
+
     @Provides
     @Singleton
     fun provideDecisionEngine(): DecisionEngine {
@@ -50,6 +39,9 @@ object BrainModule {
         return DecisionEngine()
 
     }
+
+
+
 
 
     @Provides
@@ -61,73 +53,5 @@ object BrainModule {
     }
 
 
-    @Provides
-    @Singleton
-    fun provideBrainPipeline(
-
-        marketBrain: MarketBrain,
-
-        riskBrain: RiskBrain,
-
-        decisionEngine: DecisionEngine,
-
-        learningBrain: LearningBrain
-
-    ): BrainPipeline {
-
-        return BrainPipeline(
-
-            marketBrain = marketBrain,
-
-            riskBrain = riskBrain,
-
-            decisionEngine = decisionEngine,
-
-            learningBrain = learningBrain
-
-        )
-
-    }
-
-
-    @Provides
-    @Singleton
-    fun provideBrainManager(
-
-        marketBrain: MarketBrain,
-
-        riskBrain: RiskBrain,
-
-        decisionEngine: DecisionEngine,
-
-        learningBrain: LearningBrain,
-
-        logger: Logger,
-
-        eventBus: EventBus,
-
-        brainPipeline: BrainPipeline
-
-    ): BrainManager {
-
-        return BrainManager(
-
-            marketBrain = marketBrain,
-
-            riskBrain = riskBrain,
-
-            decisionEngine = decisionEngine,
-
-            learningBrain = learningBrain,
-
-            logger = logger,
-
-            eventBus = eventBus,
-
-            brainPipeline = brainPipeline
-
-        )
-
-    }
 
 }

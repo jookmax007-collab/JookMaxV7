@@ -1,7 +1,9 @@
 package com.jookmax.v7.brain.pipeline
 
 
+import com.jookmax.v7.analysis.model.MarketAnalysis
 import com.jookmax.v7.brain.decision.DecisionEngine
+import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.risk.RiskBrain
@@ -41,37 +43,52 @@ class BrainPipeline @Inject constructor(
 
 
 
-        val decision = decisionEngine.decide(
+        val marketScore =
 
+            calculateMarketScore(
 
-            marketScore =
+                context.marketAnalysis
 
-                context.marketAnalysis.confidence,
-
-
-
-            riskAllowed =
-
-                context.riskResult.allowed,
-
-
-
-            learningReward =
-
-                context.learningReward
-
-
-        )
+            )
 
 
 
 
 
-        val finalContext = context.copy(
+        val decision =
 
-            decisionResult = decision
+            decisionEngine.decide(
 
-        )
+
+                marketScore = marketScore,
+
+
+                riskAllowed =
+
+                    context.riskResult.allowed,
+
+
+                learningReward =
+
+                    context.learningReward
+
+
+            )
+
+
+
+
+
+
+
+        val finalContext =
+
+            context.copy(
+
+                decisionResult = decision
+
+            )
+
 
 
 
@@ -87,6 +104,7 @@ class BrainPipeline @Inject constructor(
 
 
         )
+
 
     }
 
@@ -114,9 +132,13 @@ class BrainPipeline @Inject constructor(
 
             riskBrain.evaluateRisk(
 
-                marketVolatility = 0.5
+                marketVolatility =
+
+                    marketAnalysis.volatility
 
             )
+
+
 
 
 
@@ -125,9 +147,14 @@ class BrainPipeline @Inject constructor(
         val learningReward =
 
             learningBrain
+
                 .getLastResult()
+
                 ?.reward
+
                 ?: 0.0
+
+
 
 
 
@@ -146,6 +173,55 @@ class BrainPipeline @Inject constructor(
 
 
         )
+
+
+    }
+
+
+
+
+
+
+
+
+
+    private fun calculateMarketScore(
+
+        analysis: MarketAnalysis
+
+    ): Double {
+
+
+
+        return when {
+
+
+            analysis.trend == "BULLISH" &&
+
+                    analysis.rsi < 70 ->
+
+                0.8
+
+
+
+
+
+            analysis.trend == "BEARISH" &&
+
+                    analysis.rsi > 30 ->
+
+                0.2
+
+
+
+
+
+            else ->
+
+                0.5
+
+
+        }
 
 
     }
