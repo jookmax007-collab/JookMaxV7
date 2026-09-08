@@ -4,6 +4,7 @@ package com.jookmax.v7.brain.intelligence
 import com.jookmax.v7.brain.confidence.ConfidenceAnalytics
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackManager
 import com.jookmax.v7.brain.learning.LearningAnalytics
+import com.jookmax.v7.brain.intelligence.feedback.IntelligenceFeedbackAnalyzer
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,10 +18,11 @@ import javax.inject.Singleton
  *
  * Confidence Intelligence
  * Learning Intelligence
+ * Feedback Intelligence
  *
  * Output:
  *
- * Decision Adjustment Factor
+ * Final Decision Adjustment Factor
  *
  */
 @Singleton
@@ -33,7 +35,10 @@ class IntelligenceAdvisor @Inject constructor(
     private val confidenceFeedbackManager: ConfidenceFeedbackManager,
 
 
-    private val learningAnalytics: LearningAnalytics
+    private val learningAnalytics: LearningAnalytics,
+
+
+    private val feedbackAnalyzer: IntelligenceFeedbackAnalyzer
 
 
 ) {
@@ -41,6 +46,7 @@ class IntelligenceAdvisor @Inject constructor(
 
 
     fun calculateAdjustment(): Double {
+
 
 
         val confidenceAdjustment =
@@ -55,11 +61,15 @@ class IntelligenceAdvisor @Inject constructor(
 
 
 
+
+
         val learningPerformance =
 
             learningAnalytics
 
                 .calculatePerformanceScore()
+
+
 
 
 
@@ -76,9 +86,13 @@ class IntelligenceAdvisor @Inject constructor(
 
 
 
+
+
                 learningPerformance < 0.35 ->
 
                     0.95
+
+
 
 
 
@@ -92,11 +106,31 @@ class IntelligenceAdvisor @Inject constructor(
 
 
 
+
+
+
+
+        val feedbackAdjustment =
+
+            feedbackAnalyzer
+
+                .calculateAdjustment()
+
+
+
+
+
+
+
+
+
         return (
 
                 confidenceAdjustment *
 
-                        learningAdjustment
+                learningAdjustment *
+
+                feedbackAdjustment
 
                 )
 
