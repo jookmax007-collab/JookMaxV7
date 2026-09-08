@@ -8,6 +8,7 @@ import com.jookmax.v7.core.events.EventSubscriber
 import com.jookmax.v7.core.events.MarketEvent
 
 import com.jookmax.v7.core.logging.Logger
+
 import com.jookmax.v7.monitoring.RuntimeObserver
 
 import javax.inject.Inject
@@ -18,13 +19,15 @@ import javax.inject.Singleton
 /**
  * Handles market related engine events.
  *
- * Flow:
+ * Responsibilities:
  *
- * MarketEvent
- *      ↓
- * MarketEventSubscriber
- *      ↓
- * MarketBrain
+ * - Receive market events
+ * - Update MarketBrain
+ * - Notify runtime monitoring
+ * - Prepare pipeline for:
+ *      Technical Analysis
+ *      Risk Evaluation
+ *      Decision Engine
  *
  */
 @Singleton
@@ -53,38 +56,70 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
-        when (event) {
+
+        when(event) {
+
 
 
             is MarketEvent.PriceUpdated -> {
 
-                handlePriceUpdate(event)
+
+                handlePriceUpdate(
+
+                    event
+
+                )
+
 
             }
+
+
+
 
 
 
             is MarketEvent.CandleClosed -> {
 
-                handleCandleClosed(event)
+
+                handleCandleClosed(
+
+                    event
+
+                )
+
 
             }
+
+
+
 
 
 
             is MarketEvent.CandleUpdated -> {
 
-                handleCandleUpdate(event)
+
+                handleCandleUpdate(
+
+                    event
+
+                )
+
 
             }
 
 
 
+
+
             else -> Unit
+
 
         }
 
+
+
     }
+
 
 
 
@@ -99,7 +134,10 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
+
         val price = event.marketPrice
+
+
 
 
 
@@ -111,8 +149,6 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
-        val analysis = marketBrain.analyze()
-
 
 
         logger.info(
@@ -120,9 +156,11 @@ class MarketEventSubscriber @Inject constructor(
             tag = "MarketEventSubscriber",
 
             message =
-                "Price updated: ${price.symbol} ${price.price} | Analysis=${analysis.status}"
+                "Market price updated: ${price.symbol} ${price.price}"
 
         )
+
+
 
 
 
@@ -131,6 +169,7 @@ class MarketEventSubscriber @Inject constructor(
             "MARKET_PRICE_UPDATED"
 
         )
+
 
 
     }
@@ -149,7 +188,10 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
+
         val candle = event.candle
+
+
 
 
 
@@ -164,11 +206,28 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
+
         runtimeObserver.observe(
 
             "CANDLE_CLOSED"
 
         )
+
+
+
+        /*
+         Future pipeline:
+
+         1. TechnicalAnalyzer
+         2. MarketBrain.analyze()
+         3. RiskBrain.evaluateRisk()
+         4. DecisionEngine.decide()
+         5. DecisionAnalytics persistence
+
+        */
+
+
 
     }
 
@@ -186,7 +245,10 @@ class MarketEventSubscriber @Inject constructor(
     ) {
 
 
+
         val candle = event.candle
+
+
 
 
 
@@ -201,13 +263,18 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
+
         runtimeObserver.observe(
 
             "CANDLE_UPDATED"
 
         )
 
+
+
     }
+
 
 
 }
