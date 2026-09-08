@@ -9,7 +9,6 @@ import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.risk.RiskEngine
 import com.jookmax.v7.brain.risk.RiskProfile
 
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,6 +42,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         val marketScore =
 
             calculateMarketScore(
@@ -63,10 +64,14 @@ class BrainPipeline @Inject constructor(
                 marketScore = marketScore,
 
 
-                riskAllowed = true,
+                riskAllowed =
+
+                    context.riskDecision.positionSize > 0.0,
 
 
-                learningReward = context.learningReward
+                learningReward =
+
+                    context.learningReward
 
 
             )
@@ -89,9 +94,12 @@ class BrainPipeline @Inject constructor(
 
         return BrainExecutionResult(
 
+
             context = finalContext,
 
+
             decision = decision
+
 
         )
 
@@ -130,12 +138,12 @@ class BrainPipeline @Inject constructor(
                 volatility = marketAnalysis.volatility,
 
 
-                isLong = marketAnalysis.trend == "BULLISH"
+                isLong =
+
+                    marketAnalysis.trend == "BULLISH"
 
 
             )
-
-
 
 
 
@@ -150,7 +158,6 @@ class BrainPipeline @Inject constructor(
                 ?.reward
 
                 ?: 0.0
-
 
 
 
@@ -225,7 +232,6 @@ class BrainPipeline @Inject constructor(
 
 
     }
-
 
 
 }
