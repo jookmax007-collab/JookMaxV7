@@ -1,6 +1,7 @@
 package com.jookmax.v7.di
 
 
+import com.jookmax.v7.brain.confidence.ConfidenceAnalytics
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackManager
 import com.jookmax.v7.brain.confidence.ConfidenceFusionEngine
@@ -73,6 +74,21 @@ object BrainModule {
             feedbackManager = feedbackManager
 
         )
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideConfidenceAnalytics():
+
+            ConfidenceAnalytics {
+
+
+        return ConfidenceAnalytics()
 
     }
 
