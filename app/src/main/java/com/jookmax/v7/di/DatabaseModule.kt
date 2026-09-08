@@ -3,7 +3,10 @@ package com.jookmax.v7.di
 
 import android.content.Context
 import androidx.room.Room
+
 import com.jookmax.v7.data.local.dao.MarketDao
+import com.jookmax.v7.data.local.dao.DecisionDao
+
 import com.jookmax.v7.data.local.database.JookMaxDatabase
 
 import dagger.Module
@@ -44,6 +47,8 @@ object DatabaseModule {
 
 
 
+
+
     @Provides
     @Singleton
     fun provideMarketDao(
@@ -52,6 +57,22 @@ object DatabaseModule {
 
 
         return database.marketDao()
+
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideDecisionDao(
+        database: JookMaxDatabase
+    ): DecisionDao {
+
+
+        return database.decisionDao()
 
 
     }
