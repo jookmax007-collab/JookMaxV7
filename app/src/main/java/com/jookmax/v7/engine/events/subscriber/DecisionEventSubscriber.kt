@@ -53,7 +53,6 @@ class DecisionEventSubscriber @Inject constructor(
     ) {
 
 
-
         when (event) {
 
 
@@ -112,13 +111,13 @@ class DecisionEventSubscriber @Inject constructor(
             confidence = decision.confidence,
 
 
-            marketScore = 0.0,
+            marketScore = event.marketScore,
 
 
-            riskAllowed = true,
+            riskAllowed = event.riskAllowed,
 
 
-            learningReward = 0.0,
+            learningReward = event.learningReward,
 
 
             timestamp = event.timestamp

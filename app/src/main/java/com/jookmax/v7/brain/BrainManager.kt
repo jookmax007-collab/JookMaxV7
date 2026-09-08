@@ -212,7 +212,13 @@ class BrainManager @Inject constructor(
 
                 ),
 
-                decision = decision
+                decision = decision,
+
+                marketScore = marketAnalysis.confidence,
+
+                riskAllowed = riskResult.allowed,
+
+                learningReward = learningReward
 
             )
 

@@ -1,7 +1,9 @@
 package com.jookmax.v7.core.events
 
+
 import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.core.model.Symbol
+
 
 
 /**
@@ -33,11 +35,33 @@ sealed class DecisionEvent(
      */
     data class DecisionGenerated(
 
+
         val symbol: Symbol,
+
 
         val decision: DecisionResult,
 
+
+        /**
+         * Market confidence score used for decision.
+         */
+        val marketScore: Double,
+
+
+        /**
+         * Risk permission state.
+         */
+        val riskAllowed: Boolean,
+
+
+        /**
+         * Learning reward used during decision.
+         */
+        val learningReward: Double,
+
+
         val timestamp: Long = System.currentTimeMillis()
+
 
     ) : DecisionEvent()
 

@@ -28,17 +28,21 @@ object DecisionMapper {
 
             confidence = event.decision.confidence,
 
-            marketScore = event.decision.confidence,
+            marketScore = event.marketScore,
 
-            riskAllowed = true,
+            riskAllowed = event.riskAllowed,
 
-            learningReward = 0.0,
+            learningReward = event.learningReward,
 
             timestamp = event.timestamp
 
         )
 
     }
+
+
+
+
 
 
 
@@ -53,11 +57,13 @@ object DecisionMapper {
 
         return DecisionEvent.DecisionGenerated(
 
+
             symbol = Symbol(
 
                 code = entity.symbol
 
             ),
+
 
 
             decision = DecisionResult(
@@ -73,7 +79,18 @@ object DecisionMapper {
             ),
 
 
+
+            marketScore = entity.marketScore,
+
+
+            riskAllowed = entity.riskAllowed,
+
+
+            learningReward = entity.learningReward,
+
+
             timestamp = entity.timestamp
+
 
         )
 
