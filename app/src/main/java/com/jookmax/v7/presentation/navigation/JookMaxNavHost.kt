@@ -6,7 +6,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
+import androidx.hilt.navigation.compose.hiltViewModel
+
 import com.jookmax.v7.presentation.market.ui.MarketScreen
+import com.jookmax.v7.presentation.monitoring.ui.MonitoringScreen
+
 
 
 @Composable
@@ -36,14 +40,34 @@ fun JookMaxNavHost() {
 
             MarketScreen(
 
-                viewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                viewModel = hiltViewModel()
 
             )
+
 
         }
 
 
 
+
+        composable(
+
+            route = ScreenRoute.Monitoring.route
+
+        ) {
+
+
+            MonitoringScreen(
+
+                viewModel = hiltViewModel()
+
+            )
+
+
+        }
+
+
     }
+
 
 }
