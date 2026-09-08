@@ -6,28 +6,12 @@ import javax.inject.Singleton
 
 
 
-/**
- * Combines multiple confidence sources
- *
- * Sources:
- *
- * Market Confidence
- * Risk Confidence
- * Learning Confidence
- *
- * Feedback:
- *
- * Historical Decision Performance
- *
- * Output:
- *
- * Final Intelligence Confidence
- *
- */
 @Singleton
 class ConfidenceFusionEngine @Inject constructor(
 
-    private val feedbackManager: ConfidenceFeedbackManager
+    private val feedbackManager: ConfidenceFeedbackManager,
+
+    private val confidenceAnalytics: ConfidenceAnalytics
 
 ) {
 
@@ -67,11 +51,25 @@ class ConfidenceFusionEngine @Inject constructor(
 
 
 
-        val adjustment =
+        val history =
 
             feedbackManager
 
-                .calculateAdjustment()
+                .getHistory()
+
+
+
+
+
+        val adjustment =
+
+            confidenceAnalytics
+
+                .calculateAdjustment(
+
+                    history
+
+                )
 
 
 
@@ -112,7 +110,6 @@ class ConfidenceFusionEngine @Inject constructor(
 
 
     companion object {
-
 
 
         private const val MARKET_WEIGHT = 0.40

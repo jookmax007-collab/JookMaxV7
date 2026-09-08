@@ -100,14 +100,18 @@ object BrainModule {
     @Singleton
     fun provideConfidenceFusionEngine(
 
-        feedbackManager: ConfidenceFeedbackManager
+        feedbackManager: ConfidenceFeedbackManager,
+
+        confidenceAnalytics: ConfidenceAnalytics
 
     ): ConfidenceFusionEngine {
 
 
         return ConfidenceFusionEngine(
 
-            feedbackManager = feedbackManager
+            feedbackManager = feedbackManager,
+
+            confidenceAnalytics = confidenceAnalytics
 
         )
 
