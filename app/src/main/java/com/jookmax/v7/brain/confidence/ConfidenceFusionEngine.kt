@@ -15,13 +15,21 @@ import javax.inject.Singleton
  * Risk Confidence
  * Learning Confidence
  *
+ * Feedback:
+ *
+ * Historical Decision Performance
+ *
  * Output:
  *
  * Final Intelligence Confidence
  *
  */
 @Singleton
-class ConfidenceFusionEngine @Inject constructor() {
+class ConfidenceFusionEngine @Inject constructor(
+
+    private val feedbackManager: ConfidenceFeedbackManager
+
+) {
 
 
 
@@ -37,8 +45,7 @@ class ConfidenceFusionEngine @Inject constructor() {
 
 
 
-        val finalConfidence =
-
+        val baseConfidence =
 
             (
 
@@ -51,6 +58,32 @@ class ConfidenceFusionEngine @Inject constructor() {
                 +
 
                 learningConfidence * LEARNING_WEIGHT
+
+            )
+
+                .coerceIn(0.0, 1.0)
+
+
+
+
+
+        val adjustment =
+
+            feedbackManager
+
+                .calculateAdjustment()
+
+
+
+
+
+        val finalConfidence =
+
+            (
+
+                baseConfidence *
+
+                adjustment
 
             )
 
