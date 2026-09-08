@@ -15,6 +15,8 @@ class ConfidenceFeedbackManager @Inject constructor() {
 
 
 
+
+
     fun record(
 
         feedback: ConfidenceFeedback
@@ -32,12 +34,16 @@ class ConfidenceFeedbackManager @Inject constructor() {
 
 
 
+
+
     fun getHistory(): ConfidenceHistory {
 
 
         return history
 
     }
+
+
 
 
 
@@ -61,9 +67,13 @@ class ConfidenceFeedbackManager @Inject constructor() {
 
 
 
+
+
             reward < -0.5 ->
 
                 0.95
+
+
 
 
 
@@ -72,6 +82,19 @@ class ConfidenceFeedbackManager @Inject constructor() {
                 1.0
 
         }
+
+    }
+
+
+
+
+
+
+
+    fun clear() {
+
+
+        history = ConfidenceHistory()
 
     }
 

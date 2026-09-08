@@ -50,11 +50,13 @@ class ConfidenceFeedbackCollector @Inject constructor(
 
                 success =
 
-                    reward > 0
+                    reward > 0.0
 
 
 
             )
+
+
 
 
 
@@ -65,6 +67,19 @@ class ConfidenceFeedbackCollector @Inject constructor(
             feedback
 
         )
+
+    }
+
+
+
+
+
+
+
+    fun clear() {
+
+
+        feedbackManager.clear()
 
     }
 
