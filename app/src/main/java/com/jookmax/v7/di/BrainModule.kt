@@ -1,6 +1,7 @@
 package com.jookmax.v7.di
 
 
+import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackManager
 import com.jookmax.v7.brain.confidence.ConfidenceFusionEngine
 import com.jookmax.v7.brain.confidence.LearningConfidenceCalculator
@@ -23,6 +24,7 @@ import com.jookmax.v7.brain.risk.RiskMultiplier
 import com.jookmax.v7.brain.risk.StopLossCalculator
 import com.jookmax.v7.brain.risk.TakeProfitCalculator
 
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,9 +40,9 @@ object BrainModule {
 
 
 
-    // -------------------------
+    // =========================
     // Confidence Layer
-    // -------------------------
+    // =========================
 
 
     @Provides
@@ -50,6 +52,27 @@ object BrainModule {
             ConfidenceFeedbackManager {
 
         return ConfidenceFeedbackManager()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideConfidenceFeedbackCollector(
+
+        feedbackManager: ConfidenceFeedbackManager
+
+    ): ConfidenceFeedbackCollector {
+
+
+        return ConfidenceFeedbackCollector(
+
+            feedbackManager = feedbackManager
+
+        )
 
     }
 
@@ -153,9 +176,9 @@ object BrainModule {
 
 
 
-    // -------------------------
+    // =========================
     // Decision Layer
-    // -------------------------
+    // =========================
 
 
     @Provides
@@ -215,9 +238,9 @@ object BrainModule {
 
 
 
-    // -------------------------
+    // =========================
     // Risk Layer
-    // -------------------------
+    // =========================
 
 
     @Provides
@@ -369,9 +392,9 @@ object BrainModule {
 
 
 
-    // -------------------------
+    // =========================
     // Learning Layer
-    // -------------------------
+    // =========================
 
 
     @Provides
