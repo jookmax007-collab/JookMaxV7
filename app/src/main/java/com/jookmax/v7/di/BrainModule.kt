@@ -1,11 +1,15 @@
 package com.jookmax.v7.di
 
 
+import com.jookmax.v7.brain.decision.ConfidenceEngine
 import com.jookmax.v7.brain.decision.DecisionEngine
+import com.jookmax.v7.brain.decision.DecisionScoreCalculator
+import com.jookmax.v7.brain.decision.SignalAggregator
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.risk.DynamicRiskManager
 import com.jookmax.v7.brain.risk.ExposureManager
 import com.jookmax.v7.brain.risk.PositionSizer
+import com.jookmax.v7.brain.risk.RiskBrain
 import com.jookmax.v7.brain.risk.RiskEngine
 import com.jookmax.v7.brain.risk.RiskMultiplier
 import com.jookmax.v7.brain.risk.StopLossCalculator
@@ -23,6 +27,24 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object BrainModule {
+
+
+
+    @Provides
+    @Singleton
+    fun provideRiskBrain(
+        riskEngine: RiskEngine
+    ): RiskBrain {
+
+        return RiskBrain(
+
+            riskEngine = riskEngine
+
+        )
+
+    }
+
+
 
 
 
@@ -89,11 +111,8 @@ object BrainModule {
     @Provides
     @Singleton
     fun provideDynamicRiskManager(
-
         riskMultiplier: RiskMultiplier
-
     ): DynamicRiskManager {
-
 
         return DynamicRiskManager(
 
@@ -146,9 +165,62 @@ object BrainModule {
 
     @Provides
     @Singleton
-    fun provideDecisionEngine(): DecisionEngine {
+    fun provideSignalAggregator(): SignalAggregator {
 
-        return DecisionEngine()
+        return SignalAggregator()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideDecisionScoreCalculator(): DecisionScoreCalculator {
+
+        return DecisionScoreCalculator()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideConfidenceEngine(): ConfidenceEngine {
+
+        return ConfidenceEngine()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideDecisionEngine(
+
+        signalAggregator: SignalAggregator,
+
+        decisionScoreCalculator: DecisionScoreCalculator,
+
+        confidenceEngine: ConfidenceEngine
+
+    ): DecisionEngine {
+
+
+        return DecisionEngine(
+
+            signalAggregator = signalAggregator,
+
+            decisionScoreCalculator = decisionScoreCalculator,
+
+            confidenceEngine = confidenceEngine
+
+        )
 
     }
 

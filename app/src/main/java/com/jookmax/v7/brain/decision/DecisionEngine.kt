@@ -1,73 +1,165 @@
 package com.jookmax.v7.brain.decision
 
 
-class DecisionEngine {
+import javax.inject.Inject
+import javax.inject.Singleton
+
+
+
+@Singleton
+class DecisionEngine @Inject constructor(
+
+
+    private val signalAggregator: SignalAggregator,
+
+
+    private val decisionScoreCalculator: DecisionScoreCalculator,
+
+
+    private val confidenceEngine: ConfidenceEngine
+
+
+) {
+
 
 
     fun decide(
+
         marketScore: Double,
+
         riskAllowed: Boolean,
+
         learningReward: Double
+
     ): DecisionResult {
 
 
-        return when {
 
+        val aggregatedSignal =
 
-            !riskAllowed -> {
+            signalAggregator.aggregate(
 
-                DecisionResult(
-                    action = DecisionAction.HOLD,
-                    confidence = 0.0
-                )
+                marketScore = marketScore,
 
-            }
+                riskAllowed = riskAllowed,
 
+                learningReward = learningReward
 
-
-            marketScore >= 0.7 && learningReward >= 0 -> {
-
-                DecisionResult(
-                    action = DecisionAction.BUY,
-                    confidence = marketScore
-                )
-
-            }
+            )
 
 
 
-            marketScore <= 0.3 && learningReward >= 0 -> {
-
-                DecisionResult(
-                    action = DecisionAction.SELL,
-                    confidence = 1 - marketScore
-                )
-
-            }
 
 
+        val decisionScore =
 
-            else -> {
+            decisionScoreCalculator.calculate(
 
-                DecisionResult(
-                    action = DecisionAction.HOLD,
-                    confidence = 0.5
-                )
+                aggregatedSignal
 
-            }
+            )
+
+
+
+
+
+        val confidence =
+
+            confidenceEngine.calculate(
+
+                decisionScore
+
+            )
+
+
+
+
+
+        if (!decisionScore.riskApproved) {
+
+
+
+            return DecisionResult(
+
+                action = DecisionAction.HOLD,
+
+                confidence = confidence
+
+            )
+
         }
+
+
+
+
+
+        return when(decisionScore.direction) {
+
+
+
+            DecisionDirection.BULLISH ->
+
+
+
+                DecisionResult(
+
+                    action = DecisionAction.BUY,
+
+                    confidence = confidence
+
+                )
+
+
+
+
+
+            DecisionDirection.BEARISH ->
+
+
+
+                DecisionResult(
+
+                    action = DecisionAction.SELL,
+
+                    confidence = confidence
+
+                )
+
+
+
+
+
+            DecisionDirection.NEUTRAL ->
+
+
+
+                DecisionResult(
+
+                    action = DecisionAction.HOLD,
+
+                    confidence = confidence
+
+                )
+
+
+        }
+
     }
+
+
 
 
 
     fun reset() {
 
         // Future:
-        // clear decision history
+        // clear decision memory
 
     }
 
+
 }
+
 
 
 
@@ -81,6 +173,7 @@ enum class DecisionAction {
     HOLD
 
 }
+
 
 
 
