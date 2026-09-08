@@ -9,6 +9,8 @@ import com.jookmax.v7.core.logging.Logger
 
 import com.jookmax.v7.domain.analytics.DecisionAnalyticsRepository
 
+import com.jookmax.v7.monitoring.DecisionMetricsCollector
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,11 +29,11 @@ import javax.inject.Singleton
  *        v
  * DecisionEventSubscriber
  *        |
- *        v
- * DecisionAnalyticsRepository (Domain)
- *        |
- *        v
- * DecisionAnalyticsRepositoryImpl (Data)
+ *        +----------------------+
+ *        |                      |
+ *        v                      v
+ * DecisionAnalytics        DecisionMetrics
+ * Repository               Collector
  *        |
  *        v
  * Room Database
@@ -42,6 +44,9 @@ class DecisionEventSubscriber @Inject constructor(
 
 
     private val repository: DecisionAnalyticsRepository,
+
+
+    private val metricsCollector: DecisionMetricsCollector,
 
 
     private val logger: Logger
@@ -99,11 +104,28 @@ class DecisionEventSubscriber @Inject constructor(
     ) {
 
 
+
         repository.saveDecision(
 
             event
 
         )
+
+
+
+
+
+        metricsCollector.recordDecision(
+
+
+            action = event.decision.action.name,
+
+
+            confidence = event.decision.confidence
+
+
+        )
+
 
 
 
@@ -117,7 +139,7 @@ class DecisionEventSubscriber @Inject constructor(
 
             message =
 
-                "Decision stored: ${event.symbol.code} ${event.decision.action}"
+                "Decision stored and measured: ${event.symbol.code} ${event.decision.action}"
 
 
         )
