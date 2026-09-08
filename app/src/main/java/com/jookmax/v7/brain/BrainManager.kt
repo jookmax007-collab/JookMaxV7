@@ -5,7 +5,12 @@ import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.risk.RiskBrain
+
+import com.jookmax.v7.core.events.DecisionEvent
+import com.jookmax.v7.core.events.EventBus
+
 import com.jookmax.v7.core.logging.Logger
+import com.jookmax.v7.core.model.Symbol
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,12 +33,13 @@ class BrainManager @Inject constructor(
     private val learningBrain: LearningBrain,
 
 
-    private val logger: Logger
+    private val logger: Logger,
+
+
+    private val eventBus: EventBus
 
 
 ) {
-
-
 
 
 
@@ -43,10 +49,7 @@ class BrainManager @Inject constructor(
 
 
 
-
-
     fun initialize() {
-
 
 
         if (initialized) {
@@ -67,10 +70,7 @@ class BrainManager @Inject constructor(
 
 
 
-
-
         initialized = true
-
 
 
 
@@ -91,12 +91,132 @@ class BrainManager @Inject constructor(
 
 
 
-
-
     fun isReady(): Boolean {
 
 
         return initialized
+
+
+    }
+
+
+
+
+
+
+
+
+    fun process() {
+
+
+
+        if (!initialized) {
+
+
+            logger.warning(
+
+                tag = "BrainManager",
+
+                message = "Process ignored. Brain is not initialized"
+
+            )
+
+
+            return
+
+        }
+
+
+
+
+
+
+        val marketAnalysis =
+
+            marketBrain.analyze()
+
+
+
+
+
+
+        val riskResult =
+
+            riskBrain.evaluateRisk(
+
+                marketVolatility = 0.5
+
+            )
+
+
+
+
+
+
+
+        val learningReward =
+
+            learningBrain
+                .getLastResult()
+                ?.reward
+                ?: 0.0
+
+
+
+
+
+
+
+        val decision =
+
+            decisionEngine.decide(
+
+                marketScore = marketAnalysis.confidence,
+
+                riskAllowed = riskResult.allowed,
+
+                learningReward = learningReward
+
+            )
+
+
+
+
+
+
+
+        logger.info(
+
+            tag = "BrainManager",
+
+            message =
+                "Decision generated: ${decision.action}"
+
+        )
+
+
+
+
+
+
+
+        eventBus.publish(
+
+            DecisionEvent.DecisionGenerated(
+
+                symbol = Symbol(
+
+                    code = "XAUUSD",
+
+                    description = "Gold vs US Dollar"
+
+                ),
+
+                decision = decision
+
+            )
+
+        )
 
 
     }
@@ -123,8 +243,6 @@ class BrainManager @Inject constructor(
 
 
 
-
-
         marketBrain.reset()
 
 
@@ -135,8 +253,6 @@ class BrainManager @Inject constructor(
 
 
         learningBrain.reset()
-
-
 
 
 
@@ -151,77 +267,6 @@ class BrainManager @Inject constructor(
             tag = "BrainManager",
 
             message = "Brain shutdown completed"
-
-        )
-
-
-    }
-
-
-
-
-
-
-
-
-
-    fun process() {
-
-
-
-        if (!initialized) {
-
-
-
-            logger.warning(
-
-                tag = "BrainManager",
-
-                message = "Process ignored. Brain is not initialized"
-
-            )
-
-
-
-            return
-
-        }
-
-
-
-
-
-        logger.debug(
-
-            tag = "BrainManager",
-
-            message = "Brain processing pipeline started"
-
-        )
-
-
-
-
-
-        // Future pipeline:
-
-        // 1. Market analysis
-
-        // 2. Risk evaluation
-
-        // 3. Decision generation
-
-        // 4. Learning update
-
-
-
-
-
-        logger.debug(
-
-            tag = "BrainManager",
-
-            message = "Brain processing pipeline completed"
 
         )
 

@@ -1,6 +1,8 @@
 package com.jookmax.v7.engine.events.subscriber
 
 
+import com.jookmax.v7.brain.BrainManager
+
 import com.jookmax.v7.brain.market.MarketBrain
 
 import com.jookmax.v7.core.events.EngineEvent
@@ -19,15 +21,18 @@ import javax.inject.Singleton
 /**
  * Handles market related engine events.
  *
- * Responsibilities:
+ * Flow:
  *
- * - Receive market events
- * - Update MarketBrain
- * - Notify runtime monitoring
- * - Prepare pipeline for:
- *      Technical Analysis
- *      Risk Evaluation
- *      Decision Engine
+ * MarketEvent
+ *      |
+ *      v
+ * MarketEventSubscriber
+ *      |
+ *      v
+ * MarketBrain
+ *      |
+ *      v
+ * BrainManager Pipeline
  *
  */
 @Singleton
@@ -40,7 +45,10 @@ class MarketEventSubscriber @Inject constructor(
     private val runtimeObserver: RuntimeObserver,
 
 
-    private val marketBrain: MarketBrain
+    private val marketBrain: MarketBrain,
+
+
+    private val brainManager: BrainManager
 
 
 ) : EventSubscriber {
@@ -127,6 +135,7 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
     private fun handlePriceUpdate(
 
         event: MarketEvent.PriceUpdated
@@ -172,7 +181,27 @@ class MarketEventSubscriber @Inject constructor(
 
 
 
+
+
+        /*
+            Start brain decision pipeline
+
+            MarketBrain
+                ->
+            RiskBrain
+                ->
+            DecisionEngine
+                ->
+            DecisionEvent
+        */
+
+
+        brainManager.process()
+
+
+
     }
+
 
 
 
@@ -217,19 +246,18 @@ class MarketEventSubscriber @Inject constructor(
 
 
         /*
-         Future pipeline:
+            Future:
 
-         1. TechnicalAnalyzer
-         2. MarketBrain.analyze()
-         3. RiskBrain.evaluateRisk()
-         4. DecisionEngine.decide()
-         5. DecisionAnalytics persistence
+            1. Technical indicators
+            2. Market condition update
+            3. Decision pipeline
 
         */
 
 
 
     }
+
 
 
 
