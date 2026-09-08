@@ -101,6 +101,7 @@ class BrainManager @Inject constructor(
 
 
 
+
     fun isReady(): Boolean {
 
 
@@ -173,6 +174,13 @@ class BrainManager @Inject constructor(
 
 
 
+        val intelligenceDecision =
+
+            executionResult.intelligenceDecision
+
+
+
+
 
 
 
@@ -184,7 +192,7 @@ class BrainManager @Inject constructor(
 
             message =
 
-                "Decision generated: ${decision.action}"
+                "Decision: ${decision.action} | Intelligence confidence: ${intelligenceDecision.confidence}"
 
         )
 
@@ -290,6 +298,7 @@ class BrainManager @Inject constructor(
 
 
     }
+
 
 
 
