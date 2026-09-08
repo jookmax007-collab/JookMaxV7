@@ -101,7 +101,6 @@ class BrainManager @Inject constructor(
 
 
 
-
     fun isReady(): Boolean {
 
 
@@ -137,6 +136,7 @@ class BrainManager @Inject constructor(
             return
 
         }
+
 
 
 
@@ -184,6 +184,8 @@ class BrainManager @Inject constructor(
 
 
 
+
+
         logger.info(
 
 
@@ -192,7 +194,7 @@ class BrainManager @Inject constructor(
 
             message =
 
-                "Decision: ${decision.action} | Intelligence confidence: ${intelligenceDecision.confidence}"
+                "Decision generated: ${decision.action} | Intelligence confidence: ${intelligenceDecision.confidence}"
 
         )
 
@@ -237,6 +239,9 @@ class BrainManager @Inject constructor(
 
 
 
+
+
+
         eventBus.publish(
 
 
@@ -264,6 +269,12 @@ class BrainManager @Inject constructor(
 
 
                 decision = decision,
+
+
+
+
+
+                intelligenceDecision = intelligenceDecision,
 
 
 
@@ -311,6 +322,9 @@ class BrainManager @Inject constructor(
 
 
 
+
+
+
     fun shutdown() {
 
 
@@ -322,6 +336,10 @@ class BrainManager @Inject constructor(
             message = "Brain shutdown started"
 
         )
+
+
+
+
 
 
 
@@ -350,6 +368,9 @@ class BrainManager @Inject constructor(
 
 
         initialized = false
+
+
+
 
 
 

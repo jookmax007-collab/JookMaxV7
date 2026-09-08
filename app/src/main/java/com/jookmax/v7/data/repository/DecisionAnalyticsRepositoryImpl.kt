@@ -1,11 +1,13 @@
 package com.jookmax.v7.data.repository
 
 
+import com.jookmax.v7.brain.decision.DecisionAction
+import com.jookmax.v7.brain.decision.DecisionResult
+import com.jookmax.v7.brain.intelligence.IntelligenceDecision
 import com.jookmax.v7.core.events.DecisionEvent
-
-import com.jookmax.v7.data.local.dao.DecisionDao
+import com.jookmax.v7.core.model.Symbol
 import com.jookmax.v7.data.local.entity.DecisionEntity
-
+import com.jookmax.v7.data.local.dao.DecisionDao
 import com.jookmax.v7.domain.analytics.DecisionAnalyticsRepository
 
 import javax.inject.Inject
@@ -24,6 +26,8 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
 
 
+
+
     override suspend fun saveDecision(
 
         event: DecisionEvent.DecisionGenerated
@@ -36,6 +40,7 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
 
         decisionDao.insertDecision(
+
 
 
             DecisionEntity(
@@ -76,54 +81,99 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
 
 
-    override suspend fun getDecisions():
 
+    override suspend fun getDecisions():
 
             List<DecisionEvent.DecisionGenerated> {
 
 
 
         return decisionDao
+
             .getDecisions()
+
             .map {
+
+
+
+                val action =
+
+                    DecisionAction.valueOf(
+
+                        it.action
+
+                    )
+
+
+
+
+
+                val decision =
+
+                    DecisionResult(
+
+                        action = action,
+
+                        confidence = it.confidence
+
+                    )
+
+
+
+
+
+                val intelligenceDecision =
+
+                    IntelligenceDecision(
+
+                        action = action,
+
+                        confidence = it.confidence,
+
+                        reason = "Loaded from analytics history",
+
+                        timestamp = it.timestamp
+
+                    )
+
+
+
 
 
                 DecisionEvent.DecisionGenerated(
 
 
-                    symbol = com.jookmax.v7.core.model.Symbol(
+
+                    symbol = Symbol(
 
                         code = it.symbol
 
                     ),
 
 
-                    decision =
-                        com.jookmax.v7.brain.decision.DecisionResult(
 
-                            action =
-                                com.jookmax.v7.brain.decision.DecisionAction.valueOf(
-
-                                    it.action
-
-                                ),
+                    decision = decision,
 
 
-                            confidence = it.confidence
 
-                        ),
+                    intelligenceDecision = intelligenceDecision,
+
 
 
                     marketScore = it.marketScore,
 
 
+
                     riskAllowed = it.riskAllowed,
+
 
 
                     learningReward = it.learningReward,
 
 
+
                     timestamp = it.timestamp
+
 
 
                 )
@@ -140,6 +190,7 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
 
 
+
     override suspend fun clearDecisions() {
 
 
@@ -147,7 +198,6 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
 
     }
-
 
 
 }

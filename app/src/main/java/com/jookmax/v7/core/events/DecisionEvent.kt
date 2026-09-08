@@ -2,6 +2,7 @@ package com.jookmax.v7.core.events
 
 
 import com.jookmax.v7.brain.decision.DecisionResult
+import com.jookmax.v7.brain.intelligence.IntelligenceDecision
 import com.jookmax.v7.core.model.Symbol
 
 
@@ -11,6 +12,7 @@ import com.jookmax.v7.core.model.Symbol
  *
  * Used for:
  * - Decision analytics
+ * - Intelligence monitoring
  * - Future learning system
  * - Decision history tracking
  */
@@ -31,7 +33,13 @@ sealed class DecisionEvent(
 
 
     /**
-     * Emitted when DecisionEngine creates a decision.
+     * Emitted when Brain Pipeline creates final decision.
+     *
+     * Contains:
+     *
+     * DecisionEngine Output
+     * +
+     * Intelligence Layer Output
      */
     data class DecisionGenerated(
 
@@ -39,7 +47,18 @@ sealed class DecisionEvent(
         val symbol: Symbol,
 
 
+        /**
+         * Raw decision from DecisionEngine.
+         */
         val decision: DecisionResult,
+
+
+
+        /**
+         * Intelligence adjusted decision.
+         */
+        val intelligenceDecision: IntelligenceDecision,
+
 
 
         /**
@@ -48,16 +67,19 @@ sealed class DecisionEvent(
         val marketScore: Double,
 
 
+
         /**
          * Risk permission state.
          */
         val riskAllowed: Boolean,
 
 
+
         /**
          * Learning reward used during decision.
          */
         val learningReward: Double,
+
 
 
         val timestamp: Long = System.currentTimeMillis()
