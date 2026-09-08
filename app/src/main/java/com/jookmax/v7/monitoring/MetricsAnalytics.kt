@@ -14,15 +14,11 @@ import javax.inject.Singleton
  * Responsible for:
  * - Performance analysis
  * - Runtime statistics
+ * - Decision analytics calculation
  * - Health metrics calculation
  *
  * Data source:
  * - MonitoringRepository contract
- *
- * Future connections:
- * - Performance Center UI
- * - Optimization Engine
- * - Learning System
  */
 @Singleton
 class MetricsAnalytics @Inject constructor(
@@ -42,16 +38,11 @@ class MetricsAnalytics @Inject constructor(
             .getSnapshots()
             .sumOf {
 
-
                 it.processedEvents
-
 
             }
 
-
     }
-
-
 
 
 
@@ -66,16 +57,11 @@ class MetricsAnalytics @Inject constructor(
             .getSnapshots()
             .sumOf {
 
-
                 it.failedEvents
-
 
             }
 
-
     }
-
-
 
 
 
@@ -95,9 +81,7 @@ class MetricsAnalytics @Inject constructor(
 
         if (snapshots.isEmpty()) {
 
-
             return 0L
-
 
         }
 
@@ -106,9 +90,7 @@ class MetricsAnalytics @Inject constructor(
         return snapshots
             .map {
 
-
                 it.processingLatencyMs
-
 
             }
             .average()
@@ -116,25 +98,6 @@ class MetricsAnalytics @Inject constructor(
 
 
     }
-
-
-
-
-
-
-
-
-
-    fun getSnapshotCount(): Int {
-
-
-        return monitoringRepository
-            .getSnapshotCount()
-
-
-    }
-
-
 
 
 
@@ -167,13 +130,9 @@ class MetricsAnalytics @Inject constructor(
 
         if (total == 0L) {
 
-
             return 0.0
 
-
         }
-
-
 
 
 
@@ -183,8 +142,6 @@ class MetricsAnalytics @Inject constructor(
 
 
     }
-
-
 
 
 
@@ -209,6 +166,164 @@ class MetricsAnalytics @Inject constructor(
 
 
 
+    /*
+     * Decision Analytics
+     */
+
+
+
+    fun getTotalDecisions(): Long {
+
+
+        return monitoringRepository
+            .getSnapshots()
+            .sumOf {
+
+                it.totalDecisions
+
+            }
+
+
+    }
+
+
+
+
+
+
+
+    fun getBuyDecisions(): Long {
+
+
+        return monitoringRepository
+            .getSnapshots()
+            .sumOf {
+
+                it.buyDecisions
+
+            }
+
+
+    }
+
+
+
+
+
+
+
+    fun getSellDecisions(): Long {
+
+
+        return monitoringRepository
+            .getSnapshots()
+            .sumOf {
+
+                it.sellDecisions
+
+            }
+
+
+    }
+
+
+
+
+
+
+
+    fun getHoldDecisions(): Long {
+
+
+        return monitoringRepository
+            .getSnapshots()
+            .sumOf {
+
+                it.holdDecisions
+
+            }
+
+
+    }
+
+
+
+
+
+
+
+    fun getAverageDecisionConfidence(): Double {
+
+
+        val snapshots =
+
+            monitoringRepository
+                .getSnapshots()
+
+
+
+        if (snapshots.isEmpty()) {
+
+            return 0.0
+
+        }
+
+
+
+        val decisions =
+
+            snapshots.sumOf {
+
+                it.totalDecisions
+
+            }
+
+
+
+        if (decisions == 0L) {
+
+            return 0.0
+
+        }
+
+
+
+        val confidenceSum =
+
+            snapshots.sumOf {
+
+                it.averageDecisionConfidence *
+                        it.totalDecisions
+
+            }
+
+
+
+        return confidenceSum / decisions
+
+
+
+    }
+
+
+
+
+
+
+
+    fun getSnapshotCount(): Int {
+
+
+        return monitoringRepository
+            .getSnapshotCount()
+
+
+    }
+
+
+
+
+
 
 
     fun reset() {
@@ -219,7 +334,6 @@ class MetricsAnalytics @Inject constructor(
 
 
     }
-
 
 
 }
