@@ -22,6 +22,8 @@ import com.jookmax.v7.engine.lifecycle.EngineState
 import com.jookmax.v7.engine.runtime.EngineCoroutineScope
 import com.jookmax.v7.engine.runtime.EngineRuntimeTracker
 
+import com.jookmax.v7.engine.market.MarketFeedManager
+
 import kotlinx.coroutines.flow.StateFlow
 
 
@@ -62,7 +64,10 @@ class JookMaxEngine(
     private val runtimeObserver: RuntimeObserver,
 
 
-    private val metricsCollector: MetricsCollector
+    private val metricsCollector: MetricsCollector,
+
+
+    private val marketFeedManager: MarketFeedManager
 
 
 ) {
@@ -71,8 +76,6 @@ class JookMaxEngine(
 
     val state: StateFlow<EngineState>
         get() = lifecycleManager.state
-
-
 
 
 
@@ -91,7 +94,6 @@ class JookMaxEngine(
 
 
         metricsCollector.recordEvent()
-
 
 
 
@@ -128,7 +130,18 @@ class JookMaxEngine(
 
 
 
+
         eventDispatcher.start(
+
+            coroutineScope.scope
+
+        )
+
+
+
+
+
+        marketFeedManager.start(
 
             coroutineScope.scope
 
@@ -177,10 +190,7 @@ class JookMaxEngine(
         )
 
 
-
     }
-
-
 
 
 
@@ -191,7 +201,6 @@ class JookMaxEngine(
     fun stop() {
 
 
-
         eventBus.publish(
 
             SystemEvent.EngineStopped
@@ -200,11 +209,7 @@ class JookMaxEngine(
 
 
 
-
-
         lifecycleManager.stop()
-
-
 
 
 
@@ -212,11 +217,7 @@ class JookMaxEngine(
 
 
 
-
-
         metricsCollector.recordEvent()
-
-
 
 
 
@@ -224,11 +225,7 @@ class JookMaxEngine(
 
 
 
-
-
         brainManager.shutdown()
-
-
 
 
 
@@ -240,8 +237,6 @@ class JookMaxEngine(
 
 
 
-
-
         runtimeObserver.observe(
 
             "STOPPED"
@@ -250,10 +245,7 @@ class JookMaxEngine(
 
 
 
-
-
         updatePerformanceSnapshot()
-
 
 
     }
@@ -264,15 +256,10 @@ class JookMaxEngine(
 
 
 
-
-
     fun pause() {
 
 
-
         lifecycleManager.pause()
-
-
 
 
 
@@ -284,16 +271,11 @@ class JookMaxEngine(
 
 
 
-
-
         metricsCollector.recordEvent()
 
 
 
-
-
         updatePerformanceSnapshot()
-
 
 
     }
@@ -304,15 +286,10 @@ class JookMaxEngine(
 
 
 
-
-
     fun resume() {
 
 
-
         lifecycleManager.resume()
-
-
 
 
 
@@ -324,21 +301,14 @@ class JookMaxEngine(
 
 
 
-
-
         metricsCollector.recordEvent()
-
-
 
 
 
         updatePerformanceSnapshot()
 
 
-
     }
-
-
 
 
 
@@ -349,10 +319,7 @@ class JookMaxEngine(
     fun reset() {
 
 
-
         lifecycleManager.reset()
-
-
 
 
 
@@ -360,11 +327,7 @@ class JookMaxEngine(
 
 
 
-
-
         engineMonitor.reset()
-
-
 
 
 
@@ -372,15 +335,10 @@ class JookMaxEngine(
 
 
 
-
-
         metricsCollector.reset()
 
 
-
     }
-
-
 
 
 
@@ -391,13 +349,11 @@ class JookMaxEngine(
     fun shutdown() {
 
 
-
         stop()
 
 
 
         coroutineScope.cancel()
-
 
 
     }
@@ -408,10 +364,7 @@ class JookMaxEngine(
 
 
 
-
-
     private fun updatePerformanceSnapshot() {
-
 
 
         val snapshot =
@@ -419,11 +372,9 @@ class JookMaxEngine(
             engineMonitor.createSnapshot(
 
 
-
                 engineState =
 
                     runtimeObserver.getCurrentState(),
-
 
 
 
@@ -435,7 +386,6 @@ class JookMaxEngine(
 
 
 
-
                 failedEvents =
 
                     metricsCollector.getFailedEvents(),
@@ -443,11 +393,9 @@ class JookMaxEngine(
 
 
 
-
                 processingLatencyMs =
 
                     metricsCollector.getAverageLatencyMs()
-
 
 
             )
@@ -461,7 +409,6 @@ class JookMaxEngine(
             snapshot
 
         )
-
 
 
     }

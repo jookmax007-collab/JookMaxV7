@@ -5,61 +5,41 @@ import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
 import com.jookmax.v7.core.model.MarketQuote
-import com.jookmax.v7.core.model.Tick
+import com.jookmax.v7.core.model.MarketTick
 
 import com.jookmax.v7.data.local.dao.MarketDao
 import com.jookmax.v7.data.mapper.MarketEntityMapper
 
 import com.jookmax.v7.domain.repository.MarketDataSource
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
 import javax.inject.Inject
 
 
-
-/**
- * Local market data source.
- *
- * Responsibilities:
- *
- * - Store market cache
- * - Read cached market data
- * - Provide local fallback data
- *
- */
 class MarketLocalDataSource @Inject constructor(
-
 
     private val marketDao: MarketDao,
 
-
     private val mapper: MarketEntityMapper
 
-
 ) : MarketDataSource {
-
 
 
     suspend fun saveMarketPrice(
         price: MarketPrice
     ) {
 
+        val entity = mapper.mapToEntity(price)
 
-        val entity =
-            mapper.mapToEntity(price)
-
-
-        marketDao.insertMarketPrice(
-            entity
-        )
+        marketDao.insertMarketPrice(entity)
 
     }
 
 
 
-
-
     suspend fun getMarketPrice(): MarketPrice? {
-
 
         return marketDao
             .getMarketPrice()
@@ -69,22 +49,41 @@ class MarketLocalDataSource @Inject constructor(
 
             }
 
-
     }
-
-
 
 
 
     override suspend fun getLatestPrice(): MarketPrice? {
 
-
         return getMarketPrice()
-
 
     }
 
 
+
+    override fun observeLivePrice(): Flow<MarketPrice> {
+
+        return marketDao
+            .observeMarketPrice()
+            .map { entity ->
+
+                entity?.let {
+
+                    mapper.mapToDomain(it)
+
+                } ?: MarketPrice(
+
+                    symbol = com.jookmax.v7.core.model.Symbol(code = "XAUUSD"),
+
+                    price = 0.0,
+
+                    timestamp = System.currentTimeMillis()
+
+                )
+
+            }
+
+    }
 
 
 
@@ -92,43 +91,27 @@ class MarketLocalDataSource @Inject constructor(
         history: MarketHistory
     ) {
 
+        val entities = history.candles.map {
 
-        val entities =
+            mapper.mapCandleToEntity(it)
 
-            history.candles.map {
+        }
 
-                mapper.mapCandleToEntity(it)
-
-            }
-
-
-
-        marketDao.insertCandles(
-
-            entities
-
-        )
-
+        marketDao.insertCandles(entities)
 
     }
 
 
 
-
-
     suspend fun getMarketHistory(): MarketHistory? {
 
+        val candles = marketDao
+            .getCandles()
+            .map {
 
-        val candles =
+                mapper.mapCandleToDomain(it)
 
-            marketDao
-                .getCandles()
-                .map {
-
-                    mapper.mapCandleToDomain(it)
-
-                }
-
+            }
 
 
         if (candles.isEmpty()) {
@@ -136,7 +119,6 @@ class MarketLocalDataSource @Inject constructor(
             return null
 
         }
-
 
 
         return MarketHistory(
@@ -149,128 +131,78 @@ class MarketLocalDataSource @Inject constructor(
 
         )
 
-
     }
-
-
 
 
 
     override suspend fun getLatestQuote(): MarketQuote? {
 
-
-        val price =
-
-            getMarketPrice()
-                ?: return null
-
+        val price = getMarketPrice()
+            ?: return null
 
 
         return MarketQuote(
 
-
             symbol = price.symbol,
 
+            bid = price.bid ?: price.price,
 
-            bid = price.bid
-                ?: price.price,
-
-
-            ask = price.ask
-                ?: price.price,
-
+            ask = price.ask ?: price.price,
 
             last = price.price,
 
-
             timestamp = price.timestamp
 
-
         )
-
 
     }
 
 
 
+    override suspend fun getLatestTick(): MarketTick? {
+
+        val price = getMarketPrice()
+            ?: return null
 
 
-
-
-    override suspend fun getLatestTick(): Tick? {
-
-
-        val price =
-
-            getMarketPrice()
-                ?: return null
-
-
-
-        return Tick(
-
+        return MarketTick(
 
             symbol = price.symbol,
 
-
             price = price.price,
-
 
             timestamp = price.timestamp,
 
-
             bid = price.bid,
-
 
             ask = price.ask
 
-
         )
 
-
     }
-
-
-
-
 
 
 
     override suspend fun getCandles(): List<MarketCandle> {
 
-
         return marketDao
-
             .getCandles()
-
             .map {
-
 
                 mapper.mapCandleToDomain(it)
 
-
             }
 
-
     }
-
-
-
-
 
 
 
     suspend fun clear() {
 
-
         marketDao.clearPrice()
-
 
         marketDao.clearCandles()
 
-
     }
-
-
 
 }

@@ -15,6 +15,7 @@ import com.jookmax.v7.monitoring.MetricsCollector
 import com.jookmax.v7.monitoring.RuntimeObserver
 
 import com.jookmax.v7.engine.JookMaxEngine
+import com.jookmax.v7.engine.market.MarketFeedManager
 import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
 import com.jookmax.v7.engine.manager.EngineManager
 import com.jookmax.v7.engine.runtime.EngineCoroutineScope
@@ -115,7 +116,9 @@ object EngineModule {
         runtimeObserver: RuntimeObserver,
 
 
-        metricsCollector: MetricsCollector
+        metricsCollector: MetricsCollector,
+
+        marketFeedManager: MarketFeedManager
 
 
 
@@ -161,7 +164,9 @@ object EngineModule {
             runtimeObserver = runtimeObserver,
 
 
-            metricsCollector = metricsCollector
+            metricsCollector = metricsCollector,
+
+            marketFeedManager = marketFeedManager
 
 
 
@@ -204,3 +209,5 @@ object EngineModule {
 
 
 }
+
+

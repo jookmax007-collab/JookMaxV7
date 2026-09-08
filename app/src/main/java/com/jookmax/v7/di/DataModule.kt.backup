@@ -194,19 +194,6 @@ object DataModule {
     }
 
 
-
-    @Provides
-    @Singleton
-    fun provideMarketSocketClient(
-        okHttpClient: okhttp3.OkHttpClient
-    ): MarketSocketClient {
-
-        return MarketSocketClient(
-            apiKey = "",
-            okHttpClient = okHttpClient
-        )
-
-    }
-
 }
+
 

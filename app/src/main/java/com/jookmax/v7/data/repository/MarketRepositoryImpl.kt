@@ -3,11 +3,14 @@ package com.jookmax.v7.data.repository
 
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
+import com.jookmax.v7.core.model.MarketTick
 
 import com.jookmax.v7.data.local.MarketLocalDataSource
 
 import com.jookmax.v7.domain.repository.MarketDataSource
 import com.jookmax.v7.domain.repository.MarketRepository
+
+import kotlinx.coroutines.flow.Flow
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,8 +31,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 
-
-
     override suspend fun getLatestMarketPrice(): MarketPrice? {
 
 
@@ -37,7 +38,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
             val remotePrice =
-
                 remoteDataSource.getLatestPrice()
 
 
@@ -46,9 +46,7 @@ class MarketRepositoryImpl @Inject constructor(
 
 
                 localDataSource.saveMarketPrice(
-
                     remotePrice
-
                 )
 
 
@@ -62,7 +60,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
             }
-
 
 
         } catch (exception: Exception) {
@@ -80,8 +77,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 
-
-
     override suspend fun getCachedMarketPrice(): MarketPrice? {
 
 
@@ -94,8 +89,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 
-
-
     override suspend fun getMarketHistory(): MarketHistory? {
 
 
@@ -103,7 +96,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
             val candles =
-
                 remoteDataSource.getCandles()
 
 
@@ -128,11 +120,8 @@ class MarketRepositoryImpl @Inject constructor(
 
 
                 localDataSource.saveMarketHistory(
-
                     history
-
                 )
-
 
 
                 history
@@ -145,7 +134,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
             }
-
 
 
         } catch (exception: Exception) {
@@ -163,6 +151,34 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 
+    override fun observeLivePrice(): Flow<MarketPrice> {
+
+
+        return remoteDataSource.observeLivePrice()
+
+
+    }
+
+
+
+
+
+    /**
+     * Raw market tick stream.
+     *
+     * Used by Tick Engine
+     * for candle generation.
+     */
+    override fun observeLiveTicks(): Flow<MarketTick> {
+
+
+        return remoteDataSource.observeLiveTicks()
+
+
+    }
+
+
+
 
 
     override suspend fun clearCache() {
@@ -172,7 +188,6 @@ class MarketRepositoryImpl @Inject constructor(
 
 
     }
-
 
 
 }
