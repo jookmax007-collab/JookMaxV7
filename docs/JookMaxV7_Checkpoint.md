@@ -6,17 +6,18 @@ JookMax V7 — Development Checkpoint
 
 ✅ BUILD SUCCESSFUL
 
-Stack:
-
-Kotlin 2.2.0
-AGP 8.11.1
-Compose BOM 2025.06.00
-Hilt 2.57.1
-minSdk 26
-target/compile 36
-JVM 21
+Stack
+Kotlin        2.2.0
+AGP           8.11.1
+Compose BOM   2025.06.00
+Hilt          2.57.1
+minSdk        26
+targetSdk     36
+compileSdk    36
+JVM           21
+Gradle        9.2.1
 Architecture Status
-وضعیت فعلی:
+وضعیت فعلی
 
 ✅ Clean Architecture Foundation
 
@@ -28,27 +29,66 @@ Architecture Status
 
 ✅ Event Driven Architecture
 
-✅ Package by Layer
+✅ Package By Layer
 
-ساختار فعلی:
+Architecture:
 
 Presentation
-      |
-      v
-Domain
-      |
-      v
-Data
-      |
-      v
-Core / Engine
 
-Multi Module:
+      |
+
+      v
+
+Domain
+
+      |
+
+      v
+
+Data
+
+      |
+
+      v
+
+Core / Engine
+Multi Module
+
+وضعیت:
 
 ⚠️ برنامه آینده
 
-فاز 0 — Foundation
-وضعیت: ✅ تکمیل
+فعلاً پروژه در ساختار Single App Module با Package Separation قرار دارد.
+
+برنامه آینده:
+
+:app
+
+:core
+
+:domain
+
+:data
+
+:engine
+
+:analysis
+
+:risk
+
+:learning
+
+:intelligence
+
+:logging
+
+:monitoring
+
+:ui
+Phase 0 — Foundation
+Status
+
+✅ COMPLETED
 
 ساخته شده:
 
@@ -66,8 +106,10 @@ Multi Module:
 
 ✅ Time Provider
 
-فاز 1 — Event Driven Engine
-وضعیت: ✅ تکمیل
+Phase 1 — Event Driven Engine
+Status
+
+✅ COMPLETED
 
 ساخته شده:
 
@@ -85,22 +127,33 @@ Subscribers:
 
 ✅ DecisionEventSubscriber
 
-✅ Engine Event Subscribers
+✅ EngineEventSubscriber
 
 Flow:
 
 Event
+
  |
+
  v
-Dispatcher
+
+EventDispatcher
+
  |
+
  v
+
 Subscriber
+
  |
+
  v
-Engine / Analytics
-فاز 2 — Engine Core
-وضعیت: ✅ تکمیل Foundation
+
+Engine / Brain
+Phase 2 — Engine Core
+Status
+
+✅ FOUNDATION COMPLETED
 
 ساخته شده:
 
@@ -114,16 +167,35 @@ Engine / Analytics
 
 ✅ EngineCoroutineScope
 
-✅ Engine Metrics Collector
+✅ MetricsCollector
 
-✅ Engine Monitoring Connection
+✅ EngineMonitor
 
-وضعیت:
+✅ RuntimeObserver
 
-Engine Lifecycle آماده است.
+Engine Lifecycle:
 
-فاز 3 — Brain Pipeline
-وضعیت: ⚠️ Foundation تکمیل
+START
+
+ |
+
+RUNNING
+
+ |
+
+PAUSE
+
+ |
+
+RESUME
+
+ |
+
+STOP
+Phase 3 — Brain Pipeline
+Status
+
+⚠️ FOUNDATION COMPLETED
 
 ساخته شده:
 
@@ -165,21 +237,20 @@ LearningBrain
 
 DecisionEvent
 
+باقی:
 
-اما:
+❌ Intelligence واقعی
 
-❌ Intelligence واقعی وجود ندارد
+❌ Technical Analysis Integration
 
-نیاز آینده:
+❌ Learning Algorithm
 
-تحلیل تکنیکال واقعی
-مدل تصمیم‌گیری
-داده بازار واقعی
-Learning Algorithm
-فاز 4 — Persistence Layer
-وضعیت: ⚠️ Foundation + Decision Persistence
+❌ Adaptive Decision Model
 
-ساخته شده:
+Phase 4 — Persistence Layer
+Status
+
+⚠️ FOUNDATION COMPLETED
 
 Room:
 
@@ -209,27 +280,6 @@ Repository:
 
 ✅ Data Implementation
 
-Flow:
-
-DecisionEvent
-
-↓
-
-DecisionAnalyticsRepository
-
-↓
-
-RepositoryImpl
-
-↓
-
-Room
-
-↓
-
-Database
-
-
 باقی:
 
 ⚠️ Migration
@@ -238,8 +288,10 @@ Database
 
 ⚠️ Cache Strategy
 
-فاز 5 — Decision Analytics
-وضعیت: ✅ تکمیل Foundation
+Phase 5 — Decision Analytics
+Status
+
+✅ COMPLETED
 
 ساخته شده:
 
@@ -283,14 +335,15 @@ MetricsCollector
 
 ↓
 
-Performance Snapshot
+PerformanceSnapshot
 
 ↓
 
 Monitoring
+Phase 6 — Monitoring System
+Status
 
-فاز 6 — Monitoring System
-وضعیت: ✅ تکمیل Foundation
+✅ COMPLETED FOUNDATION
 
 ساخته شده:
 
@@ -330,127 +383,149 @@ Navigation:
 
 ✅ Monitoring Route
 
-Flow:
+Phase 7 — Monitoring Dashboard
+Status
 
-Engine
+⚠️ FOUNDATION
 
-↓
+فعال:
 
-Metrics
+✅ Engine State
 
-↓
+✅ Processed Events
 
-PerformanceSnapshot
+✅ Failed Events
 
-↓
+✅ Latency
 
-Repository
+✅ Failure Rate
 
-↓
+✅ Decision Count
 
-Analytics
+✅ BUY
 
-↓
+✅ SELL
 
-UseCase
+✅ HOLD
 
-↓
-
-ViewModel
-
-↓
-
-Compose UI
-
-فاز 7 — Monitoring Dashboard
-وضعیت: ⚠️ Foundation
-
-فعلی:
-
-✅ نمایش:
-
-Engine State
-Processed Events
-Failed Events
-Latency
-Failure Rate
-Decisions
-BUY
-SELL
-HOLD
-Confidence
+✅ Confidence
 
 باقی:
 
-❌ Chart
+❌ Advanced Dashboard Layout
 
-❌ Real Time Update UI
+❌ Charts
 
-❌ Advanced Cards
+❌ Real Time Graph
 
-❌ Dashboard Layout
+❌ Professional Cards
 
-فاز 8 — Market Data Feed
-وضعیت: ❌ شروع نشده
+Phase 8 — Market Data Feed
+Status
 
-ساخته نشده:
+✅ FOUNDATION COMPLETED
 
-❌ WebSocket Client
+ساخته شده:
 
-❌ Connection Manager
+✅ MarketSocketClient
 
-❌ Reconnect Strategy
+✅ MarketSocketListener
 
-❌ Live Price Stream
+✅ SocketConnectionState
 
-پیش نیاز:
+✅ ReconnectStrategy Foundation
 
-قبل از این مرحله:
-
-Market Event آماده است ✅
-Repository آماده است ✅
-
-نیاز ساخت:
+Provider:
 
 WebSocket
 
 ↓
 
-Tick Data
+MarketTick
 
 ↓
 
-MarketEvent
+Repository
+
+پیاده سازی:
+
+✅ Live Tick Stream
+
+✅ Connection State
+
+✅ Authentication Flow
+
+باقی:
+
+⚠️ Production API Validation
+
+⚠️ Error Recovery Enhancement
+
+⚠️ Connection Monitoring
+
+Phase 9 — Tick Engine
+Status
+
+✅ FOUNDATION COMPLETED
+
+ساخته شده:
+
+✅ MarketTick Model
+
+✅ TickBuffer
+
+✅ CandleInterval
+
+✅ CandleBuilder
+
+✅ TickEngine
+
+✅ TickProcessor Foundation
+
+Flow:
+
+MarketTick
 
 ↓
 
-Brain Pipeline
+TickEngine
 
-فاز 9 — Tick Engine
-وضعیت: ❌ شروع نشده
+↓
+
+CandleBuilder
+
+↓
+
+MarketCandle
+
+↓
+
+CandleClosed Event
+
+اتصال:
+
+✅ MarketRepository
+
+↓
+
+✅ MarketFeedManager
+
+↓
+
+✅ TickEngine
+
+↓
+
+✅ EventBus
+
+Phase 10 — Technical Analysis Engine
+Status
+
+❌ NOT IMPLEMENTED
 
 نیاز:
 
-❌ TickProcessor
-
-❌ TickBuffer
-
-❌ CandleBuilder
-
-وابستگی:
-
-نیازمند:
-
-WebSocket Feed
-
-فاز 10 — Technical Analysis
-وضعیت: ⚠️ Skeleton
-
-موجود:
-
-✅ MarketBrain
-
-ساخته نشده:
+❌ Indicator Framework
 
 ❌ RSI
 
@@ -462,12 +537,16 @@ WebSocket Feed
 
 ❌ Trend Detection
 
-پیش نیاز:
+❌ Market Structure
 
-Market Data واقعی
+وابستگی:
 
-فاز 11 — Risk Management
-وضعیت: ⚠️ Skeleton
+Market Candle Feed آماده است ✅
+
+Phase 11 — Risk Management Engine
+Status
+
+⚠️ Skeleton
 
 موجود:
 
@@ -475,16 +554,20 @@ Market Data واقعی
 
 نیاز:
 
-❌ Position Size
+❌ Position Size Calculator
 
-❌ Stop Loss Calculator
+❌ Stop Loss Engine
 
-❌ Risk Profile
+❌ Take Profit Engine
 
 ❌ Exposure Management
 
-فاز 12 — AI Learning
-وضعیت: ⚠️ Skeleton
+❌ Risk Profile
+
+Phase 12 — AI Learning System
+Status
+
+⚠️ Skeleton
 
 موجود:
 
@@ -492,16 +575,20 @@ Market Data واقعی
 
 نیاز:
 
-❌ Training Sample
+❌ Training Dataset
 
-❌ Reward Calculator
+❌ Reward System
 
-❌ Learning Strategy
+❌ Learning Algorithm
 
 ❌ Weight Storage
 
-فاز 13 — Backtesting Engine
-وضعیت: ❌ شروع نشده
+❌ Model Adaptation
+
+Phase 13 — Backtesting Engine
+Status
+
+❌ NOT IMPLEMENTED
 
 نیاز:
 
@@ -513,8 +600,10 @@ Market Data واقعی
 
 ❌ Performance Evaluation
 
-فاز 14 — UI/UX
-وضعیت: ⚠️ Foundation
+Phase 14 — UI / UX
+Status
+
+⚠️ FOUNDATION
 
 ساخته شده:
 
@@ -526,14 +615,18 @@ Market Data واقعی
 
 ❌ Main Dashboard
 
-❌ Chart Screen
+❌ Trading Chart Screen
 
 ❌ Risk Settings
 
 ❌ Backtest Screen
 
-فاز 15 — Testing & Hardening
-وضعیت: ❌ شروع نشده
+❌ AI Insight Screen
+
+Phase 15 — Testing & Hardening
+Status
+
+❌ NOT STARTED
 
 نیاز:
 
@@ -541,71 +634,143 @@ Market Data واقعی
 
 ❌ Repository Tests
 
+❌ Engine Tests
+
 ❌ Brain Tests
 
 ❌ UI Tests
 
 ❌ Performance Tests
 
-وضعیت فعلی Pipeline
-کامل شده:
-DecisionEngine
+Current Live Pipeline
+
+وضعیت فعلی:
+
+MarketSocket
 
 ↓
 
-DecisionEvent
+MarketRemoteDataSource
 
 ↓
 
-DecisionSubscriber
+MarketRepository
 
 ↓
 
-DecisionAnalyticsRepository
+MarketFeedManager
+
+        |
+        |
+        +----------------+
+        |                |
+        v                v
+
+ MarketPrice        MarketTick
+
+        |                |
+
+        v                v
+
+ PriceUpdated       TickEngine
+
+                         |
+
+                         v
+
+                  CandleBuilder
+
+                         |
+
+                         v
+
+                   MarketCandle
+
+                         |
+
+                         v
+
+                  CandleClosed
+
+                         |
+
+                         v
+
+              MarketEventSubscriber
+
+                         |
+
+                         v
+
+                    MarketBrain
+
+                         |
+
+                         v
+
+                  DecisionEngine
+
+                         |
+
+                         v
+
+                DecisionAnalytics
+
+                         |
+
+                         v
+
+                  Monitoring
+آخرین وضعیت Commit
+
+آخرین Commit فعلی:
+
+e1daa2e
+Checkpoint: Market Tick pipeline added
+
+و آخرین تغییر موفق:
+
+Connect TickEngine to MarketFeedManager candle pipeline
+وضعیت خلاصه
+بخش	وضعیت
+Architecture	✅
+Engine Core	✅
+Event System	✅
+Brain Foundation	⚠️
+Room Persistence	⚠️
+Decision Analytics	✅
+Monitoring	✅
+Dashboard	⚠️
+WebSocket Feed	✅ Foundation
+Tick Engine	✅ Foundation
+Candle Pipeline	✅
+Technical Analysis	❌
+Risk Engine	⚠️
+AI Learning	⚠️
+Backtesting	❌
+Testing	❌
+قدم بعدی پیشنهادی
+Phase 10 — Technical Analysis Engine
+
+دلیل:
+
+الان برای اولین بار مسیر کامل داریم:
+
+Real Market Data
 
 ↓
 
-Room
+Tick
 
 ↓
 
-DecisionMetrics
+Candle
 
 ↓
 
-PerformanceSnapshot
+Event
 
 ↓
-
-MetricsAnalytics
-
-↓
-
-Monitoring UI
-چیزهایی که هنوز ساخته نشده‌اند
-مهم‌ترین موارد:
-Market Data Infrastructure
-WebSocket Feed
-Tick Engine
-Technical Analysis Engine
-Real Risk Engine
-Backtesting Engine
-AI Learning System
-Professional Dashboard
-پیش نیاز مرحله بعد
-مرحله بعد پیشنهادی:
-
-شروع Phase 6 — WebSocket Market Feed
-
-چون:
-
-Brain آماده است.
-
-Decision Pipeline آماده است.
-
-Monitoring آماده است.
-
-اما هنوز:
 
 Brain
 
@@ -613,68 +778,36 @@ Brain
 
 Decision
 
-
-داده واقعی ندارد.
-
-پس قدم منطقی:
-
-WebSocket
-
 ↓
 
-Market Tick
-
-↓
-
-Candle Builder
-
-↓
-
-MarketEvent
-
-↓
-
-Brain Pipeline
-
-↓
-
-Decision Analytics
+Analytics
 
 ↓
 
 Monitoring
-آخرین Commit وضعیت
 
-آخرین commit:
+پس مرحله منطقی بعد:
 
-a85bc7d
-feat: connect monitoring snapshots flow to presentation
+ساخت:
 
-Commitهای اخیر:
+analysis/
 
-9c9f2cb feat: display decision analytics in monitoring screen
+ ├── indicator/
 
-805b3b1 feat: expose decision analytics in performance report
+ │     ├── RSI.kt
 
-7e93eb1 feat: add decision analytics to metrics analytics
+ │     ├── MACD.kt
 
-c8473fb feat: integrate decision metrics into engine monitor
+ │     ├── MovingAverage.kt
 
-ce009ec feat: extend performance snapshot with decision metrics
-خلاصه وضعیت پروژه
-بخش	وضعیت
-Architecture	✅
-Engine Core	✅
-Event System	✅
-Brain Pipeline	⚠️ Foundation
-Room	⚠️ Foundation
-Decision Analytics	✅
-Monitoring	✅
-Dashboard	⚠️
-WebSocket	❌
-Tick Engine	❌
-Technical Analysis	❌
-Risk Engine	❌
-AI Learning	⚠️
-Backtesting	❌
-Testing	❌
+ │     └── ATR.kt
+
+
+ ├── structure/
+
+ │     ├── TrendDetector.kt
+
+ │     └── MarketStructure.kt
+
+
+ └── AnalysisEngine.kt

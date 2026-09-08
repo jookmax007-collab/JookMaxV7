@@ -7,7 +7,6 @@ import com.jookmax.v7.domain.repository.MarketRepository
 import com.jookmax.v7.engine.market.tick.TickEngine
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -69,7 +68,6 @@ class MarketFeedManager @Inject constructor(
 
 
     private var started = false
-
 
 
 
@@ -145,6 +143,7 @@ class MarketFeedManager @Inject constructor(
 
 
 
+
         /*
          *
          * Tick Pipeline
@@ -153,6 +152,9 @@ class MarketFeedManager @Inject constructor(
          *      |
          *      v
          * TickEngine
+         *      |
+         *      v
+         * MarketCandle
          *      |
          *      v
          * CandleClosed Event
@@ -210,10 +212,6 @@ class MarketFeedManager @Inject constructor(
 
 
     }
-
-
-
-
 
 
 
