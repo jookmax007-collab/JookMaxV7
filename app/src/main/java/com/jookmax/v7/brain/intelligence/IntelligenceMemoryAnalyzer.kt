@@ -9,29 +9,24 @@ import javax.inject.Singleton
 /**
  * Intelligence Memory Analyzer
  *
- * Analyzes previous decisions
- *
- * Flow:
- *
- * DecisionMemory
- *       |
- *       v
- * IntelligenceMemoryAnalyzer
- *       |
- *       v
- * IntelligenceEngine
+ * Reads decision history
+ * and adjusts intelligence confidence.
  *
  */
 @Singleton
 class IntelligenceMemoryAnalyzer @Inject constructor(
 
+
     private val decisionMemory: DecisionMemory
+
 
 ) {
 
 
 
-    fun calculateMemoryScore(): Double {
+    fun calculateMemoryScore():
+
+            Double {
 
 
         return decisionMemory
@@ -44,9 +39,9 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
 
 
 
+    fun detectWeakPerformance():
 
-
-    fun detectWeakPerformance(): Boolean {
+            Boolean {
 
 
         return calculateMemoryScore() < 0.45
@@ -57,9 +52,9 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
 
 
 
+    fun detectStrongPerformance():
 
-
-    fun detectStrongPerformance(): Boolean {
+            Boolean {
 
 
         return calculateMemoryScore() > 0.75
@@ -70,9 +65,9 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
 
 
 
+    fun calculateAdjustment():
 
-
-    fun calculateAdjustment(): Double {
+            Double {
 
 
         return when {
@@ -84,13 +79,9 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
 
 
 
-
-
             detectWeakPerformance() ->
 
                 0.95
-
-
 
 
 
@@ -99,6 +90,19 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
                 1.0
 
         }
+
+    }
+
+
+
+
+
+    fun getMemorySize():
+
+            Int {
+
+
+        return decisionMemory.size()
 
     }
 

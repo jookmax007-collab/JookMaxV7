@@ -2,6 +2,7 @@ package com.jookmax.v7.brain.intelligence
 
 
 import com.jookmax.v7.brain.decision.DecisionAction
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,12 +28,9 @@ import javax.inject.Singleton
 class DecisionMemory @Inject constructor() {
 
 
-
     private val decisions =
 
         mutableListOf<DecisionExperience>()
-
-
 
 
 
@@ -52,14 +50,9 @@ class DecisionMemory @Inject constructor() {
 
 
 
-
-
-
-
     fun getAll():
 
             List<DecisionExperience> {
-
 
         return decisions.toList()
 
@@ -67,14 +60,9 @@ class DecisionMemory @Inject constructor() {
 
 
 
-
-
-
-
     fun getLatest():
 
             DecisionExperience? {
-
 
         return decisions.lastOrNull()
 
@@ -82,14 +70,9 @@ class DecisionMemory @Inject constructor() {
 
 
 
-
-
-
-
     fun size():
 
             Int {
-
 
         return decisions.size
 
@@ -97,20 +80,11 @@ class DecisionMemory @Inject constructor() {
 
 
 
-
-
-
-
     fun clear() {
-
 
         decisions.clear()
 
     }
-
-
-
-
 
 
 
@@ -119,12 +93,9 @@ class DecisionMemory @Inject constructor() {
             Double {
 
 
-
         if (decisions.isEmpty())
 
             return 0.0
-
-
 
 
 
@@ -138,8 +109,6 @@ class DecisionMemory @Inject constructor() {
 
 
 
-
-
         return correct.toDouble() /
 
                 decisions.size.toDouble()
@@ -148,21 +117,14 @@ class DecisionMemory @Inject constructor() {
 
 
 
-
-
-
-
     fun calculateAverageConfidence():
 
             Double {
 
 
-
         if (decisions.isEmpty())
 
             return 0.0
-
-
 
 
 
@@ -180,7 +142,28 @@ class DecisionMemory @Inject constructor() {
 
 
 
+    fun calculateAverageReward():
 
+            Double {
+
+
+        if (decisions.isEmpty())
+
+            return 0.0
+
+
+
+        return decisions
+
+            .map {
+
+                it.reward
+
+            }
+
+            .average()
+
+    }
 
 
 
@@ -189,12 +172,9 @@ class DecisionMemory @Inject constructor() {
             Double {
 
 
-
         val accuracy =
 
             calculateAccuracy()
-
-
 
 
 
@@ -204,13 +184,19 @@ class DecisionMemory @Inject constructor() {
 
 
 
+        val reward =
+
+            calculateAverageReward()
+
 
 
         return (
 
-                accuracy * 0.6 +
+                accuracy * 0.5 +
 
-                        confidence * 0.4
+                        confidence * 0.3 +
+
+                        normalizeReward(reward) * 0.2
 
                 )
 
@@ -225,11 +211,27 @@ class DecisionMemory @Inject constructor() {
     }
 
 
+
+    private fun normalizeReward(
+
+        reward: Double
+
+    ): Double {
+
+
+        return when {
+
+            reward <= 0 -> 0.0
+
+            reward >= 1 -> 1.0
+
+            else -> reward
+
+        }
+
+    }
+
 }
-
-
-
-
 
 
 
