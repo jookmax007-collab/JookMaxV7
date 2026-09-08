@@ -11,20 +11,24 @@ import javax.inject.Singleton
  *
  * Responsible for:
  *
- * - storing past brain experiences
- * - retrieving learning history
- * - calculating memory statistics
- * - resetting learning memory
+ * - storing brain experiences
+ * - keeping learning memory
+ * - providing historical statistics
+ * - supporting adaptive learning
+ * - resetting memory
  *
  *
  * Flow:
  *
+ * Brain Decision
+ *        |
+ *        v
  * LearningExperience
- *          |
- *          v
+ *        |
+ *        v
  * LearningExperienceManager
- *          |
- *          v
+ *        |
+ *        v
  * LearningBrain
  *
  */
@@ -41,6 +45,10 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
+
+    /**
+     * Add new learning experience
+     */
     fun addExperience(
 
         experience: LearningExperience
@@ -54,7 +62,6 @@ class LearningExperienceManager @Inject constructor() {
 
         )
 
-
     }
 
 
@@ -63,6 +70,10 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
+
+    /**
+     * Return all stored experiences
+     */
     fun getExperiences():
 
             List<LearningExperience> {
@@ -78,6 +89,10 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
+
+    /**
+     * Return latest brain experience
+     */
     fun getLatestExperience():
 
             LearningExperience? {
@@ -93,6 +108,10 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
+
+    /**
+     * Total memory size
+     */
     fun getExperienceCount():
 
             Int {
@@ -108,6 +127,10 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
+
+    /**
+     * Calculate average reward
+     */
     fun getAverageReward():
 
             Double {
@@ -118,7 +141,6 @@ class LearningExperienceManager @Inject constructor() {
             return 0.0
 
         }
-
 
 
 
@@ -141,6 +163,10 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
+
+    /**
+     * Calculate success percentage
+     */
     fun getSuccessRate():
 
             Double {
@@ -155,8 +181,7 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
-
-        val successCount =
+        val successfulTrades =
 
             experiences
 
@@ -169,8 +194,7 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
-
-        return successCount.toDouble() /
+        return successfulTrades.toDouble() /
 
                 experiences.size.toDouble()
 
@@ -182,10 +206,52 @@ class LearningExperienceManager @Inject constructor() {
 
 
 
+
+    /**
+     * Calculate failure percentage
+     */
+    fun getFailureRate():
+
+            Double {
+
+
+        return 1.0 -
+
+                getSuccessRate()
+
+    }
+
+
+
+
+
+
+
+
+    /**
+     * Clear all learning memory
+     */
     fun clear() {
 
 
         experiences.clear()
+
+    }
+
+
+
+
+
+
+
+
+    /**
+     * Reset learning memory
+     */
+    fun reset() {
+
+
+        clear()
 
     }
 
