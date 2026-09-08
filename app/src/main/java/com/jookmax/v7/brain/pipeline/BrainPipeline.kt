@@ -6,7 +6,9 @@ import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.market.MarketBrain
-import com.jookmax.v7.brain.risk.RiskBrain
+import com.jookmax.v7.brain.risk.RiskEngine
+import com.jookmax.v7.brain.risk.RiskProfile
+
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,7 +22,7 @@ class BrainPipeline @Inject constructor(
     private val marketBrain: MarketBrain,
 
 
-    private val riskBrain: RiskBrain,
+    private val riskEngine: RiskEngine,
 
 
     private val learningBrain: LearningBrain,
@@ -38,8 +40,6 @@ class BrainPipeline @Inject constructor(
 
 
         val context = createContext()
-
-
 
 
 
@@ -63,19 +63,13 @@ class BrainPipeline @Inject constructor(
                 marketScore = marketScore,
 
 
-                riskAllowed =
-
-                    context.riskResult.allowed,
+                riskAllowed = true,
 
 
-                learningReward =
-
-                    context.learningReward
+                learningReward = context.learningReward
 
 
             )
-
-
 
 
 
@@ -93,22 +87,16 @@ class BrainPipeline @Inject constructor(
 
 
 
-
         return BrainExecutionResult(
-
 
             context = finalContext,
 
-
             decision = decision
-
 
         )
 
 
     }
-
-
 
 
 
@@ -128,13 +116,22 @@ class BrainPipeline @Inject constructor(
 
 
 
-        val riskResult =
+        val riskDecision =
 
-            riskBrain.evaluateRisk(
+            riskEngine.calculateTradeRisk(
 
-                marketVolatility =
 
-                    marketAnalysis.volatility
+                profile = RiskProfile(),
+
+
+                entryPrice = 0.0,
+
+
+                volatility = marketAnalysis.volatility,
+
+
+                isLong = marketAnalysis.trend == "BULLISH"
+
 
             )
 
@@ -159,14 +156,13 @@ class BrainPipeline @Inject constructor(
 
 
 
-
         return BrainContext(
 
 
             marketAnalysis = marketAnalysis,
 
 
-            riskResult = riskResult,
+            riskDecision = riskDecision,
 
 
             learningReward = learningReward
@@ -196,9 +192,11 @@ class BrainPipeline @Inject constructor(
         return when {
 
 
+
             analysis.trend == "BULLISH" &&
 
                     analysis.rsi < 70 ->
+
 
                 0.8
 
@@ -210,6 +208,7 @@ class BrainPipeline @Inject constructor(
 
                     analysis.rsi > 30 ->
 
+
                 0.2
 
 
@@ -217,6 +216,7 @@ class BrainPipeline @Inject constructor(
 
 
             else ->
+
 
                 0.5
 

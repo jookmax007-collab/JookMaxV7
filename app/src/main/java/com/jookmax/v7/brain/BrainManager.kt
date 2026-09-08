@@ -142,10 +142,10 @@ class BrainManager @Inject constructor(
 
 
 
+
         val executionResult =
 
             brainPipeline.execute()
-
 
 
 
@@ -175,6 +175,7 @@ class BrainManager @Inject constructor(
 
 
 
+
         logger.info(
 
 
@@ -184,7 +185,6 @@ class BrainManager @Inject constructor(
             message =
 
                 "Decision generated: ${decision.action}"
-
 
         )
 
@@ -269,7 +269,7 @@ class BrainManager @Inject constructor(
 
                 riskAllowed =
 
-                    context.riskResult.allowed,
+                    context.riskDecision.positionSize > 0.0,
 
 
 
@@ -313,6 +313,7 @@ class BrainManager @Inject constructor(
             message = "Brain shutdown started"
 
         )
+
 
 
 
