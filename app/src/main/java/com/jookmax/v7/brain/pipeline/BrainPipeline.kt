@@ -2,7 +2,6 @@ package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
-import com.jookmax.v7.brain.decision.DecisionContext
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.learning.LearningBrain
@@ -57,21 +56,25 @@ class BrainPipeline @Inject constructor(
 
 
 
+        val riskAllowed =
+
+            context.riskDecision.positionSize > 0.0
+
+
+
+
+
         val decision =
 
             decisionEngine.decide(
 
+                marketScore = marketScore,
 
-                DecisionContext(
+                riskAllowed = riskAllowed,
 
-                    marketScore = marketScore,
+                learningReward = context.learningReward,
 
-                    riskDecision = context.riskDecision,
-
-                    learningReward = context.learningReward
-
-                )
-
+                riskDecision = context.riskDecision
 
             )
 
@@ -93,15 +96,11 @@ class BrainPipeline @Inject constructor(
 
         return BrainExecutionResult(
 
-
             context = finalContext,
-
 
             decision = decision
 
-
         )
-
 
     }
 
@@ -129,28 +128,15 @@ class BrainPipeline @Inject constructor(
 
             riskEngine.calculateTradeRisk(
 
-
-
                 profile = RiskProfile(),
-
-
 
                 entryPrice = 0.0,
 
-
-
                 volatility = marketAnalysis.volatility,
 
-
-
-                isLong =
-
-                    marketAnalysis.trend == "BULLISH"
-
+                isLong = marketAnalysis.trend == "BULLISH"
 
             )
-
-
 
 
 
@@ -170,25 +156,15 @@ class BrainPipeline @Inject constructor(
 
 
 
-
-
         return BrainContext(
-
-
 
             marketAnalysis = marketAnalysis,
 
-
-
             riskDecision = riskDecision,
-
-
 
             learningReward = learningReward
 
-
         )
-
 
     }
 
@@ -202,9 +178,7 @@ class BrainPipeline @Inject constructor(
 
     private fun calculateMarketScore(
 
-
         analysis: MarketAnalysis
-
 
     ): Double {
 
@@ -218,10 +192,7 @@ class BrainPipeline @Inject constructor(
 
                     analysis.rsi < 70 ->
 
-
                 0.8
-
-
 
 
 
@@ -231,10 +202,7 @@ class BrainPipeline @Inject constructor(
 
                     analysis.rsi > 30 ->
 
-
                 0.2
-
-
 
 
 
@@ -242,11 +210,9 @@ class BrainPipeline @Inject constructor(
 
             else ->
 
-
                 0.5
 
         }
-
 
     }
 

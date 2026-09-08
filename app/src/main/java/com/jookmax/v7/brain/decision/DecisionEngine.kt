@@ -1,6 +1,8 @@
 package com.jookmax.v7.brain.decision
 
 
+import com.jookmax.v7.brain.risk.RiskDecision
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,16 +23,15 @@ class DecisionEngine @Inject constructor(
 
     fun decide(
 
-        context: DecisionContext
+        marketScore: Double,
+
+        riskAllowed: Boolean,
+
+        learningReward: Double,
+
+        riskDecision: RiskDecision
 
     ): DecisionResult {
-
-
-
-        val riskAllowed =
-
-            context.riskDecision.positionSize > 0.0
-
 
 
 
@@ -38,13 +39,14 @@ class DecisionEngine @Inject constructor(
 
             signalAggregator.aggregate(
 
-                marketScore = context.marketScore,
+                marketScore = marketScore,
 
                 riskAllowed = riskAllowed,
 
-                learningReward = context.learningReward
+                learningReward = learningReward
 
             )
+
 
 
 
@@ -60,13 +62,21 @@ class DecisionEngine @Inject constructor(
 
 
 
+
         val confidence =
 
             confidenceEngine.calculate(
 
-                decisionScore
+                decisionScore = decisionScore,
+
+                marketScore = marketScore,
+
+                riskDecision = riskDecision,
+
+                learningReward = learningReward
 
             )
+
 
 
 
@@ -83,6 +93,7 @@ class DecisionEngine @Inject constructor(
             )
 
         }
+
 
 
 
@@ -127,6 +138,8 @@ class DecisionEngine @Inject constructor(
         }
 
     }
+
+
 
 
 
