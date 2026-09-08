@@ -14,6 +14,9 @@ import javax.inject.Singleton
  * RiskProfile
  *      |
  *      v
+ * DynamicRiskManager
+ *      |
+ *      v
  * PositionSizer
  *      |
  *      v
@@ -32,13 +35,21 @@ import javax.inject.Singleton
 @Singleton
 class RiskEngine @Inject constructor(
 
+
     private val positionSizer: PositionSizer,
+
 
     private val stopLossCalculator: StopLossCalculator,
 
+
     private val takeProfitCalculator: TakeProfitCalculator,
 
-    private val exposureManager: ExposureManager
+
+    private val exposureManager: ExposureManager,
+
+
+    private val dynamicRiskManager: DynamicRiskManager
+
 
 ) {
 
@@ -46,15 +57,34 @@ class RiskEngine @Inject constructor(
 
     fun calculateTradeRisk(
 
+
         profile: RiskProfile,
+
 
         entryPrice: Double,
 
+
         volatility: Double,
+
 
         isLong: Boolean
 
+
     ): RiskDecision {
+
+
+
+        val adjustedProfile =
+
+            dynamicRiskManager.adjustRisk(
+
+                profile = profile,
+
+                volatility = volatility
+
+            )
+
+
 
 
 
@@ -94,7 +124,7 @@ class RiskEngine @Inject constructor(
 
             positionSizer.calculate(
 
-                profile = profile,
+                profile = adjustedProfile,
 
                 stopLossDistance =
 
@@ -158,10 +188,14 @@ class RiskEngine @Inject constructor(
 
 data class RiskDecision(
 
+
     val positionSize: Double,
+
 
     val stopLoss: Double,
 
+
     val takeProfit: Double
+
 
 )

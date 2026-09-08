@@ -3,10 +3,12 @@ package com.jookmax.v7.di
 
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.learning.LearningBrain
+import com.jookmax.v7.brain.risk.DynamicRiskManager
 import com.jookmax.v7.brain.risk.ExposureManager
 import com.jookmax.v7.brain.risk.PositionSizer
 import com.jookmax.v7.brain.risk.RiskBrain
 import com.jookmax.v7.brain.risk.RiskEngine
+import com.jookmax.v7.brain.risk.RiskMultiplier
 import com.jookmax.v7.brain.risk.StopLossCalculator
 import com.jookmax.v7.brain.risk.TakeProfitCalculator
 
@@ -87,6 +89,39 @@ object BrainModule {
 
     @Provides
     @Singleton
+    fun provideRiskMultiplier(): RiskMultiplier {
+
+        return RiskMultiplier()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideDynamicRiskManager(
+
+        riskMultiplier: RiskMultiplier
+
+    ): DynamicRiskManager {
+
+
+        return DynamicRiskManager(
+
+            riskMultiplier = riskMultiplier
+
+        )
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
     fun provideRiskEngine(
 
         positionSizer: PositionSizer,
@@ -95,7 +130,9 @@ object BrainModule {
 
         takeProfitCalculator: TakeProfitCalculator,
 
-        exposureManager: ExposureManager
+        exposureManager: ExposureManager,
+
+        dynamicRiskManager: DynamicRiskManager
 
     ): RiskEngine {
 
@@ -108,7 +145,9 @@ object BrainModule {
 
             takeProfitCalculator = takeProfitCalculator,
 
-            exposureManager = exposureManager
+            exposureManager = exposureManager,
+
+            dynamicRiskManager = dynamicRiskManager
 
         )
 
