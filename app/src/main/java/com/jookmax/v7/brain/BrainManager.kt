@@ -53,6 +53,7 @@ class BrainManager @Inject constructor(
 
 
 
+
     fun initialize() {
 
 
@@ -95,6 +96,7 @@ class BrainManager @Inject constructor(
 
 
 
+
     fun isReady(): Boolean {
 
 
@@ -102,6 +104,7 @@ class BrainManager @Inject constructor(
 
 
     }
+
 
 
 
@@ -136,7 +139,7 @@ class BrainManager @Inject constructor(
 
 
 
-        val decision =
+        val context =
 
             brainPipeline.execute()
 
@@ -146,12 +149,29 @@ class BrainManager @Inject constructor(
 
 
 
-        val learningReward =
+        val decision =
 
-            learningBrain
-                .getLastResult()
-                ?.reward
-                ?: 0.0
+            context.decisionResult
+
+
+
+
+
+        if (decision == null) {
+
+
+            logger.warning(
+
+                tag = "BrainManager",
+
+                message = "Decision generation failed"
+
+            )
+
+
+            return
+
+        }
 
 
 
@@ -167,6 +187,8 @@ class BrainManager @Inject constructor(
                 "Decision generated: ${decision.action}"
 
         )
+
+
 
 
 
@@ -199,22 +221,32 @@ class BrainManager @Inject constructor(
 
 
 
+
                 decision = decision,
 
 
 
 
-                marketScore = decision.confidence,
+
+                marketScore =
+
+                    context.marketAnalysis.confidence,
 
 
 
 
-                riskAllowed = true,
+
+                riskAllowed =
+
+                    context.riskResult.allowed,
 
 
 
 
-                learningReward = learningReward
+
+                learningReward =
+
+                    context.learningReward
 
 
 
@@ -227,6 +259,9 @@ class BrainManager @Inject constructor(
 
 
     }
+
+
+
 
 
 

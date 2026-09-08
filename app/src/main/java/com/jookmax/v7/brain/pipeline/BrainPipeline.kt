@@ -2,7 +2,6 @@ package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.brain.decision.DecisionEngine
-import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.risk.RiskBrain
@@ -32,14 +31,14 @@ class BrainPipeline @Inject constructor(
 
 
 
-    fun execute(): DecisionResult {
+    fun execute(): BrainContext {
 
 
         val context = createContext()
 
 
 
-        return decisionEngine.decide(
+        val decision = decisionEngine.decide(
 
 
             marketScore =
@@ -62,7 +61,17 @@ class BrainPipeline @Inject constructor(
         )
 
 
+
+
+        return context.copy(
+
+            decisionResult = decision
+
+        )
+
+
     }
+
 
 
 
@@ -78,7 +87,6 @@ class BrainPipeline @Inject constructor(
         val marketAnalysis =
 
             marketBrain.analyze()
-
 
 
 
