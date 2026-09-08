@@ -3,9 +3,10 @@ package com.jookmax.v7.di
 
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.learning.LearningBrain
+import com.jookmax.v7.brain.risk.ExposureManager
+import com.jookmax.v7.brain.risk.PositionSizer
 import com.jookmax.v7.brain.risk.RiskBrain
 import com.jookmax.v7.brain.risk.RiskEngine
-import com.jookmax.v7.brain.risk.PositionSizer
 import com.jookmax.v7.brain.risk.StopLossCalculator
 import com.jookmax.v7.brain.risk.TakeProfitCalculator
 
@@ -74,13 +75,27 @@ object BrainModule {
 
     @Provides
     @Singleton
+    fun provideExposureManager(): ExposureManager {
+
+        return ExposureManager()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
     fun provideRiskEngine(
 
         positionSizer: PositionSizer,
 
         stopLossCalculator: StopLossCalculator,
 
-        takeProfitCalculator: TakeProfitCalculator
+        takeProfitCalculator: TakeProfitCalculator,
+
+        exposureManager: ExposureManager
 
     ): RiskEngine {
 
@@ -91,7 +106,9 @@ object BrainModule {
 
             stopLossCalculator = stopLossCalculator,
 
-            takeProfitCalculator = takeProfitCalculator
+            takeProfitCalculator = takeProfitCalculator,
+
+            exposureManager = exposureManager
 
         )
 

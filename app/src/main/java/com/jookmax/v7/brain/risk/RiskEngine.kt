@@ -9,26 +9,36 @@ import javax.inject.Singleton
 /**
  * Central Risk Calculation Engine.
  *
- * Connects:
+ * Pipeline:
  *
  * RiskProfile
+ *      |
+ *      v
  * PositionSizer
+ *      |
+ *      v
+ * ExposureManager
+ *      |
+ *      v
  * StopLossCalculator
+ *      |
+ *      v
  * TakeProfitCalculator
+ *      |
+ *      v
+ * RiskDecision
  *
  */
 @Singleton
 class RiskEngine @Inject constructor(
 
-
     private val positionSizer: PositionSizer,
-
 
     private val stopLossCalculator: StopLossCalculator,
 
+    private val takeProfitCalculator: TakeProfitCalculator,
 
-    private val takeProfitCalculator: TakeProfitCalculator
-
+    private val exposureManager: ExposureManager
 
 ) {
 
@@ -63,6 +73,7 @@ class RiskEngine @Inject constructor(
 
 
 
+
         val takeProfit =
 
             takeProfitCalculator.calculate(
@@ -78,15 +89,19 @@ class RiskEngine @Inject constructor(
 
 
 
-        val positionSize =
+
+        val calculatedPositionSize =
 
             positionSizer.calculate(
 
                 profile = profile,
 
                 stopLossDistance =
+
                     kotlin.math.abs(
+
                         entryPrice - stopLoss
+
                     )
 
             )
@@ -94,9 +109,36 @@ class RiskEngine @Inject constructor(
 
 
 
+
+        val exposureAllowed =
+
+            exposureManager.checkExposure(
+
+                calculatedPositionSize
+
+            )
+
+
+
+
+
+        val finalPositionSize =
+
+            if (exposureAllowed)
+
+                calculatedPositionSize
+
+            else
+
+                0.0
+
+
+
+
+
         return RiskDecision(
 
-            positionSize = positionSize,
+            positionSize = finalPositionSize,
 
             stopLoss = stopLoss,
 
@@ -104,7 +146,9 @@ class RiskEngine @Inject constructor(
 
         )
 
+
     }
+
 
 
 }
@@ -114,14 +158,10 @@ class RiskEngine @Inject constructor(
 
 data class RiskDecision(
 
-
     val positionSize: Double,
-
 
     val stopLoss: Double,
 
-
     val takeProfit: Double
-
 
 )

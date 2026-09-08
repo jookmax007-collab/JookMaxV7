@@ -1,63 +1,62 @@
 package com.jookmax.v7.analysis.structure
 
 
+import com.jookmax.v7.core.model.MarketCandle
 
-class TrendDetector {
+import javax.inject.Inject
+import javax.inject.Singleton
 
+
+@Singleton
+class TrendDetector @Inject constructor() {
 
 
     fun detect(
-        values: List<Double>
+        candles: List<MarketCandle>
     ): MarketStructure {
 
 
-        if(values.size < 5) {
+        if (candles.size < 5) {
 
-            return MarketStructure.SIDEWAYS
+            return MarketStructure.UNKNOWN
 
         }
 
 
-
         val recent =
-            values.takeLast(5)
+            candles.takeLast(5)
 
 
 
         val first =
-            recent.first()
-
+            recent.first().close
 
 
         val last =
-            recent.last()
-
-
-
-        val change =
-            last - first
+            recent.last().close
 
 
 
         return when {
 
 
-            change > 0 ->
+            last > first ->
+
                 MarketStructure.UPTREND
 
 
 
-            change < 0 ->
+            last < first ->
+
                 MarketStructure.DOWNTREND
 
 
 
             else ->
-                MarketStructure.SIDEWAYS
 
+                MarketStructure.RANGE
 
         }
-
 
     }
 
