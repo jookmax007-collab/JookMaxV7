@@ -2,6 +2,7 @@ package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
+import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.learning.LearningBrain
@@ -27,7 +28,10 @@ class BrainPipeline @Inject constructor(
     private val learningBrain: LearningBrain,
 
 
-    private val decisionEngine: DecisionEngine
+    private val decisionEngine: DecisionEngine,
+
+
+    private val confidenceFeedbackCollector: ConfidenceFeedbackCollector
 
 
 ) {
@@ -77,6 +81,18 @@ class BrainPipeline @Inject constructor(
                 riskDecision = context.riskDecision
 
             )
+
+
+
+
+
+        confidenceFeedbackCollector.collect(
+
+            decisionResult = decision,
+
+            reward = context.learningReward
+
+        )
 
 
 
