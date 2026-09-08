@@ -2,6 +2,7 @@ package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.brain.decision.DecisionResult
+import com.jookmax.v7.brain.intelligence.IntelligenceDecision
 
 
 
@@ -12,12 +13,15 @@ import com.jookmax.v7.brain.decision.DecisionResult
  *
  * BrainContext
  * +
- * Final DecisionResult
+ * DecisionResult
+ * +
+ * IntelligenceDecision
  *
  * Used by:
  * - BrainManager
  * - Decision Analytics
  * - Learning system
+ * - Intelligence layer
  */
 data class BrainExecutionResult(
 
@@ -25,7 +29,9 @@ data class BrainExecutionResult(
     val context: BrainContext,
 
 
-    val decision: DecisionResult
+    val decision: DecisionResult,
 
+
+    val intelligenceDecision: IntelligenceDecision
 
 )

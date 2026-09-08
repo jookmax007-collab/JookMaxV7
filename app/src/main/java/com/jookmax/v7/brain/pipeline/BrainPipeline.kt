@@ -2,15 +2,23 @@ package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
+
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
+
 import com.jookmax.v7.brain.decision.DecisionEngine
-import com.jookmax.v7.brain.intelligence.IntelligenceAdvisor
+
+import com.jookmax.v7.brain.intelligence.IntelligenceDecision
+import com.jookmax.v7.brain.intelligence.IntelligenceEngine
+
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.learning.LearningExperience
 import com.jookmax.v7.brain.learning.LearningExperienceManager
+
 import com.jookmax.v7.brain.market.MarketBrain
+
 import com.jookmax.v7.brain.risk.RiskEngine
 import com.jookmax.v7.brain.risk.RiskProfile
+
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,7 +47,7 @@ class BrainPipeline @Inject constructor(
     private val learningExperienceManager: LearningExperienceManager,
 
 
-    private val intelligenceAdvisor: IntelligenceAdvisor
+    private val intelligenceEngine: IntelligenceEngine
 
 
 ) {
@@ -106,47 +114,11 @@ class BrainPipeline @Inject constructor(
 
 
 
-        val intelligenceAdjustment =
-
-            intelligenceAdvisor.calculateAdjustment()
-
-
-
-
-
-        val adjustedConfidence =
-
-            (
-
-                decision.confidence *
-
-                        intelligenceAdjustment
-
-                )
-
-                .coerceIn(0.0, 1.0)
-
-
-
-
-
-        val adjustedDecision =
-
-            decision.copy(
-
-                confidence = adjustedConfidence
-
-            )
-
-
-
-
-
         val experience =
 
             LearningExperience.from(
 
-                decisionResult = adjustedDecision,
+                decisionResult = decision,
 
                 riskDecision = context.riskDecision,
 
@@ -168,17 +140,25 @@ class BrainPipeline @Inject constructor(
 
 
 
+        val intelligenceDecision =
+
+            intelligenceEngine.evaluate(
+
+                decisionResult = decision
+
+            )
+
+
+
 
 
         val finalContext =
 
             context.copy(
 
-                decisionResult = adjustedDecision
+                decisionResult = decision
 
             )
-
-
 
 
 
@@ -188,13 +168,13 @@ class BrainPipeline @Inject constructor(
 
             context = finalContext,
 
-            decision = adjustedDecision
+            decision = decision,
+
+            intelligenceDecision = intelligenceDecision
 
         )
 
     }
-
-
 
 
 
@@ -257,8 +237,6 @@ class BrainPipeline @Inject constructor(
         )
 
     }
-
-
 
 
 
