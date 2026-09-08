@@ -1,6 +1,7 @@
 package com.jookmax.v7.monitoring
 
 
+
 /**
  * Represents a snapshot of JookMax engine performance.
  *
@@ -28,14 +29,14 @@ data class PerformanceSnapshot(
 
 
     /**
-     * Number of processed events.
+     * Number of processed engine events.
      */
     val processedEvents: Long = 0,
 
 
 
     /**
-     * Number of failed events.
+     * Number of failed engine events.
      */
     val failedEvents: Long = 0,
 
@@ -52,6 +53,41 @@ data class PerformanceSnapshot(
      * Processing latency in milliseconds.
      */
     val processingLatencyMs: Long = 0,
+
+
+
+    /**
+     * Total generated trading decisions.
+     */
+    val totalDecisions: Long = 0,
+
+
+
+    /**
+     * BUY decision count.
+     */
+    val buyDecisions: Long = 0,
+
+
+
+    /**
+     * SELL decision count.
+     */
+    val sellDecisions: Long = 0,
+
+
+
+    /**
+     * HOLD decision count.
+     */
+    val holdDecisions: Long = 0,
+
+
+
+    /**
+     * Average confidence of generated decisions.
+     */
+    val averageDecisionConfidence: Double = 0.0,
 
 
 
