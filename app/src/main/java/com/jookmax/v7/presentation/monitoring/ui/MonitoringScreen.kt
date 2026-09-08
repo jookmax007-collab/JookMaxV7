@@ -53,6 +53,8 @@ fun MonitoringScreen(
 
 
 
+
+
 @Composable
 private fun MonitoringContent(
 
@@ -92,7 +94,12 @@ private fun MonitoringContent(
 
 
 
+
+
             is MonitoringUiState.Available -> {
+
+
+                val report = state.report
 
 
 
@@ -108,9 +115,83 @@ private fun MonitoringContent(
 
                 Text(
 
-                    text = "Performance report available"
+                    text = "Engine State: ${report.currentEngineState}"
 
                 )
+
+
+
+                Text(
+
+                    text = "Processed Events: ${report.totalProcessedEvents}"
+
+                )
+
+
+
+                Text(
+
+                    text = "Failed Events: ${report.totalFailedEvents}"
+
+                )
+
+
+
+                Text(
+
+                    text = "Failure Rate: ${report.failureRate}"
+
+                )
+
+
+
+                Text(
+
+                    text = "Average Latency: ${report.averageLatencyMs} ms"
+
+                )
+
+
+
+                Text(
+
+                    text = "Total Decisions: ${report.totalDecisions}"
+
+                )
+
+
+
+                Text(
+
+                    text = "BUY: ${report.buyDecisions}"
+
+                )
+
+
+
+                Text(
+
+                    text = "SELL: ${report.sellDecisions}"
+
+                )
+
+
+
+                Text(
+
+                    text = "HOLD: ${report.holdDecisions}"
+
+                )
+
+
+
+                Text(
+
+                    text = "Decision Confidence: ${report.averageDecisionConfidence}"
+
+                )
+
+
 
 
 
@@ -140,6 +221,8 @@ private fun MonitoringContent(
 
 
             }
+
+
 
 
 
