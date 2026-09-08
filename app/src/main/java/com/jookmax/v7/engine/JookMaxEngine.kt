@@ -6,8 +6,10 @@ import com.jookmax.v7.brain.BrainManager
 import com.jookmax.v7.core.events.EventBus
 import com.jookmax.v7.core.events.SystemEvent
 import com.jookmax.v7.core.events.EventDispatcher
+
 import com.jookmax.v7.engine.events.subscriber.EngineEventSubscriber
 import com.jookmax.v7.engine.events.subscriber.MarketEventSubscriber
+import com.jookmax.v7.engine.events.subscriber.DecisionEventSubscriber
 
 import com.jookmax.v7.monitoring.EngineHealth
 import com.jookmax.v7.monitoring.EngineMonitor
@@ -16,6 +18,7 @@ import com.jookmax.v7.monitoring.RuntimeObserver
 
 import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
 import com.jookmax.v7.engine.lifecycle.EngineState
+
 import com.jookmax.v7.engine.runtime.EngineCoroutineScope
 import com.jookmax.v7.engine.runtime.EngineRuntimeTracker
 
@@ -41,6 +44,9 @@ class JookMaxEngine(
     private val engineEventSubscriber: EngineEventSubscriber,
 
 
+    private val decisionEventSubscriber: DecisionEventSubscriber,
+
+
     private val lifecycleManager: EngineLifecycleManager,
 
 
@@ -63,9 +69,9 @@ class JookMaxEngine(
 
 
 
-
     val state: StateFlow<EngineState>
         get() = lifecycleManager.state
+
 
 
 
@@ -75,13 +81,19 @@ class JookMaxEngine(
     fun start() {
 
 
+
         lifecycleManager.start()
+
 
 
         runtimeTracker.start()
 
 
+
         metricsCollector.recordEvent()
+
+
+
 
 
 
@@ -93,11 +105,26 @@ class JookMaxEngine(
 
 
 
+
+
         eventDispatcher.register(
 
             engineEventSubscriber
 
         )
+
+
+
+
+
+        eventDispatcher.register(
+
+            decisionEventSubscriber
+
+        )
+
+
+
 
 
 
@@ -109,7 +136,11 @@ class JookMaxEngine(
 
 
 
+
+
         brainManager.initialize()
+
+
 
 
 
@@ -121,6 +152,8 @@ class JookMaxEngine(
 
 
 
+
+
         runtimeObserver.observe(
 
             "RUNNING"
@@ -128,7 +161,12 @@ class JookMaxEngine(
         )
 
 
+
+
+
         updatePerformanceSnapshot()
+
+
 
 
 
@@ -137,6 +175,7 @@ class JookMaxEngine(
             SystemEvent.EngineStarted
 
         )
+
 
 
     }
@@ -152,6 +191,7 @@ class JookMaxEngine(
     fun stop() {
 
 
+
         eventBus.publish(
 
             SystemEvent.EngineStopped
@@ -160,14 +200,23 @@ class JookMaxEngine(
 
 
 
+
+
         lifecycleManager.stop()
+
+
 
 
 
         runtimeTracker.stop()
 
 
+
+
+
         metricsCollector.recordEvent()
+
+
 
 
 
@@ -175,7 +224,11 @@ class JookMaxEngine(
 
 
 
+
+
         brainManager.shutdown()
+
+
 
 
 
@@ -187,6 +240,8 @@ class JookMaxEngine(
 
 
 
+
+
         runtimeObserver.observe(
 
             "STOPPED"
@@ -194,7 +249,11 @@ class JookMaxEngine(
         )
 
 
+
+
+
         updatePerformanceSnapshot()
+
 
 
     }
@@ -210,7 +269,10 @@ class JookMaxEngine(
     fun pause() {
 
 
+
         lifecycleManager.pause()
+
+
 
 
 
@@ -222,11 +284,16 @@ class JookMaxEngine(
 
 
 
+
+
         metricsCollector.recordEvent()
 
 
 
+
+
         updatePerformanceSnapshot()
+
 
 
     }
@@ -242,7 +309,10 @@ class JookMaxEngine(
     fun resume() {
 
 
+
         lifecycleManager.resume()
+
+
 
 
 
@@ -254,11 +324,16 @@ class JookMaxEngine(
 
 
 
+
+
         metricsCollector.recordEvent()
 
 
 
+
+
         updatePerformanceSnapshot()
+
 
 
     }
@@ -274,7 +349,10 @@ class JookMaxEngine(
     fun reset() {
 
 
+
         lifecycleManager.reset()
+
+
 
 
 
@@ -282,7 +360,11 @@ class JookMaxEngine(
 
 
 
+
+
         engineMonitor.reset()
+
+
 
 
 
@@ -290,7 +372,10 @@ class JookMaxEngine(
 
 
 
+
+
         metricsCollector.reset()
+
 
 
     }
@@ -306,11 +391,13 @@ class JookMaxEngine(
     fun shutdown() {
 
 
+
         stop()
 
 
 
         coroutineScope.cancel()
+
 
 
     }
@@ -332,23 +419,40 @@ class JookMaxEngine(
             engineMonitor.createSnapshot(
 
 
+
                 engineState =
+
                     runtimeObserver.getCurrentState(),
 
 
+
+
+
                 processedEvents =
+
                     metricsCollector.getProcessedEvents(),
 
 
+
+
+
                 failedEvents =
+
                     metricsCollector.getFailedEvents(),
 
 
+
+
+
                 processingLatencyMs =
+
                     metricsCollector.getAverageLatencyMs()
 
 
+
             )
+
+
 
 
 
@@ -357,6 +461,7 @@ class JookMaxEngine(
             snapshot
 
         )
+
 
 
     }

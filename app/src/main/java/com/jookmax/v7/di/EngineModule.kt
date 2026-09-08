@@ -5,6 +5,8 @@ import com.jookmax.v7.brain.BrainManager
 
 import com.jookmax.v7.core.events.EventBus
 import com.jookmax.v7.core.events.EventDispatcher
+
+import com.jookmax.v7.engine.events.subscriber.DecisionEventSubscriber
 import com.jookmax.v7.engine.events.subscriber.EngineEventSubscriber
 import com.jookmax.v7.engine.events.subscriber.MarketEventSubscriber
 
@@ -104,6 +106,9 @@ object EngineModule {
         engineEventSubscriber: EngineEventSubscriber,
 
 
+        decisionEventSubscriber: DecisionEventSubscriber,
+
+
         engineMonitor: EngineMonitor,
 
 
@@ -145,6 +150,9 @@ object EngineModule {
 
 
             engineEventSubscriber = engineEventSubscriber,
+
+
+            decisionEventSubscriber = decisionEventSubscriber,
 
 
             engineMonitor = engineMonitor,
