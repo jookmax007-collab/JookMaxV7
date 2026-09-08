@@ -1,6 +1,7 @@
 package com.jookmax.v7.brain.decision
 
 
+import com.jookmax.v7.brain.confidence.ConfidenceFusionEngine
 import com.jookmax.v7.brain.confidence.LearningConfidenceCalculator
 import com.jookmax.v7.brain.confidence.MarketConfidenceCalculator
 import com.jookmax.v7.brain.confidence.RiskConfidenceCalculator
@@ -21,7 +22,10 @@ class ConfidenceEngine @Inject constructor(
     private val riskConfidenceCalculator: RiskConfidenceCalculator,
 
 
-    private val learningConfidenceCalculator: LearningConfidenceCalculator
+    private val learningConfidenceCalculator: LearningConfidenceCalculator,
+
+
+    private val confidenceFusionEngine: ConfidenceFusionEngine
 
 
 ) {
@@ -83,7 +87,24 @@ class ConfidenceEngine @Inject constructor(
 
 
 
-        val baseConfidence =
+        val fusionResult =
+
+            confidenceFusionEngine.fuse(
+
+                marketConfidence = marketConfidence,
+
+                riskConfidence = riskConfidence,
+
+                learningConfidence = learningConfidence
+
+            )
+
+
+
+
+
+        val decisionAdjustment =
+
 
             when(decisionScore.direction) {
 
@@ -111,25 +132,13 @@ class ConfidenceEngine @Inject constructor(
 
 
 
-        val finalConfidence =
+        return (
 
-            (
+            fusionResult.finalConfidence *
 
-                baseConfidence * 0.4 +
+            decisionAdjustment
 
-                marketConfidence * 0.3 +
-
-                riskConfidence * 0.2 +
-
-                learningConfidence * 0.1
-
-            )
-
-
-
-
-
-        return finalConfidence
+        )
 
             .coerceIn(0.0,1.0)
 

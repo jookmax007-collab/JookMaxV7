@@ -1,6 +1,7 @@
 package com.jookmax.v7.di
 
 
+import com.jookmax.v7.brain.confidence.ConfidenceFusionEngine
 import com.jookmax.v7.brain.confidence.LearningConfidenceCalculator
 import com.jookmax.v7.brain.confidence.MarketConfidenceCalculator
 import com.jookmax.v7.brain.confidence.RiskConfidenceCalculator
@@ -27,7 +28,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-
 import javax.inject.Singleton
 
 
@@ -52,6 +52,8 @@ object BrainModule {
 
 
 
+
+
     @Provides
     @Singleton
     fun providePositionSizer(): PositionSizer {
@@ -59,6 +61,8 @@ object BrainModule {
         return PositionSizer()
 
     }
+
+
 
 
 
@@ -72,6 +76,8 @@ object BrainModule {
 
 
 
+
+
     @Provides
     @Singleton
     fun provideTakeProfitCalculator(): TakeProfitCalculator {
@@ -79,6 +85,8 @@ object BrainModule {
         return TakeProfitCalculator()
 
     }
+
+
 
 
 
@@ -92,6 +100,8 @@ object BrainModule {
 
 
 
+
+
     @Provides
     @Singleton
     fun provideRiskMultiplier(): RiskMultiplier {
@@ -99,6 +109,8 @@ object BrainModule {
         return RiskMultiplier()
 
     }
+
+
 
 
 
@@ -113,6 +125,8 @@ object BrainModule {
         )
 
     }
+
+
 
 
 
@@ -155,11 +169,37 @@ object BrainModule {
 
     @Provides
     @Singleton
+    fun provideSignalAggregator(): SignalAggregator {
+
+        return SignalAggregator()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideDecisionScoreCalculator(): DecisionScoreCalculator {
+
+        return DecisionScoreCalculator()
+
+    }
+
+
+
+
+
+    @Provides
+    @Singleton
     fun provideMarketConfidenceCalculator(): MarketConfidenceCalculator {
 
         return MarketConfidenceCalculator()
 
     }
+
+
 
 
 
@@ -173,6 +213,8 @@ object BrainModule {
 
 
 
+
+
     @Provides
     @Singleton
     fun provideLearningConfidenceCalculator(): LearningConfidenceCalculator {
@@ -180,6 +222,20 @@ object BrainModule {
         return LearningConfidenceCalculator()
 
     }
+
+
+
+
+
+    @Provides
+    @Singleton
+    fun provideConfidenceFusionEngine(): ConfidenceFusionEngine {
+
+        return ConfidenceFusionEngine()
+
+    }
+
+
 
 
 
@@ -191,7 +247,9 @@ object BrainModule {
 
         riskConfidenceCalculator: RiskConfidenceCalculator,
 
-        learningConfidenceCalculator: LearningConfidenceCalculator
+        learningConfidenceCalculator: LearningConfidenceCalculator,
+
+        confidenceFusionEngine: ConfidenceFusionEngine
 
     ): ConfidenceEngine {
 
@@ -202,31 +260,11 @@ object BrainModule {
 
             riskConfidenceCalculator = riskConfidenceCalculator,
 
-            learningConfidenceCalculator = learningConfidenceCalculator
+            learningConfidenceCalculator = learningConfidenceCalculator,
+
+            confidenceFusionEngine = confidenceFusionEngine
 
         )
-
-    }
-
-
-
-
-
-    @Provides
-    @Singleton
-    fun provideSignalAggregator(): SignalAggregator {
-
-        return SignalAggregator()
-
-    }
-
-
-
-    @Provides
-    @Singleton
-    fun provideDecisionScoreCalculator(): DecisionScoreCalculator {
-
-        return DecisionScoreCalculator()
 
     }
 
