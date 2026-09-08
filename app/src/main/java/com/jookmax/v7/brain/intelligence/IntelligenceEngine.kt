@@ -13,10 +13,18 @@ import javax.inject.Singleton
 class IntelligenceEngine @Inject constructor(
 
 
-    private val advisor: IntelligenceAdvisor
+    private val advisor: IntelligenceAdvisor,
+
+
+    private val memoryAnalyzer: IntelligenceMemoryAnalyzer,
+
+
+    private val decisionMemory: DecisionMemory
 
 
 ) {
+
+
 
 
 
@@ -28,9 +36,41 @@ class IntelligenceEngine @Inject constructor(
 
 
 
-        val adjustment =
+        val advisorAdjustment =
 
             advisor.calculateAdjustment()
+
+
+
+
+
+        val memoryAdjustment =
+
+            memoryAnalyzer.calculateAdjustment()
+
+
+
+
+
+        val finalAdjustment =
+
+            (
+
+                    advisorAdjustment *
+
+                            memoryAdjustment
+
+                    )
+
+                .coerceIn(
+
+                    0.8,
+
+                    1.2
+
+                )
+
+
 
 
 
@@ -40,13 +80,19 @@ class IntelligenceEngine @Inject constructor(
 
             (
 
-                decisionResult.confidence *
+                    decisionResult.confidence *
 
-                adjustment
+                            finalAdjustment
 
-            )
+                    )
 
-                .coerceIn(0.0,1.0)
+                .coerceIn(
+
+                    0.0,
+
+                    1.0
+
+                )
 
 
 
@@ -59,14 +105,21 @@ class IntelligenceEngine @Inject constructor(
             when(decisionResult.action) {
 
 
+
                 DecisionAction.BUY ->
 
                     "Bullish intelligence alignment"
 
 
+
+
+
                 DecisionAction.SELL ->
 
                     "Bearish intelligence alignment"
+
+
+
 
 
                 DecisionAction.HOLD ->
@@ -81,19 +134,43 @@ class IntelligenceEngine @Inject constructor(
 
 
 
-        return IntelligenceDecision(
+        val intelligenceDecision =
+
+            IntelligenceDecision(
+
+                action = decisionResult.action,
+
+                confidence = confidence,
+
+                reason = reason
+
+            )
 
 
-            action = decisionResult.action,
 
 
-            confidence = confidence,
 
+        decisionMemory.add(
 
-            reason = reason
+            DecisionExperience(
 
+                action = decisionResult.action,
+
+                confidence = confidence,
+
+                reward = 0.0,
+
+                success = false
+
+            )
 
         )
+
+
+
+
+
+        return intelligenceDecision
 
     }
 
