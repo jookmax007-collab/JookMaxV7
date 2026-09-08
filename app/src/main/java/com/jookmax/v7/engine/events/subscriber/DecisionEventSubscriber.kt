@@ -1,14 +1,13 @@
 package com.jookmax.v7.engine.events.subscriber
 
 
-import com.jookmax.v7.brain.analytics.DecisionAnalyticsRepository
-import com.jookmax.v7.brain.analytics.DecisionRecord
-
 import com.jookmax.v7.core.events.DecisionEvent
 import com.jookmax.v7.core.events.EngineEvent
 import com.jookmax.v7.core.events.EventSubscriber
 
 import com.jookmax.v7.core.logging.Logger
+
+import com.jookmax.v7.domain.analytics.DecisionAnalyticsRepository
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,14 +20,22 @@ import javax.inject.Singleton
  * Flow:
  *
  * DecisionEngine
- *      ↓
+ *        |
+ *        v
  * DecisionEvent
- *      ↓
+ *        |
+ *        v
  * DecisionEventSubscriber
- *      ↓
- * DecisionAnalyticsRepository
- *      ↓
- * Room
+ *        |
+ *        v
+ * DecisionAnalyticsRepository (Domain)
+ *        |
+ *        v
+ * DecisionAnalyticsRepositoryImpl (Data)
+ *        |
+ *        v
+ * Room Database
+ *
  */
 @Singleton
 class DecisionEventSubscriber @Inject constructor(
@@ -92,46 +99,9 @@ class DecisionEventSubscriber @Inject constructor(
     ) {
 
 
-
-        val decision = event.decision
-
-
-
-
-
-        val record = DecisionRecord(
-
-
-            symbol = event.symbol.code,
-
-
-            action = decision.action.name,
-
-
-            confidence = decision.confidence,
-
-
-            marketScore = event.marketScore,
-
-
-            riskAllowed = event.riskAllowed,
-
-
-            learningReward = event.learningReward,
-
-
-            timestamp = event.timestamp
-
-
-        )
-
-
-
-
-
         repository.saveDecision(
 
-            record
+            event
 
         )
 
@@ -141,10 +111,14 @@ class DecisionEventSubscriber @Inject constructor(
 
         logger.info(
 
+
             tag = "DecisionEventSubscriber",
 
+
             message =
-                "Decision stored: ${event.symbol.code} ${decision.action}"
+
+                "Decision stored: ${event.symbol.code} ${event.decision.action}"
+
 
         )
 
