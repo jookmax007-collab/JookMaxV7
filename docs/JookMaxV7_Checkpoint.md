@@ -1,363 +1,147 @@
-تغییرات مهمی که انجام شده و در فایل قبلی نبود:
+JookMax V7 — Development Checkpoint
 
-✅ Decision Analytics persistence از Foundation عبور کرده و Flow کامل‌تر شده.
-✅ DecisionEvent payload کامل شده (marketScore, riskAllowed, learningReward)
-✅ BrainPipeline اضافه شده.
-✅ اتصال BrainManager → BrainPipeline → DecisionEvent انجام شده.
-✅ DecisionEventSubscriber به Repository Domain وصل شده.
-✅ Repository implementation به Data Layer منتقل شده.
-✅ Decision metrics collector اضافه و به subscriber وصل شده.
-✅ آخرین commit:
-65d76a6 fix: restore performance snapshot model
+آخرین بروزرسانی: 2026-09-08
 
-نسخه جدید فایل docs/JookMaxV7_Checkpoint.md:
+وضعیت کلی Build
 
-# JookMax V7 — چک‌پوینت وضعیت پروژه
-
-**آخرین به‌روزرسانی:** 2026-09-08
-
-این فایل باید بعد از پایان هر فاز طبق معیار پایان فاز در سند Master Plan بروزرسانی شود.
-
-راهنما:
-
-- ✅ کامل و تست شده
-- ⚠️ Foundation / اسکلت
-- ❌ شروع نشده
-- 🔲 برنامه آینده
-
-
-# وضعیت کلی Build
-
-- Build فعلی: ✅ BUILD SUCCESSFUL
+✅ BUILD SUCCESSFUL
 
 Stack:
 
-- Kotlin 2.2.0
-- AGP 8.11.1
-- Compose BOM 2025.06.00
-- Hilt 2.57.1
-- minSdk 26
-- target/compile 36
-- JVM 21
+Kotlin 2.2.0
+AGP 8.11.1
+Compose BOM 2025.06.00
+Hilt 2.57.1
+minSdk 26
+target/compile 36
+JVM 21
+Architecture Status
+وضعیت فعلی:
 
+✅ Clean Architecture Foundation
 
-Architecture:
+✅ MVVM
 
-- ✅ Clean Architecture foundation
-- ✅ MVVM foundation
-- ✅ Repository Pattern
-- ✅ Hilt Dependency Injection
-- ✅ Package by Layer
-- ⚠️ Multi Module در فازهای بعدی
+✅ Repository Pattern
 
+✅ Dependency Injection (Hilt)
 
----
+✅ Event Driven Architecture
 
-# فاز ۰ — رفع بدهی فنی
+✅ Package by Layer
 
-## وضعیت: ✅ تکمیل شده
+ساختار فعلی:
 
-انجام شده:
+Presentation
+      |
+      v
+Domain
+      |
+      v
+Data
+      |
+      v
+Core / Engine
 
-- ✅ JookMaxApplication
-- ✅ Hilt Application setup
-- ✅ MainActivity AndroidEntryPoint
-- ✅ EngineEvent استاندارد
-- ✅ EngineManager relocation
-- ✅ EngineState relocation
-- ✅ Market model normalization
+Multi Module:
 
+⚠️ برنامه آینده
 
----
+فاز 0 — Foundation
+وضعیت: ✅ تکمیل
 
-# فاز ۱ — Event Driven Architecture
+ساخته شده:
 
-## وضعیت: ✅ تکمیل شده
+✅ Application Setup
 
+✅ Hilt Application
 
-انجام شده:
+✅ MainActivity
 
-- ✅ EventBus
-- ✅ EventDispatcher
-- ✅ EventSubscriber
-- ✅ MarketEventSubscriber
-- ✅ EngineEventSubscriber
-- ✅ DecisionEventSubscriber
-- ✅ Subscriber registration در JookMaxEngine
+✅ Core Models
 
+✅ Core Events
 
-Architecture:
+✅ Logger Foundation
 
-EventBus
+✅ Time Provider
 
-↓
+فاز 1 — Event Driven Engine
+وضعیت: ✅ تکمیل
 
-EventDispatcher
+ساخته شده:
 
-↓
+✅ EngineEvent
 
-Subscribers
+✅ EventBus
 
-↓
+✅ EventDispatcher
 
-Engine / Brain Pipeline
+✅ EventSubscriber
 
+Subscribers:
 
----
+✅ MarketEventSubscriber
 
-# فاز ۲ — Persistence (Room)
+✅ DecisionEventSubscriber
 
-## وضعیت: ⚠️ Foundation + Decision Persistence تکمیل شده
-
-
-انجام شده:
-
-- ✅ Room integration
-- ✅ JookMaxDatabase
-- ✅ MarketPriceEntity
-- ✅ MarketCandleEntity
-- ✅ MarketDao
-- ✅ MarketLocalDataSource
-- ✅ DecisionEntity
-- ✅ DecisionDao
-- ✅ DecisionMapper
-- ✅ DecisionRepository implementation
-
-
-Decision persistence flow:
-
-DecisionEvent
-
-↓
-
-DecisionAnalyticsRepository
-
-↓
-
-DecisionAnalyticsRepositoryImpl
-
-↓
-
-DecisionDao
-
-↓
-
-Room
-
-
-باقی:
-
-- ⚠️ Migration testing
-- ⚠️ Database optimization
-
-
----
-
-# فاز ۳ — Logging
-
-## وضعیت: ⚠️ Foundation تکمیل شده
-
-
-انجام شده:
-
-- ✅ Logger interface
-- ✅ JookMaxLogger
-- ✅ LogRepository
-- ✅ LogRepositoryImpl
-- ✅ Hilt logging setup
-- ✅ Engine logging
-- ✅ BrainManager logging
-- ✅ Subscriber logging
-
-
-باقی:
-
-- ⚠️ Persistent log storage
-- ⚠️ Log analytics
-
-
----
-
-# فاز ۴ — Monitoring
-
-## وضعیت: ✅ تکمیل شده
-
-
-انجام شده:
-
-- ✅ EngineMonitor
-- ✅ EngineHealth
-- ✅ MetricsCollector
-- ✅ RuntimeObserver
-- ✅ MetricsHistory
-- ✅ PerformanceSnapshot
-- ✅ Monitoring UI foundation
-- ✅ Navigation connection
-
-
----
-
-# فاز ۵ — Analytics
-
-## وضعیت: ✅ Foundation تکمیل و Pipeline متصل شده
-
-
-انجام شده:
-
-- ✅ DecisionAnalytics
-- ✅ DecisionRecord
-- ✅ DecisionEntity
-- ✅ DecisionDao
-- ✅ DecisionMapper
-- ✅ DecisionEvent
-- ✅ DecisionAnalyticsRepository
-- ✅ DecisionAnalyticsRepositoryImpl
-- ✅ DecisionStatistics
-- ✅ DecisionMetricsCollector
-- ✅ DecisionEventSubscriber
-
+✅ Engine Event Subscribers
 
 Flow:
 
-DecisionEngine
+Event
+ |
+ v
+Dispatcher
+ |
+ v
+Subscriber
+ |
+ v
+Engine / Analytics
+فاز 2 — Engine Core
+وضعیت: ✅ تکمیل Foundation
 
-↓
+ساخته شده:
 
-DecisionEvent
+✅ JookMaxEngine
 
-↓
+✅ EngineManager
 
-DecisionEventSubscriber
+✅ EngineLifecycleManager
 
-↓
+✅ EngineRuntimeTracker
 
-DecisionAnalyticsRepository
+✅ EngineCoroutineScope
 
-↓
+✅ Engine Metrics Collector
 
-Room
+✅ Engine Monitoring Connection
 
+وضعیت:
 
----
+Engine Lifecycle آماده است.
 
-# فاز ۶ — WebSocket Market Feed
+فاز 3 — Brain Pipeline
+وضعیت: ⚠️ Foundation تکمیل
 
-## وضعیت: ❌ شروع نشده
+ساخته شده:
 
+✅ BrainManager
 
-باقی:
+✅ MarketBrain
 
-- 🔲 MarketSocketClient
-- 🔲 MarketSocketListener
-- 🔲 SocketConnectionState
-- 🔲 ReconnectStrategy
-- 🔲 Live Price Flow
+✅ RiskBrain
 
+✅ LearningBrain
 
----
+✅ DecisionEngine
 
-# فاز ۷ — Tick Engine
+✅ BrainContext
 
-## وضعیت: ❌ شروع نشده
+✅ BrainPipeline
 
-
-باقی:
-
-- 🔲 TickProcessor
-- 🔲 CandleBuilder
-- 🔲 TickBuffer
-
-
----
-
-# فاز ۸ — تحلیل تکنیکال واقعی
-
-## وضعیت: ⚠️ اسکلت
-
-
-موجود:
-
-- ✅ MarketBrain
-
-
-باقی:
-
-- ❌ Moving Average
-- ❌ RSI
-- ❌ MACD
-- ❌ ATR
-- ❌ TechnicalAnalyzer
-- ❌ MarketCondition
-
-
----
-
-# فاز ۹ — مدیریت ریسک واقعی
-
-## وضعیت: ⚠️ اسکلت
-
-
-موجود:
-
-- ✅ RiskBrain
-
-
-باقی:
-
-- ❌ PositionSizer
-- ❌ StopLossCalculator
-- ❌ RiskProfile
-
-
----
-
-# فاز ۱۰ — Backtesting Engine
-
-## وضعیت: ❌ شروع نشده
-
-
----
-
-# فاز ۱۱ — AI Learning Layer
-
-## وضعیت: ⚠️ اسکلت
-
-
-موجود:
-
-- ✅ LearningBrain
-
-
-باقی:
-
-- ❌ TrainingSample
-- ❌ RewardCalculator
-- ❌ LearningStrategy
-- 🔲 Learning weights storage
-
-
----
-
-# فاز ۱۲ — هوش معاملاتی
-
-
-## وضعیت: ⚠️ Pipeline Foundation تکمیل شده
-
-
-موجود:
-
-- ✅ MarketBrain
-- ✅ RiskBrain
-- ✅ DecisionEngine
-- ✅ LearningBrain
-- ✅ BrainManager
-- ✅ BrainPipeline
-- ✅ BrainContext
-- ✅ DecisionEvent
-
-
-Flow فعلی:
-
+Flow:
 
 MarketEvent
 
@@ -381,124 +165,121 @@ LearningBrain
 
 DecisionEvent
 
+
+اما:
+
+❌ Intelligence واقعی وجود ندارد
+
+نیاز آینده:
+
+تحلیل تکنیکال واقعی
+مدل تصمیم‌گیری
+داده بازار واقعی
+Learning Algorithm
+فاز 4 — Persistence Layer
+وضعیت: ⚠️ Foundation + Decision Persistence
+
+ساخته شده:
+
+Room:
+
+✅ Database
+
+✅ DAO
+
+✅ Entity
+
+Market:
+
+✅ MarketPriceEntity
+
+✅ MarketCandleEntity
+
+Decision:
+
+✅ DecisionEntity
+
+✅ DecisionDao
+
+✅ DecisionMapper
+
+Repository:
+
+✅ Domain Repository
+
+✅ Data Implementation
+
+Flow:
+
+DecisionEvent
+
 ↓
 
-DecisionAnalytics
+DecisionAnalyticsRepository
 
 ↓
 
-Room Database
+RepositoryImpl
+
+↓
+
+Room
+
+↓
+
+Database
 
 
 باقی:
 
-- ❌ Intelligence واقعی
-- ❌ مدل تصمیم‌گیری حرفه‌ای
+⚠️ Migration
 
+⚠️ Database Optimization
 
----
+⚠️ Cache Strategy
 
-# فاز ۱۳ — UI/UX
+فاز 5 — Decision Analytics
+وضعیت: ✅ تکمیل Foundation
 
+ساخته شده:
 
-## وضعیت: ⚠️ Foundation
+✅ DecisionAnalytics
 
+✅ DecisionRecord
 
-انجام شده:
+✅ DecisionStatistics
 
-- ✅ Compose Navigation
-- ✅ JookMaxNavHost
-- ✅ Monitoring Screen foundation
+✅ DecisionMetricsCollector
 
+✅ DecisionEventSubscriber
 
-باقی:
+Metrics:
 
-- ❌ Dashboard
-- ❌ Price Chart
-- ❌ Risk Settings
-- ❌ Backtest UI
+✅ Total Decisions
 
+✅ BUY Count
 
----
+✅ SELL Count
 
-# فاز ۱۴ — Testing & Hardening
+✅ HOLD Count
 
-## وضعیت: ❌ شروع نشده
+✅ Average Confidence
 
+Flow:
 
-باقی:
+DecisionEvent
 
-- 🔲 Brain Unit Tests
-- 🔲 Repository Tests
-- 🔲 UI Tests
-- 🔲 Performance Testing
-- 🔲 Security Review
+↓
 
+Subscriber
 
----
+↓
 
-# فاز ۱۵ — Validation
+Repository
 
+↓
 
-## وضعیت: ❌ شروع نشده
-
-
----
-
-# آخرین وضعیت Commit
-
-
-آخرین Commit:
-
-65d76a6 fix: restore performance snapshot model
-
-
-Commitهای مهم اخیر:
-
-2780c8c feat: connect decision metrics collector
-
-0473e44 feat: add decision metrics collector
-
-d40d30f refactor: move decision analytics repository to data layer
-
-ccf8833 fix: complete decision event payload
-
-
----
-
-# وضعیت فعلی پروژه
-
-
-Architecture Foundation ✅
-
-Event Architecture ✅
-
-Engine Core ✅
-
-Monitoring ✅
-
-Room Foundation ⚠️
-
-Decision Analytics Pipeline ✅
-
-Brain Pipeline Foundation ✅
-
-Real Trading Intelligence ❌
-
-
----
-
-# قدم بعدی توسعه
-
-
-مرحله بعد:
-
-تکمیل Decision Analytics + Monitoring Integration
-
-
-هدف:
-
-Decision Metrics
+MetricsCollector
 
 ↓
 
@@ -506,9 +287,394 @@ Performance Snapshot
 
 ↓
 
-Monitoring Dashboard
+Monitoring
+
+فاز 6 — Monitoring System
+وضعیت: ✅ تکمیل Foundation
+
+ساخته شده:
+
+Monitoring:
+
+✅ EngineMonitor
+
+✅ EngineHealth
+
+✅ RuntimeObserver
+
+✅ MetricsHistory
+
+✅ PerformanceSnapshot
+
+Analytics:
+
+✅ MetricsAnalytics
+
+Domain:
+
+✅ PerformanceReport
+
+✅ GetPerformanceReportUseCase
+
+Presentation:
+
+✅ MonitoringViewModel
+
+✅ MonitoringUiState
+
+✅ MonitoringStateMapper
+
+✅ MonitoringScreen
+
+Navigation:
+
+✅ Monitoring Route
+
+Flow:
+
+Engine
+
+↓
+
+Metrics
+
+↓
+
+PerformanceSnapshot
+
+↓
+
+Repository
+
+↓
+
+Analytics
+
+↓
+
+UseCase
+
+↓
+
+ViewModel
+
+↓
+
+Compose UI
+
+فاز 7 — Monitoring Dashboard
+وضعیت: ⚠️ Foundation
+
+فعلی:
+
+✅ نمایش:
+
+Engine State
+Processed Events
+Failed Events
+Latency
+Failure Rate
+Decisions
+BUY
+SELL
+HOLD
+Confidence
+
+باقی:
+
+❌ Chart
+
+❌ Real Time Update UI
+
+❌ Advanced Cards
+
+❌ Dashboard Layout
+
+فاز 8 — Market Data Feed
+وضعیت: ❌ شروع نشده
+
+ساخته نشده:
+
+❌ WebSocket Client
+
+❌ Connection Manager
+
+❌ Reconnect Strategy
+
+❌ Live Price Stream
+
+پیش نیاز:
+
+قبل از این مرحله:
+
+Market Event آماده است ✅
+Repository آماده است ✅
+
+نیاز ساخت:
+
+WebSocket
+
+↓
+
+Tick Data
+
+↓
+
+MarketEvent
+
+↓
+
+Brain Pipeline
+
+فاز 9 — Tick Engine
+وضعیت: ❌ شروع نشده
+
+نیاز:
+
+❌ TickProcessor
+
+❌ TickBuffer
+
+❌ CandleBuilder
+
+وابستگی:
+
+نیازمند:
+
+WebSocket Feed
+
+فاز 10 — Technical Analysis
+وضعیت: ⚠️ Skeleton
+
+موجود:
+
+✅ MarketBrain
+
+ساخته نشده:
+
+❌ RSI
+
+❌ MACD
+
+❌ Moving Average
+
+❌ ATR
+
+❌ Trend Detection
+
+پیش نیاز:
+
+Market Data واقعی
+
+فاز 11 — Risk Management
+وضعیت: ⚠️ Skeleton
+
+موجود:
+
+✅ RiskBrain
+
+نیاز:
+
+❌ Position Size
+
+❌ Stop Loss Calculator
+
+❌ Risk Profile
+
+❌ Exposure Management
+
+فاز 12 — AI Learning
+وضعیت: ⚠️ Skeleton
+
+موجود:
+
+✅ LearningBrain
+
+نیاز:
+
+❌ Training Sample
+
+❌ Reward Calculator
+
+❌ Learning Strategy
+
+❌ Weight Storage
+
+فاز 13 — Backtesting Engine
+وضعیت: ❌ شروع نشده
+
+نیاز:
+
+❌ Historical Data Loader
+
+❌ Simulation Engine
+
+❌ Strategy Runner
+
+❌ Performance Evaluation
+
+فاز 14 — UI/UX
+وضعیت: ⚠️ Foundation
+
+ساخته شده:
+
+✅ Navigation
+
+✅ Monitoring Screen
+
+نیاز:
+
+❌ Main Dashboard
+
+❌ Chart Screen
+
+❌ Risk Settings
+
+❌ Backtest Screen
+
+فاز 15 — Testing & Hardening
+وضعیت: ❌ شروع نشده
+
+نیاز:
+
+❌ Unit Tests
+
+❌ Repository Tests
+
+❌ Brain Tests
+
+❌ UI Tests
+
+❌ Performance Tests
+
+وضعیت فعلی Pipeline
+کامل شده:
+DecisionEngine
+
+↓
+
+DecisionEvent
+
+↓
+
+DecisionSubscriber
+
+↓
+
+DecisionAnalyticsRepository
+
+↓
+
+Room
+
+↓
+
+DecisionMetrics
+
+↓
+
+PerformanceSnapshot
+
+↓
+
+MetricsAnalytics
+
+↓
+
+Monitoring UI
+چیزهایی که هنوز ساخته نشده‌اند
+مهم‌ترین موارد:
+Market Data Infrastructure
+WebSocket Feed
+Tick Engine
+Technical Analysis Engine
+Real Risk Engine
+Backtesting Engine
+AI Learning System
+Professional Dashboard
+پیش نیاز مرحله بعد
+مرحله بعد پیشنهادی:
+
+شروع Phase 6 — WebSocket Market Feed
+
+چون:
+
+Brain آماده است.
+
+Decision Pipeline آماده است.
+
+Monitoring آماده است.
+
+اما هنوز:
+
+Brain
+
+↓
+
+Decision
 
 
-بعد از آن:
+داده واقعی ندارد.
 
-شروع WebSocket Market Feed Phase
+پس قدم منطقی:
+
+WebSocket
+
+↓
+
+Market Tick
+
+↓
+
+Candle Builder
+
+↓
+
+MarketEvent
+
+↓
+
+Brain Pipeline
+
+↓
+
+Decision Analytics
+
+↓
+
+Monitoring
+آخرین Commit وضعیت
+
+آخرین commit:
+
+a85bc7d
+feat: connect monitoring snapshots flow to presentation
+
+Commitهای اخیر:
+
+9c9f2cb feat: display decision analytics in monitoring screen
+
+805b3b1 feat: expose decision analytics in performance report
+
+7e93eb1 feat: add decision analytics to metrics analytics
+
+c8473fb feat: integrate decision metrics into engine monitor
+
+ce009ec feat: extend performance snapshot with decision metrics
+خلاصه وضعیت پروژه
+بخش	وضعیت
+Architecture	✅
+Engine Core	✅
+Event System	✅
+Brain Pipeline	⚠️ Foundation
+Room	⚠️ Foundation
+Decision Analytics	✅
+Monitoring	✅
+Dashboard	⚠️
+WebSocket	❌
+Tick Engine	❌
+Technical Analysis	❌
+Risk Engine	❌
+AI Learning	⚠️
+Backtesting	❌
+Testing	❌
