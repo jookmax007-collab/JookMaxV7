@@ -9,15 +9,11 @@ import javax.inject.Singleton
 @Singleton
 class DecisionEngine @Inject constructor(
 
-
     private val signalAggregator: SignalAggregator,
-
 
     private val decisionScoreCalculator: DecisionScoreCalculator,
 
-
     private val confidenceEngine: ConfidenceEngine
-
 
 ) {
 
@@ -25,13 +21,16 @@ class DecisionEngine @Inject constructor(
 
     fun decide(
 
-        marketScore: Double,
-
-        riskAllowed: Boolean,
-
-        learningReward: Double
+        context: DecisionContext
 
     ): DecisionResult {
+
+
+
+        val riskAllowed =
+
+            context.riskDecision.positionSize > 0.0
+
 
 
 
@@ -39,14 +38,13 @@ class DecisionEngine @Inject constructor(
 
             signalAggregator.aggregate(
 
-                marketScore = marketScore,
+                marketScore = context.marketScore,
 
                 riskAllowed = riskAllowed,
 
-                learningReward = learningReward
+                learningReward = context.learningReward
 
             )
-
 
 
 
@@ -62,7 +60,6 @@ class DecisionEngine @Inject constructor(
 
 
 
-
         val confidence =
 
             confidenceEngine.calculate(
@@ -74,9 +71,7 @@ class DecisionEngine @Inject constructor(
 
 
 
-
         if (!decisionScore.riskApproved) {
-
 
 
             return DecisionResult(
@@ -92,14 +87,10 @@ class DecisionEngine @Inject constructor(
 
 
 
-
         return when(decisionScore.direction) {
 
 
-
             DecisionDirection.BULLISH ->
-
-
 
                 DecisionResult(
 
@@ -111,11 +102,7 @@ class DecisionEngine @Inject constructor(
 
 
 
-
-
             DecisionDirection.BEARISH ->
-
-
 
                 DecisionResult(
 
@@ -127,11 +114,7 @@ class DecisionEngine @Inject constructor(
 
 
 
-
-
             DecisionDirection.NEUTRAL ->
-
-
 
                 DecisionResult(
 
@@ -141,26 +124,18 @@ class DecisionEngine @Inject constructor(
 
                 )
 
-
         }
 
     }
 
 
 
-
-
     fun reset() {
-
-        // Future:
-        // clear decision memory
 
     }
 
 
 }
-
-
 
 
 
@@ -173,8 +148,6 @@ enum class DecisionAction {
     HOLD
 
 }
-
-
 
 
 

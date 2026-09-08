@@ -2,6 +2,7 @@ package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
+import com.jookmax.v7.brain.decision.DecisionContext
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.learning.LearningBrain
@@ -61,17 +62,15 @@ class BrainPipeline @Inject constructor(
             decisionEngine.decide(
 
 
-                marketScore = marketScore,
+                DecisionContext(
 
+                    marketScore = marketScore,
 
-                riskAllowed =
+                    riskDecision = context.riskDecision,
 
-                    context.riskDecision.positionSize > 0.0,
+                    learningReward = context.learningReward
 
-
-                learningReward =
-
-                    context.learningReward
+                )
 
 
             )
@@ -112,6 +111,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
     private fun createContext(): BrainContext {
 
 
@@ -129,13 +130,17 @@ class BrainPipeline @Inject constructor(
             riskEngine.calculateTradeRisk(
 
 
+
                 profile = RiskProfile(),
+
 
 
                 entryPrice = 0.0,
 
 
+
                 volatility = marketAnalysis.volatility,
+
 
 
                 isLong =
@@ -144,6 +149,8 @@ class BrainPipeline @Inject constructor(
 
 
             )
+
+
 
 
 
@@ -163,13 +170,18 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         return BrainContext(
+
 
 
             marketAnalysis = marketAnalysis,
 
 
+
             riskDecision = riskDecision,
+
 
 
             learningReward = learningReward
@@ -190,7 +202,9 @@ class BrainPipeline @Inject constructor(
 
     private fun calculateMarketScore(
 
+
         analysis: MarketAnalysis
+
 
     ): Double {
 
@@ -211,6 +225,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
             analysis.trend == "BEARISH" &&
 
                     analysis.rsi > 30 ->
@@ -222,11 +238,12 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
             else ->
 
 
                 0.5
-
 
         }
 
