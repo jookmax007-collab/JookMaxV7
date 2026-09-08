@@ -22,7 +22,7 @@ data class MarketHistory(
     /**
      * Historical candle list.
      */
-    val candles: List<Candle>,
+    val candles: List<MarketCandle>,
 
 
     /**

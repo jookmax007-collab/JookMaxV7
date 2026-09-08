@@ -1,6 +1,6 @@
 package com.jookmax.v7.core.events
 
-import com.jookmax.v7.core.model.Candle
+import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.core.model.MarketPrice
 
 /**
@@ -21,11 +21,12 @@ sealed class MarketEvent(
 
 
     data class CandleClosed(
-        val candle: Candle
+        val candle: MarketCandle
     ) : MarketEvent()
 
 
     data class CandleUpdated(
-        val candle: Candle
+        val candle: MarketCandle
     ) : MarketEvent()
+
 }

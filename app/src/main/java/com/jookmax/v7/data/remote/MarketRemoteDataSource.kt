@@ -1,7 +1,7 @@
 package com.jookmax.v7.data.remote
 
 
-import com.jookmax.v7.core.model.Candle
+import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.core.model.MarketHistory
 import com.jookmax.v7.core.model.MarketPrice
 import com.jookmax.v7.core.model.MarketQuote
@@ -123,7 +123,7 @@ class MarketRemoteDataSource @Inject constructor(
 
 
 
-    override suspend fun getCandles(): List<Candle> {
+    override suspend fun getCandles(): List<MarketCandle> {
 
         return try {
 

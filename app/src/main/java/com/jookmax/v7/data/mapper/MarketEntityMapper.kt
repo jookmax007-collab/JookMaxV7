@@ -1,7 +1,7 @@
 package com.jookmax.v7.data.mapper
 
 
-import com.jookmax.v7.core.model.Candle
+import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.core.model.MarketPrice
 import com.jookmax.v7.core.model.Symbol
 import com.jookmax.v7.core.model.TimeFrame
@@ -68,7 +68,7 @@ class MarketEntityMapper {
 
 
     fun mapCandleToEntity(
-        candle: Candle
+        candle: MarketCandle
     ): MarketCandleEntity {
 
 
@@ -104,10 +104,10 @@ class MarketEntityMapper {
 
     fun mapCandleToDomain(
         entity: MarketCandleEntity
-    ): Candle {
+    ): MarketCandle {
 
 
-        return Candle(
+        return MarketCandle(
 
             symbol = Symbol(
                 code = entity.symbol

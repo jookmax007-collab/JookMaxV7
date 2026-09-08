@@ -1,7 +1,7 @@
 package com.jookmax.v7.data.mapper
 
 
-import com.jookmax.v7.core.model.Candle
+import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.core.model.Symbol
 import com.jookmax.v7.core.model.TimeFrame
 import com.jookmax.v7.data.remote.dto.CandleDto
@@ -12,10 +12,10 @@ class CandleMapper {
 
     fun mapToDomain(
         dto: CandleDto
-    ): Candle {
+    ): MarketCandle {
 
 
-        return Candle(
+        return MarketCandle(
 
             symbol = Symbol(
                 code = dto.symbol
