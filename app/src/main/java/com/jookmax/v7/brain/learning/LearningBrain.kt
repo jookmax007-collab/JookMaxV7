@@ -1,36 +1,83 @@
 package com.jookmax.v7.brain.learning
 
 
-class LearningBrain {
+import javax.inject.Inject
+import javax.inject.Singleton
+
+
+
+@Singleton
+class LearningBrain @Inject constructor(
+
+    private val experienceManager: LearningExperienceManager
+
+) {
+
 
 
     private var learningRuns: Int = 0
+
 
     private var lastResult: LearningResult? = null
 
 
 
+
+
+
+
     fun learn(
+
         success: Boolean,
+
         reward: Double
+
     ): LearningResult {
+
 
 
         learningRuns++
 
 
-        val result = LearningResult(
 
-            success = success,
 
-            reward = reward,
 
-            runNumber = learningRuns
+        val adjustedReward =
 
-        )
+            calculateAdjustedReward(
+
+                reward
+
+            )
+
+
+
+
+
+
+
+        val result =
+
+            LearningResult(
+
+                success = success,
+
+                reward = adjustedReward,
+
+                runNumber = learningRuns
+
+            )
+
+
+
+
+
 
 
         lastResult = result
+
+
+
 
 
         return result
@@ -39,7 +86,51 @@ class LearningBrain {
 
 
 
+
+
+
+
+
+
+    private fun calculateAdjustedReward(
+
+        reward: Double
+
+    ): Double {
+
+
+
+        val historicalReward =
+
+            experienceManager
+
+                .getAverageReward()
+
+
+
+
+
+        return (
+
+            reward * 0.7 +
+
+            historicalReward * 0.3
+
+        )
+
+    }
+
+
+
+
+
+
+
+
+
     fun getLearningRuns(): Int {
+
+
 
         return learningRuns
 
@@ -47,7 +138,15 @@ class LearningBrain {
 
 
 
+
+
+
+
+
+
     fun getLastResult(): LearningResult? {
+
+
 
         return lastResult
 
@@ -55,24 +154,61 @@ class LearningBrain {
 
 
 
+
+
+
+
+
+
+    fun getLearningMemorySize(): Int {
+
+
+
+        return experienceManager
+
+            .getExperienceCount()
+
+    }
+
+
+
+
+
+
+
+
+
     fun reset() {
+
+
 
         learningRuns = 0
 
+
         lastResult = null
 
+
+        experienceManager.clear()
+
     }
+
 
 }
 
 
 
 
+
+
+
 data class LearningResult(
+
 
     val success: Boolean,
 
+
     val reward: Double,
+
 
     val runNumber: Int
 
