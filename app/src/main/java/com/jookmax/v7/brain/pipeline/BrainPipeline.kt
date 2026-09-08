@@ -7,8 +7,8 @@ import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
 
 import com.jookmax.v7.brain.decision.DecisionEngine
 
-import com.jookmax.v7.brain.intelligence.IntelligenceDecision
 import com.jookmax.v7.brain.intelligence.IntelligenceEngine
+import com.jookmax.v7.brain.intelligence.feedback.IntelligenceFeedbackBridge
 
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.learning.LearningExperience
@@ -47,7 +47,10 @@ class BrainPipeline @Inject constructor(
     private val learningExperienceManager: LearningExperienceManager,
 
 
-    private val intelligenceEngine: IntelligenceEngine
+    private val intelligenceEngine: IntelligenceEngine,
+
+
+    private val intelligenceFeedbackBridge: IntelligenceFeedbackBridge
 
 
 ) {
@@ -102,6 +105,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         confidenceFeedbackCollector.collect(
 
             decisionResult = decision,
@@ -151,6 +156,20 @@ class BrainPipeline @Inject constructor(
                 decisionResult = decision
 
             )
+
+
+
+
+
+
+
+        intelligenceFeedbackBridge.recordDecision(
+
+            decision = intelligenceDecision,
+
+            reward = context.learningReward
+
+        )
 
 
 
