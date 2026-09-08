@@ -6,7 +6,6 @@ import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.risk.DynamicRiskManager
 import com.jookmax.v7.brain.risk.ExposureManager
 import com.jookmax.v7.brain.risk.PositionSizer
-import com.jookmax.v7.brain.risk.RiskBrain
 import com.jookmax.v7.brain.risk.RiskEngine
 import com.jookmax.v7.brain.risk.RiskMultiplier
 import com.jookmax.v7.brain.risk.StopLossCalculator
@@ -24,18 +23,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object BrainModule {
-
-
-
-    @Provides
-    @Singleton
-    fun provideRiskBrain(): RiskBrain {
-
-        return RiskBrain()
-
-    }
-
-
 
 
 

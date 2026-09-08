@@ -1,77 +1,106 @@
 package com.jookmax.v7.brain.risk
 
 
-class RiskBrain {
-
-
-    private var riskLevel: RiskLevel = RiskLevel.LOW
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 
-    fun evaluateRisk(
-        marketVolatility: Double
+/**
+ * Risk Intelligence Brain
+ *
+ * Pipeline:
+ *
+ * Market Analysis
+ *        |
+ *        v
+ * RiskBrain
+ *        |
+ *        v
+ * RiskEngine
+ *        |
+ *        v
+ * RiskDecision
+ */
+@Singleton
+class RiskBrain @Inject constructor(
+
+    private val riskEngine: RiskEngine
+
+) {
+
+
+
+    fun evaluate(
+
+        profile: RiskProfile,
+
+        entryPrice: Double,
+
+        volatility: Double,
+
+        isLong: Boolean
+
     ): RiskResult {
 
 
-        riskLevel = when {
 
-            marketVolatility >= 0.8 ->
-                RiskLevel.HIGH
+        val decision =
+
+            riskEngine.calculateTradeRisk(
+
+                profile = profile,
+
+                entryPrice = entryPrice,
+
+                volatility = volatility,
+
+                isLong = isLong
+
+            )
 
 
-            marketVolatility >= 0.5 ->
-                RiskLevel.MEDIUM
 
 
-            else ->
-                RiskLevel.LOW
-        }
+
+        val allowed =
+
+            decision.positionSize > 0.0
+
+
 
 
 
         return RiskResult(
-            level = riskLevel,
-            allowed = riskLevel != RiskLevel.HIGH
+
+            decision = decision,
+
+            allowed = allowed
+
         )
-    }
-
-
-
-    fun getCurrentRiskLevel(): RiskLevel {
-
-        return riskLevel
 
     }
+
+
 
 
 
     fun reset() {
 
-        riskLevel = RiskLevel.LOW
+        // Future state reset hook
 
     }
 
-}
-
-
-
-
-enum class RiskLevel {
-
-    LOW,
-
-    MEDIUM,
-
-    HIGH
 
 }
+
 
 
 
 
 data class RiskResult(
 
-    val level: RiskLevel,
+    val decision: RiskDecision,
 
     val allowed: Boolean
 
