@@ -114,6 +114,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         val experience =
 
             LearningExperience.from(
@@ -140,6 +142,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         val intelligenceDecision =
 
             intelligenceEngine.evaluate(
@@ -147,6 +151,8 @@ class BrainPipeline @Inject constructor(
                 decisionResult = decision
 
             )
+
+
 
 
 
@@ -164,6 +170,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         return BrainExecutionResult(
 
             context = finalContext,
@@ -175,6 +183,8 @@ class BrainPipeline @Inject constructor(
         )
 
     }
+
+
 
 
 
@@ -212,6 +222,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         val learningReward =
 
             learningBrain
@@ -237,6 +249,8 @@ class BrainPipeline @Inject constructor(
         )
 
     }
+
+
 
 
 
