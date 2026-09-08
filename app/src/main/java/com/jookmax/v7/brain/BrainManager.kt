@@ -5,6 +5,7 @@ import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.risk.RiskBrain
+import com.jookmax.v7.brain.pipeline.BrainPipeline
 
 import com.jookmax.v7.core.events.DecisionEvent
 import com.jookmax.v7.core.events.EventBus
@@ -36,7 +37,10 @@ class BrainManager @Inject constructor(
     private val logger: Logger,
 
 
-    private val eventBus: EventBus
+    private val eventBus: EventBus,
+
+
+    private val brainPipeline: BrainPipeline
 
 
 ) {
@@ -131,22 +135,10 @@ class BrainManager @Inject constructor(
 
 
 
-        val marketAnalysis =
 
-            marketBrain.analyze()
+        val decision =
 
-
-
-
-
-
-        val riskResult =
-
-            riskBrain.evaluateRisk(
-
-                marketVolatility = 0.5
-
-            )
+            brainPipeline.execute()
 
 
 
@@ -160,24 +152,6 @@ class BrainManager @Inject constructor(
                 .getLastResult()
                 ?.reward
                 ?: 0.0
-
-
-
-
-
-
-
-        val decision =
-
-            decisionEngine.decide(
-
-                marketScore = marketAnalysis.confidence,
-
-                riskAllowed = riskResult.allowed,
-
-                learningReward = learningReward
-
-            )
 
 
 
@@ -202,27 +176,54 @@ class BrainManager @Inject constructor(
 
         eventBus.publish(
 
+
+
             DecisionEvent.DecisionGenerated(
+
+
 
                 symbol = Symbol(
 
+
+
                     code = "XAUUSD",
+
+
 
                     description = "Gold vs US Dollar"
 
+
+
                 ),
+
+
+
 
                 decision = decision,
 
-                marketScore = marketAnalysis.confidence,
 
-                riskAllowed = riskResult.allowed,
+
+
+                marketScore = decision.confidence,
+
+
+
+
+                riskAllowed = true,
+
+
+
 
                 learningReward = learningReward
 
+
+
             )
 
+
+
         )
+
 
 
     }
@@ -252,13 +253,17 @@ class BrainManager @Inject constructor(
         marketBrain.reset()
 
 
+
         riskBrain.reset()
+
 
 
         decisionEngine.reset()
 
 
+
         learningBrain.reset()
+
 
 
 

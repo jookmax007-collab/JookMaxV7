@@ -2,6 +2,8 @@ package com.jookmax.v7.di
 
 
 import com.jookmax.v7.brain.BrainManager
+import com.jookmax.v7.brain.pipeline.BrainPipeline
+
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.market.MarketBrain
@@ -18,138 +20,114 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object BrainModule {
-
-
-
 
 
     @Provides
     @Singleton
     fun provideMarketBrain(): MarketBrain {
 
-
         return MarketBrain()
 
-
     }
-
-
-
-
-
-
 
 
     @Provides
     @Singleton
     fun provideRiskBrain(): RiskBrain {
 
-
         return RiskBrain()
 
-
     }
-
-
-
-
-
-
 
 
     @Provides
     @Singleton
     fun provideDecisionEngine(): DecisionEngine {
 
-
         return DecisionEngine()
 
-
     }
-
-
-
-
-
-
 
 
     @Provides
     @Singleton
     fun provideLearningBrain(): LearningBrain {
 
-
         return LearningBrain()
-
 
     }
 
 
+    @Provides
+    @Singleton
+    fun provideBrainPipeline(
 
+        marketBrain: MarketBrain,
 
+        riskBrain: RiskBrain,
 
+        decisionEngine: DecisionEngine,
 
+        learningBrain: LearningBrain
+
+    ): BrainPipeline {
+
+        return BrainPipeline(
+
+            marketBrain = marketBrain,
+
+            riskBrain = riskBrain,
+
+            decisionEngine = decisionEngine,
+
+            learningBrain = learningBrain
+
+        )
+
+    }
 
 
     @Provides
     @Singleton
     fun provideBrainManager(
 
-
         marketBrain: MarketBrain,
-
 
         riskBrain: RiskBrain,
 
-
         decisionEngine: DecisionEngine,
-
 
         learningBrain: LearningBrain,
 
-
         logger: Logger,
 
+        eventBus: EventBus,
 
-        eventBus: EventBus
-
-
+        brainPipeline: BrainPipeline
 
     ): BrainManager {
 
-
-
         return BrainManager(
-
 
             marketBrain = marketBrain,
 
-
             riskBrain = riskBrain,
-
 
             decisionEngine = decisionEngine,
 
-
             learningBrain = learningBrain,
-
 
             logger = logger,
 
+            eventBus = eventBus,
 
-            eventBus = eventBus
-
-
+            brainPipeline = brainPipeline
 
         )
 
-
     }
-
-
 
 }
