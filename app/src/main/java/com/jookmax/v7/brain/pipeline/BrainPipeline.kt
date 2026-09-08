@@ -11,26 +11,77 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+
 @Singleton
 class BrainPipeline @Inject constructor(
 
+
     private val marketBrain: MarketBrain,
+
 
     private val riskBrain: RiskBrain,
 
+
     private val learningBrain: LearningBrain,
+
 
     private val decisionEngine: DecisionEngine
 
+
 ) {
+
 
 
     fun execute(): DecisionResult {
 
 
+        val context = createContext()
+
+
+
+        return decisionEngine.decide(
+
+
+            marketScore =
+
+                context.marketAnalysis.confidence,
+
+
+
+            riskAllowed =
+
+                context.riskResult.allowed,
+
+
+
+            learningReward =
+
+                context.learningReward
+
+
+        )
+
+
+    }
+
+
+
+
+
+
+
+
+    private fun createContext(): BrainContext {
+
+
+
         val marketAnalysis =
 
             marketBrain.analyze()
+
+
+
+
 
 
         val riskResult =
@@ -42,6 +93,11 @@ class BrainPipeline @Inject constructor(
             )
 
 
+
+
+
+
+
         val learningReward =
 
             learningBrain
@@ -50,16 +106,26 @@ class BrainPipeline @Inject constructor(
                 ?: 0.0
 
 
-        return decisionEngine.decide(
 
-            marketScore = marketAnalysis.confidence,
 
-            riskAllowed = riskResult.allowed,
+
+        return BrainContext(
+
+
+            marketAnalysis = marketAnalysis,
+
+
+            riskResult = riskResult,
+
 
             learningReward = learningReward
 
+
         )
 
+
     }
+
+
 
 }
