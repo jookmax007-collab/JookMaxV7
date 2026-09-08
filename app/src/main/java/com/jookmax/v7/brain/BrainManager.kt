@@ -4,8 +4,8 @@ package com.jookmax.v7.brain
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.market.MarketBrain
-import com.jookmax.v7.brain.risk.RiskBrain
 import com.jookmax.v7.brain.pipeline.BrainPipeline
+import com.jookmax.v7.brain.risk.RiskBrain
 
 import com.jookmax.v7.core.events.DecisionEvent
 import com.jookmax.v7.core.events.EventBus
@@ -48,7 +48,6 @@ class BrainManager @Inject constructor(
 
 
     private var initialized = false
-
 
 
 
@@ -137,9 +136,7 @@ class BrainManager @Inject constructor(
 
 
 
-
-
-        val context =
+        val executionResult =
 
             brainPipeline.execute()
 
@@ -148,30 +145,18 @@ class BrainManager @Inject constructor(
 
 
 
+        val context =
+
+            executionResult.context
+
+
+
+
+
 
         val decision =
 
-            context.decisionResult
-
-
-
-
-
-        if (decision == null) {
-
-
-            logger.warning(
-
-                tag = "BrainManager",
-
-                message = "Decision generation failed"
-
-            )
-
-
-            return
-
-        }
+            executionResult.decision
 
 
 
@@ -181,13 +166,16 @@ class BrainManager @Inject constructor(
 
         logger.info(
 
+
             tag = "BrainManager",
 
+
             message =
+
                 "Decision generated: ${decision.action}"
 
-        )
 
+        )
 
 
 
@@ -285,6 +273,8 @@ class BrainManager @Inject constructor(
 
 
 
+
+
         marketBrain.reset()
 
 
@@ -298,6 +288,7 @@ class BrainManager @Inject constructor(
 
 
         learningBrain.reset()
+
 
 
 

@@ -31,10 +31,13 @@ class BrainPipeline @Inject constructor(
 
 
 
-    fun execute(): BrainContext {
+    fun execute(): BrainExecutionResult {
+
 
 
         val context = createContext()
+
+
 
 
 
@@ -63,12 +66,27 @@ class BrainPipeline @Inject constructor(
 
 
 
-        return context.copy(
+
+        val finalContext = context.copy(
 
             decisionResult = decision
 
         )
 
+
+
+
+
+        return BrainExecutionResult(
+
+
+            context = finalContext,
+
+
+            decision = decision
+
+
+        )
 
     }
 
@@ -99,8 +117,6 @@ class BrainPipeline @Inject constructor(
                 marketVolatility = 0.5
 
             )
-
-
 
 
 
