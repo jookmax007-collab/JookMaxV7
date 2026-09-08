@@ -18,11 +18,14 @@ import javax.inject.Singleton
  * - Performance snapshot management
  * - Runtime observation
  * - Performance history storage
+ * - Decision metrics integration
  */
 @Singleton
 class EngineMonitor @Inject constructor(
 
-    private val metricsHistory: MetricsHistory
+    private val metricsHistory: MetricsHistory,
+
+    private val decisionMetricsCollector: DecisionMetricsCollector
 
 ) {
 
@@ -36,6 +39,7 @@ class EngineMonitor @Inject constructor(
 
     val health: StateFlow<EngineHealth>
         get() = _health.asStateFlow()
+
 
 
 
@@ -136,7 +140,27 @@ class EngineMonitor @Inject constructor(
             activeBrains = activeBrains,
 
 
-            processingLatencyMs = processingLatencyMs
+            processingLatencyMs = processingLatencyMs,
+
+
+            totalDecisions =
+                decisionMetricsCollector.getTotalDecisions(),
+
+
+            buyDecisions =
+                decisionMetricsCollector.getBuyDecisions(),
+
+
+            sellDecisions =
+                decisionMetricsCollector.getSellDecisions(),
+
+
+            holdDecisions =
+                decisionMetricsCollector.getHoldDecisions(),
+
+
+            averageDecisionConfidence =
+                decisionMetricsCollector.getAverageConfidence()
 
 
 
@@ -182,6 +206,9 @@ class EngineMonitor @Inject constructor(
 
 
         metricsHistory.clear()
+
+
+        decisionMetricsCollector.reset()
 
 
     }
