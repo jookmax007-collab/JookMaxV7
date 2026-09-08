@@ -1,11 +1,20 @@
 package com.jookmax.v7.engine.manager
 
+
 import com.jookmax.v7.engine.JookMaxEngine
 
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class EngineManager(
+
+
+@Singleton
+class EngineManager @Inject constructor(
+
     private val engine: JookMaxEngine
+
 ) {
+
 
 
     fun startEngine() {
@@ -53,4 +62,6 @@ class EngineManager(
         return engine
 
     }
+
+
 }

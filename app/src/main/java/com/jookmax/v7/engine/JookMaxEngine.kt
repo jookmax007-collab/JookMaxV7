@@ -4,31 +4,35 @@ package com.jookmax.v7.engine
 import com.jookmax.v7.brain.BrainManager
 
 import com.jookmax.v7.core.events.EventBus
-import com.jookmax.v7.core.events.SystemEvent
 import com.jookmax.v7.core.events.EventDispatcher
+import com.jookmax.v7.core.events.SystemEvent
 
+import com.jookmax.v7.engine.events.subscriber.DecisionEventSubscriber
 import com.jookmax.v7.engine.events.subscriber.EngineEventSubscriber
 import com.jookmax.v7.engine.events.subscriber.MarketEventSubscriber
-import com.jookmax.v7.engine.events.subscriber.DecisionEventSubscriber
+
+import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
+import com.jookmax.v7.engine.lifecycle.EngineState
+
+import com.jookmax.v7.engine.market.MarketFeedManager
+
+import com.jookmax.v7.engine.runtime.EngineCoroutineScope
+import com.jookmax.v7.engine.runtime.EngineRuntimeTracker
 
 import com.jookmax.v7.monitoring.EngineHealth
 import com.jookmax.v7.monitoring.EngineMonitor
 import com.jookmax.v7.monitoring.MetricsCollector
 import com.jookmax.v7.monitoring.RuntimeObserver
 
-import com.jookmax.v7.engine.lifecycle.EngineLifecycleManager
-import com.jookmax.v7.engine.lifecycle.EngineState
-
-import com.jookmax.v7.engine.runtime.EngineCoroutineScope
-import com.jookmax.v7.engine.runtime.EngineRuntimeTracker
-
-import com.jookmax.v7.engine.market.MarketFeedManager
-
 import kotlinx.coroutines.flow.StateFlow
 
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class JookMaxEngine(
+
+@Singleton
+class JookMaxEngine @Inject constructor(
 
 
     private val brainManager: BrainManager,
@@ -84,70 +88,41 @@ class JookMaxEngine(
     fun start() {
 
 
-
         lifecycleManager.start()
 
 
-
         runtimeTracker.start()
-
 
 
         metricsCollector.recordEvent()
 
 
 
-
-
         eventDispatcher.register(
-
             marketEventSubscriber
-
         )
 
 
-
-
-
         eventDispatcher.register(
-
             engineEventSubscriber
-
         )
-
-
-
 
 
         eventDispatcher.register(
-
             decisionEventSubscriber
-
         )
-
-
-
-
 
 
 
         eventDispatcher.start(
-
             coroutineScope.scope
-
         )
-
-
 
 
 
         marketFeedManager.start(
-
             coroutineScope.scope
-
         )
-
-
 
 
 
@@ -155,25 +130,15 @@ class JookMaxEngine(
 
 
 
-
-
         engineMonitor.updateHealth(
-
             EngineHealth.Healthy
-
         )
-
-
 
 
 
         runtimeObserver.observe(
-
             "RUNNING"
-
         )
-
-
 
 
 
@@ -181,12 +146,8 @@ class JookMaxEngine(
 
 
 
-
-
         eventBus.publish(
-
             SystemEvent.EngineStarted
-
         )
 
 
@@ -202,9 +163,7 @@ class JookMaxEngine(
 
 
         eventBus.publish(
-
             SystemEvent.EngineStopped
-
         )
 
 
@@ -212,9 +171,7 @@ class JookMaxEngine(
         lifecycleManager.stop()
 
 
-
         runtimeTracker.stop()
-
 
 
         metricsCollector.recordEvent()
@@ -230,17 +187,13 @@ class JookMaxEngine(
 
 
         engineMonitor.updateHealth(
-
             EngineHealth.Offline
-
         )
 
 
 
         runtimeObserver.observe(
-
             "STOPPED"
-
         )
 
 
@@ -264,9 +217,7 @@ class JookMaxEngine(
 
 
         runtimeObserver.observe(
-
             "PAUSED"
-
         )
 
 
@@ -294,9 +245,7 @@ class JookMaxEngine(
 
 
         runtimeObserver.observe(
-
             "RUNNING"
-
         )
 
 
@@ -367,52 +316,35 @@ class JookMaxEngine(
     private fun updatePerformanceSnapshot() {
 
 
-        val snapshot =
-
-            engineMonitor.createSnapshot(
+        val snapshot = engineMonitor.createSnapshot(
 
 
-                engineState =
-
-                    runtimeObserver.getCurrentState(),
-
+            engineState =
+                runtimeObserver.getCurrentState(),
 
 
-
-                processedEvents =
-
-                    metricsCollector.getProcessedEvents(),
+            processedEvents =
+                metricsCollector.getProcessedEvents(),
 
 
+            failedEvents =
+                metricsCollector.getFailedEvents(),
 
 
-                failedEvents =
+            processingLatencyMs =
+                metricsCollector.getAverageLatencyMs()
 
-                    metricsCollector.getFailedEvents(),
-
-
-
-
-                processingLatencyMs =
-
-                    metricsCollector.getAverageLatencyMs()
-
-
-            )
-
-
-
-
-
-        engineMonitor.updateSnapshot(
-
-            snapshot
 
         )
 
 
-    }
 
+        engineMonitor.updateSnapshot(
+            snapshot
+        )
+
+
+    }
 
 
 }
