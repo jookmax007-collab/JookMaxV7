@@ -5,53 +5,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.jookmax.v7.domain.monitoring.GetPerformanceReportUseCase
+import com.jookmax.v7.domain.repository.MonitoringRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
 
 
 
-/**
- * ViewModel bridge for monitoring presentation layer.
- *
- * Responsible for:
- * - Executing monitoring use cases
- * - Managing UI state
- * - Handling screen actions
- * - Exposing monitoring data to UI
- *
- * Architecture:
- *
- * UI
- *  |
- *  v
- * MonitoringAction
- *  |
- *  v
- * MonitoringViewModel
- *  |
- *  v
- * MonitoringStateMapper
- *  |
- *  v
- * MonitoringUiState
- *  |
- *  v
- * GetPerformanceReportUseCase
- */
 @HiltViewModel
 class MonitoringViewModel @Inject constructor(
 
+
     private val getPerformanceReportUseCase: GetPerformanceReportUseCase,
 
+
+    private val monitoringRepository: MonitoringRepository,
+
+
     private val monitoringStateMapper: MonitoringStateMapper
+
 
 ) : ViewModel() {
 
@@ -69,10 +47,46 @@ class MonitoringViewModel @Inject constructor(
 
 
 
-
-
     val state: StateFlow<MonitoringUiState>
         get() = _state.asStateFlow()
+
+
+
+
+
+    init {
+
+        observeMonitoring()
+
+    }
+
+
+
+
+
+
+
+    private fun observeMonitoring() {
+
+
+        viewModelScope.launch {
+
+
+            monitoringRepository
+                .observeSnapshots()
+                .collect {
+
+
+                    refresh()
+
+
+                }
+
+
+        }
+
+
+    }
 
 
 
@@ -87,7 +101,7 @@ class MonitoringViewModel @Inject constructor(
     ) {
 
 
-        when (action) {
+        when(action) {
 
 
             MonitoringAction.Refresh -> {
@@ -97,7 +111,6 @@ class MonitoringViewModel @Inject constructor(
 
 
             }
-
 
 
 
@@ -130,16 +143,7 @@ class MonitoringViewModel @Inject constructor(
         viewModelScope.launch {
 
 
-            _state.value =
-
-                MonitoringUiState.Loading
-
-
-
-
-
             try {
-
 
 
                 val report =
@@ -150,17 +154,28 @@ class MonitoringViewModel @Inject constructor(
 
 
 
+                val snapshots =
+
+                    monitoringRepository
+                        .getSnapshots()
+
+
+
+
+
                 _state.value =
 
                     monitoringStateMapper.map(
 
-                        report
+                        report = report,
+
+                        snapshots = snapshots
 
                     )
 
 
 
-            } catch (exception: Exception) {
+            } catch(exception: Exception) {
 
 
 
@@ -174,6 +189,7 @@ class MonitoringViewModel @Inject constructor(
 
 
             }
+
 
 
         }
@@ -192,14 +208,17 @@ class MonitoringViewModel @Inject constructor(
     private fun reset() {
 
 
+        monitoringRepository
+            .clearHistory()
+
+
+
         _state.value =
 
             MonitoringUiState.Loading
 
 
     }
-
-
 
 
 
