@@ -1,32 +1,25 @@
-و همچنین ساختارهای موجود:
+گزارش را با وضعیت جدید بعد از اضافه شدن Intelligence Layer + Decision Memory + Feedback Loop به‌روزرسانی کردم. این نسخه را می‌توانی به‌عنوان Checkpoint ذخیره کنی.
 
-✅ TechnicalAnalyzer
-✅ RSI
-✅ MACD
-✅ MovingAverage
-✅ ATR
-✅ TrendDetector
-✅ MarketStructure
-✅ RiskEngine
-✅ PositionSizer
-✅ StopLossCalculator
-✅ TakeProfitCalculator
-✅ RiskProfile
-✅ BrainPipeline اتصال به RiskEngine
-✅ BacktestResult
-✅ HistoricalDataLoader (Foundation)
-
-نسخه به‌روز چک‌پوینت:
-
+=========================================================
 JookMax V7 — Development Checkpoint
+=========================================================
 
-آخرین بروزرسانی: 2026-09-08
+آخرین بروزرسانی:
+2026-09-08
 
-وضعیت کلی Build
+Current Branch:
+main
+
+Latest Progress:
+Intelligence System Expansion Completed
+
+---------------------------------------------------------
+Build Status
+---------------------------------------------------------
 
 ✅ BUILD SUCCESSFUL
 
-Stack
+Stack:
 
 Kotlin        2.2.0
 AGP           8.11.1
@@ -37,8 +30,13 @@ targetSdk     36
 compileSdk    36
 JVM           21
 Gradle        9.2.1
+
+
+---------------------------------------------------------
 Architecture Status
-وضعیت فعلی
+---------------------------------------------------------
+
+وضعیت:
 
 ✅ Clean Architecture Foundation
 
@@ -51,6 +49,7 @@ Architecture Status
 ✅ Event Driven Architecture
 
 ✅ Package By Layer
+
 
 Architecture:
 
@@ -73,19 +72,25 @@ Data
       v
 
 Core / Engine
-Multi Module
 
-وضعیت:
 
-⚠️ برنامه آینده
+---------------------------------------------------------
+Multi Module Status
+---------------------------------------------------------
 
-فعلاً:
+Status:
+
+⚠️ Planned Architecture
+
+Current:
 
 Single App Module
+
 +
 Package Separation
 
-برنامه آینده:
+
+Future:
 
 :app
 
@@ -110,13 +115,19 @@ Package Separation
 :monitoring
 
 :ui
+
+
+
+=========================================================
 Phase 0 — Foundation
+=========================================================
 
 Status:
 
 ✅ COMPLETED
 
-ساخته شده:
+
+Created:
 
 ✅ Application Setup
 
@@ -132,13 +143,18 @@ Status:
 
 ✅ Time Provider
 
+
+
+=========================================================
 Phase 1 — Event Driven Engine
+=========================================================
 
 Status:
 
 ✅ COMPLETED
 
-ساخته شده:
+
+Created:
 
 ✅ EngineEvent
 
@@ -148,6 +164,7 @@ Status:
 
 ✅ EventSubscriber
 
+
 Subscribers:
 
 ✅ MarketEventSubscriber
@@ -155,6 +172,7 @@ Subscribers:
 ✅ DecisionEventSubscriber
 
 ✅ EngineEventSubscriber
+
 
 Flow:
 
@@ -171,13 +189,19 @@ Subscriber
 ↓
 
 Engine / Brain
+
+
+
+=========================================================
 Phase 2 — Engine Core
+=========================================================
 
 Status:
 
 ✅ COMPLETED
 
-ساخته شده:
+
+Created:
 
 ✅ JookMaxEngine
 
@@ -194,6 +218,7 @@ Status:
 ✅ EngineMonitor
 
 ✅ RuntimeObserver
+
 
 Lifecycle:
 
@@ -214,13 +239,19 @@ RESUME
 ↓
 
 STOP
+
+
+
+=========================================================
 Phase 3 — Brain Pipeline
+=========================================================
 
 Status:
 
-✅ FOUNDATION COMPLETED
+✅ ADVANCED FOUNDATION COMPLETED
 
-ساخته شده:
+
+Created:
 
 ✅ BrainManager
 
@@ -236,17 +267,32 @@ Status:
 
 ✅ BrainPipeline
 
-اتصال جدید:
+✅ BrainExecutionResult
+
+
+Connected:
 
 ✅ BrainPipeline → RiskEngine
 
-Flow فعلی:
+✅ BrainPipeline → Learning Memory
+
+✅ BrainPipeline → Intelligence Engine
+
+✅ BrainPipeline → Intelligence Feedback Loop
+
+
+Current Flow:
+
 
 MarketBrain
 
 ↓
 
 Technical Analysis
+
+↓
+
+MarketAnalysis
 
 ↓
 
@@ -258,25 +304,34 @@ DecisionEngine
 
 ↓
 
-LearningBrain
+Confidence Layer
+
+↓
+
+Learning System
+
+↓
+
+IntelligenceEngine
+
+↓
+
+IntelligenceDecision
 
 ↓
 
 DecisionEvent
 
-باقی:
 
-❌ Intelligence واقعی
 
-❌ Adaptive Decision Model
-
-❌ Advanced Learning
-
+=========================================================
 Phase 4 — Persistence Layer
+=========================================================
 
 Status:
 
 ⚠️ FOUNDATION COMPLETED
+
 
 Room:
 
@@ -286,11 +341,13 @@ Room:
 
 ✅ Entity
 
+
 Market:
 
 ✅ MarketPriceEntity
 
 ✅ MarketCandleEntity
+
 
 Decision:
 
@@ -300,13 +357,15 @@ Decision:
 
 ✅ DecisionMapper
 
+
 Repository:
 
 ✅ Domain Repository
 
 ✅ Data Implementation
 
-باقی:
+
+Remaining:
 
 ⚠️ Migration
 
@@ -314,13 +373,18 @@ Repository:
 
 ⚠️ Cache Strategy
 
+
+
+=========================================================
 Phase 5 — Decision Analytics
+=========================================================
 
 Status:
 
 ✅ COMPLETED
 
-ساخته شده:
+
+Created:
 
 ✅ DecisionAnalytics
 
@@ -331,6 +395,7 @@ Status:
 ✅ DecisionMetricsCollector
 
 ✅ DecisionEventSubscriber
+
 
 Metrics:
 
@@ -344,13 +409,18 @@ Metrics:
 
 ✅ Average Confidence
 
+
+
+=========================================================
 Phase 6 — Monitoring System
+=========================================================
 
 Status:
 
 ✅ COMPLETED FOUNDATION
 
-ساخته شده:
+
+Created:
 
 Monitoring:
 
@@ -364,11 +434,13 @@ Monitoring:
 
 ✅ PerformanceSnapshot
 
+
 Domain:
 
 ✅ PerformanceReport
 
 ✅ GetPerformanceReportUseCase
+
 
 Presentation:
 
@@ -380,17 +452,23 @@ Presentation:
 
 ✅ MonitoringScreen
 
+
 Navigation:
 
 ✅ Monitoring Route
 
+
+
+=========================================================
 Phase 7 — Monitoring Dashboard
+=========================================================
 
 Status:
 
 ⚠️ FOUNDATION
 
-فعال:
+
+Active:
 
 ✅ Engine State
 
@@ -402,7 +480,8 @@ Status:
 
 ✅ Decision Metrics
 
-باقی:
+
+Remaining:
 
 ❌ Advanced Dashboard Layout
 
@@ -412,13 +491,18 @@ Status:
 
 ❌ Professional UI Cards
 
+
+
+=========================================================
 Phase 8 — Market Data Feed
+=========================================================
 
 Status:
 
 ✅ FOUNDATION COMPLETED
 
-ساخته شده:
+
+Created:
 
 ✅ MarketSocketClient
 
@@ -427,6 +511,7 @@ Status:
 ✅ SocketConnectionState
 
 ✅ ReconnectStrategy
+
 
 Flow:
 
@@ -440,7 +525,8 @@ MarketTick
 
 Repository
 
-باقی:
+
+Remaining:
 
 ⚠️ Production API Validation
 
@@ -448,13 +534,18 @@ Repository
 
 ⚠️ Connection Monitoring
 
+
+
+=========================================================
 Phase 9 — Tick Engine
+=========================================================
 
 Status:
 
 ✅ COMPLETED FOUNDATION
 
-ساخته شده:
+
+Created:
 
 ✅ MarketTick Model
 
@@ -465,6 +556,7 @@ Status:
 ✅ CandleBuilder
 
 ✅ TickEngine
+
 
 Flow:
 
@@ -486,7 +578,8 @@ MarketCandle
 
 CandleClosed Event
 
-اتصال:
+
+Connected:
 
 ✅ MarketRepository
 
@@ -502,13 +595,16 @@ CandleClosed Event
 
 ✅ EventBus
 
+
+
+=========================================================
 Phase 10 — Technical Analysis Engine
+=========================================================
 
 Status:
 
 ✅ COMPLETED FOUNDATION
 
-ساخته شده:
 
 Indicators:
 
@@ -520,17 +616,20 @@ Indicators:
 
 ✅ ATR
 
+
 Analysis:
 
 ✅ MarketAnalysis Model
 
 ✅ TechnicalAnalyzer
 
+
 Structure:
 
 ✅ TrendDetector
 
 ✅ MarketStructure
+
 
 Flow:
 
@@ -548,7 +647,8 @@ MarketAnalysis
 
 BrainPipeline
 
-باقی:
+
+Remaining:
 
 ❌ Advanced Indicators
 
@@ -556,13 +656,18 @@ BrainPipeline
 
 ❌ Smart Market Structure
 
+
+
+=========================================================
 Phase 11 — Risk Management Engine
+=========================================================
 
 Status:
 
 ✅ FOUNDATION COMPLETED
 
-ساخته شده:
+
+Created:
 
 ✅ RiskBrain
 
@@ -577,6 +682,7 @@ Status:
 ✅ StopLossCalculator
 
 ✅ TakeProfitCalculator
+
 
 Flow:
 
@@ -594,43 +700,169 @@ RiskDecision
 
 DecisionEngine
 
-باقی:
 
-❌ Exposure Management
+Remaining:
 
 ❌ Portfolio Risk
 
-❌ Dynamic Risk Adjustment
+❌ Advanced Exposure Model
 
+❌ Dynamic Risk Optimization
+
+
+
+=========================================================
 Phase 12 — AI Learning System
+=========================================================
 
 Status:
 
-⚠️ Skeleton
+🟡 ADVANCED FOUNDATION
 
-موجود:
+
+Created:
 
 ✅ LearningBrain
 
-باقی:
+✅ LearningResult
+
+✅ LearningExperience
+
+✅ LearningExperienceManager
+
+✅ Learning Analytics
+
+
+Memory:
+
+✅ Experience Storage
+
+✅ Average Reward
+
+✅ Success Rate
+
+✅ Learning Performance Score
+
+
+Remaining:
 
 ❌ Training Dataset
 
-❌ Reward System
-
-❌ Learning Algorithm
+❌ Real Reward Engine
 
 ❌ Weight Storage
 
 ❌ Model Adaptation
 
-Phase 13 — Backtesting Engine
+
+
+=========================================================
+Phase 13 — Intelligence System
+=========================================================
+
+Status:
+
+✅ FOUNDATION COMPLETED
+
+
+Created:
+
+Decision Intelligence:
+
+✅ IntelligenceDecision
+
+✅ IntelligenceEngine
+
+✅ IntelligenceAdvisor
+
+
+Memory:
+
+✅ DecisionMemory
+
+✅ DecisionExperience
+
+✅ IntelligenceMemoryAnalyzer
+
+
+Feedback:
+
+✅ IntelligenceFeedback
+
+✅ IntelligenceFeedbackManager
+
+✅ IntelligenceFeedbackAnalyzer
+
+✅ IntelligenceFeedbackBridge
+
+
+Connected:
+
+BrainPipeline
+
+↓
+
+IntelligenceEngine
+
+↓
+
+IntelligenceDecision
+
+↓
+
+FeedbackBridge
+
+↓
+
+FeedbackMemory
+
+
+Current Intelligence Flow:
+
+
+DecisionEngine
+
+↓
+
+IntelligenceAdvisor
+
+↓
+
+Confidence Adjustment
+
++
+
+Learning Analytics
+
++
+
+Feedback Analytics
+
+↓
+
+Final Intelligence Decision
+
+
+Remaining:
+
+❌ Intelligence Decision Validator
+
+❌ Adaptive Strategy Selection
+
+❌ Autonomous Optimization
+
+
+
+=========================================================
+Phase 14 — Backtesting Engine
+=========================================================
 
 Status:
 
 🟡 STARTED
 
-ساخته شده:
+
+Created:
 
 ✅ backtest package
 
@@ -638,7 +870,8 @@ Status:
 
 ✅ HistoricalDataLoader Foundation
 
-باقی:
+
+Remaining:
 
 ❌ BacktestRunner
 
@@ -650,19 +883,25 @@ Status:
 
 ❌ Performance Evaluation
 
-Phase 14 — UI / UX
+
+
+=========================================================
+Phase 15 — UI / UX
+=========================================================
 
 Status:
 
 ⚠️ FOUNDATION
 
-ساخته شده:
+
+Created:
 
 ✅ Navigation
 
 ✅ Monitoring Screen
 
-باقی:
+
+Remaining:
 
 ❌ Main Dashboard
 
@@ -674,13 +913,18 @@ Status:
 
 ❌ AI Insight Screen
 
-Phase 15 — Testing & Hardening
+
+
+=========================================================
+Phase 16 — Testing & Hardening
+=========================================================
 
 Status:
 
 ❌ NOT STARTED
 
-نیاز:
+
+Required:
 
 ❌ Unit Tests
 
@@ -694,7 +938,13 @@ Status:
 
 ❌ Performance Tests
 
+
+
+=========================================================
 Current Live Pipeline
+=========================================================
+
+
 MarketSocket
 
 ↓
@@ -709,122 +959,156 @@ MarketRepository
 
 MarketFeedManager
 
-        |
+↓
 
-        +------------+
+MarketTick
 
-        |            |
+↓
 
-        v            v
+TickEngine
+
+↓
+
+CandleBuilder
+
+↓
+
+MarketCandle
+
+↓
+
+CandleClosed Event
+
+↓
+
+MarketEventSubscriber
+
+↓
+
+MarketBrain
+
+↓
+
+TechnicalAnalyzer
+
+↓
+
+MarketAnalysis
+
+↓
+
+RiskEngine
+
+↓
+
+DecisionEngine
+
+↓
+
+Confidence Engine
+
+↓
+
+Learning System
+
+↓
+
+Intelligence Engine
+
+↓
+
+Intelligence Decision
+
+↓
+
+Decision Analytics
+
+↓
+
+Monitoring
 
 
- MarketPrice     MarketTick
 
-                    |
+=========================================================
+Latest Git Progress
+=========================================================
 
-                    v
+Recent commits:
 
-               TickEngine
-
-                    |
-
-                    v
-
-              CandleBuilder
-
-                    |
-
-                    v
-
-              MarketCandle
-
-                    |
-
-                    v
-
-            CandleClosed Event
-
-                    |
-
-                    v
-
-        MarketEventSubscriber
-
-                    |
-
-                    v
-
-              MarketBrain
-
-                    |
-
-                    v
-
-          TechnicalAnalyzer
-
-                    |
-
-                    v
-
-              MarketAnalysis
-
-                    |
-
-                    v
-
-              RiskEngine
-
-                    |
-
-                    v
-
-            DecisionEngine
-
-                    |
-
-                    v
-
-          DecisionAnalytics
-
-                    |
-
-                    v
-
-              Monitoring
-آخرین Commit
 a42f8a4
-JookMax V7 - Engine DI completed and build successful
-وضعیت خلاصه
-بخش	وضعیت
-Architecture	✅
-Engine Core	✅
-Event System	✅
-Brain Foundation	✅
-Room Persistence	⚠️
-Decision Analytics	✅
-Monitoring	✅
-Dashboard	⚠️
-WebSocket Feed	✅ Foundation
-Tick Engine	✅
-Candle Pipeline	✅
-Technical Analysis	✅ Foundation
-Risk Engine	✅ Foundation
-AI Learning	⚠️
-Backtesting	🟡 Started
-Testing	❌
-قدم بعد طبق سند مرجع
+Engine DI completed and build successful
 
-ادامه Phase 13:
 
-Backtesting Engine
+1b7e60e
+feature: add intelligence feedback loop foundation
+
+
+b808484
+feature: add intelligence feedback bridge
+
+
+da0719f
+feature: connect intelligence feedback analyzer to advisor
+
+
+=========================================================
+Current Overall Status
+=========================================================
+
+Architecture              ✅
+Engine Core               ✅
+Event System              ✅
+Brain Foundation          ✅
+Decision System           ✅
+Decision Analytics        ✅
+Monitoring                ✅
+Market Feed               ✅ Foundation
+Tick Engine               ✅
+Candle Pipeline            ✅
+Technical Analysis         ✅ Foundation
+Risk Engine                ✅ Foundation
+Learning System            🟡 Advanced Foundation
+Intelligence System        🟡 Advanced Foundation
+Persistence                ⚠️ Foundation
+Backtesting                🟡 Started
+Dashboard                  ⚠️ Foundation
+Testing                    ❌
+
+
+=========================================================
+NEXT DEVELOPMENT ORDER
+=========================================================
+
+
+1) Intelligence Decision Validator
+
+هدف:
+
+کنترل خروجی نهایی تصمیم
+
+
+Flow:
+
+IntelligenceDecision
+
+↓
+
+Validator
+
+↓
+
+Final Decision
+
+
+
+2) Backtesting Engine
 
 اول:
 
 BacktestRunner.kt
 
-هدف:
 
-اتصال:
+هدف:
 
 HistoricalDataLoader
 
@@ -838,20 +1122,45 @@ BrainPipeline.execute()
 
 ↓
 
-Decision Result
+DecisionResult
 
 ↓
 
 BacktestResult
 
-بعد از تکمیل Backtest Foundation:
 
-می‌رویم برای:
 
-Phase 12 — AI Learning System
+3) AI Learning Upgrade
 
-و بعد:
+بعد:
 
-Testing & Hardening
+Reward Engine
 
-این وضعیت فعلی واقعی پروژه است
+↓
+
+Adaptive Learning
+
+↓
+
+Weight Adjustment
+
+
+
+4) Testing & Hardening
+
+
+=========================================================
+
+CURRENT POSITION:
+
+JookMax V7 از Foundation عبور کرده و وارد
+Advanced Brain Intelligence Layer شده است.
+
+مرحله فعلی:
+
+🟢 Brain + Intelligence Integration
+
+قدم بعد:
+
+Intelligence Decision Validation
+=========================================================
