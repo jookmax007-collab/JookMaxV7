@@ -4,6 +4,7 @@ import com.jookmax.v7.brain.backtest.analytics.BacktestAnalytics
 import com.jookmax.v7.brain.backtest.model.BacktestTrade
 import com.jookmax.v7.brain.backtest.model.OpenBacktestPosition
 import com.jookmax.v7.brain.decision.DecisionAction
+import com.jookmax.v7.brain.learning.BacktestLearningAdapter
 import com.jookmax.v7.brain.pipeline.BrainPipeline
 import com.jookmax.v7.core.model.MarketCandle
 
@@ -20,19 +21,18 @@ class BacktestRunner @Inject constructor(
 
     private val tradeExecutor: BacktestTradeExecutor,
 
-    private val backtestAnalytics: BacktestAnalytics
+    private val backtestAnalytics: BacktestAnalytics,
+
+    private val backtestLearningAdapter: BacktestLearningAdapter
 
 ) {
 
 
     suspend fun run(): BacktestResult {
 
-
         tradeExecutor.reset()
 
-
         val candles = historicalDataLoader.load()
-
 
         candles.forEach { candle ->
 
@@ -40,11 +40,12 @@ class BacktestRunner @Inject constructor(
 
         }
 
+        val result = createResult(candles)
 
-        return createResult(candles)
+        backtestLearningAdapter.learnFromBacktest(result)
 
+        return result
     }
-
 
 
     private fun processCandle(
@@ -53,30 +54,20 @@ class BacktestRunner @Inject constructor(
 
     ) {
 
-
         tradeExecutor.evaluateCandle(candle)
-
-
 
         if (tradeExecutor.hasOpenPosition()) {
 
             return
-
         }
-
-
 
         val result =
 
             brainPipeline.execute(candle)
 
-
-
         val decision =
 
             result.validatedDecision
-
-
 
         if (
 
@@ -87,24 +78,16 @@ class BacktestRunner @Inject constructor(
         ) {
 
             return
-
         }
-
-
 
         val risk =
 
             result.context.riskDecision
 
-
-
         if (risk.positionSize <= 0.0) {
 
             return
-
         }
-
-
 
         tradeExecutor.openPosition(
 
@@ -125,9 +108,7 @@ class BacktestRunner @Inject constructor(
             )
 
         )
-
     }
-
 
 
     private fun createResult(
@@ -136,14 +117,11 @@ class BacktestRunner @Inject constructor(
 
     ): BacktestResult {
 
-
         val trades:
 
                 List<BacktestTrade> =
 
             tradeExecutor.getCompletedTrades()
-
-
 
         val winningTrades =
 
@@ -153,8 +131,6 @@ class BacktestRunner @Inject constructor(
 
             }
 
-
-
         val losingTrades =
 
             trades.count {
@@ -162,8 +138,6 @@ class BacktestRunner @Inject constructor(
                 it.profitLoss <= 0.0
 
             }
-
-
 
         val netProfit =
 
@@ -173,15 +147,19 @@ class BacktestRunner @Inject constructor(
 
             }
 
-
-
         val winRate =
 
-            if (trades.isEmpty()) 0.0
+            if (trades.isEmpty()) {
 
-            else winningTrades.toDouble() / trades.size.toDouble()
+                0.0
 
+            } else {
 
+                winningTrades.toDouble() /
+
+                        trades.size.toDouble()
+
+            }
 
         val buySignals =
 
@@ -191,8 +169,6 @@ class BacktestRunner @Inject constructor(
 
             }
 
-
-
         val sellSignals =
 
             trades.count {
@@ -201,13 +177,9 @@ class BacktestRunner @Inject constructor(
 
             }
 
-
-
         val metrics =
 
             backtestAnalytics.analyze(trades)
-
-
 
         return BacktestResult(
 
@@ -229,16 +201,19 @@ class BacktestRunner @Inject constructor(
 
             holdSignals = 0,
 
-            startTime = candles.firstOrNull()?.timestamp ?: 0L,
+            startTime =
 
-            endTime = candles.lastOrNull()?.timestamp ?: 0L,
+                candles.firstOrNull()?.timestamp ?: 0L,
+
+            endTime =
+
+                candles.lastOrNull()?.timestamp ?: 0L,
 
             trades = trades,
 
             metrics = metrics
 
         )
-
     }
 
 }
