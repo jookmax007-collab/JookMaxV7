@@ -3,9 +3,13 @@ package com.jookmax.v7.data.mapper
 
 import com.jookmax.v7.brain.decision.DecisionAction
 import com.jookmax.v7.brain.decision.DecisionResult
+
 import com.jookmax.v7.brain.intelligence.IntelligenceDecision
+import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
+
 import com.jookmax.v7.core.events.DecisionEvent
 import com.jookmax.v7.core.model.Symbol
+
 import com.jookmax.v7.data.local.entity.DecisionEntity
 
 
@@ -111,6 +115,54 @@ object DecisionMapper {
 
 
 
+        val validatedDecision =
+
+            ValidatedDecision(
+
+                originalDecision = intelligenceDecision,
+
+                approved = entity.confidence >= 0.5,
+
+                finalAction =
+
+                    if (entity.confidence >= 0.5) {
+
+                        action
+
+                    } else {
+
+                        DecisionAction.HOLD
+
+                    },
+
+                validationScore = entity.confidence,
+
+                validationReasons =
+
+                    if (entity.confidence >= 0.5) {
+
+                        listOf(
+
+                            "Restored from decision history"
+
+                        )
+
+                    } else {
+
+                        listOf(
+
+                            "Restored decision has confidence below validation threshold"
+
+                        )
+
+                    },
+
+                timestamp = entity.timestamp
+
+            )
+
+
+
 
 
         return DecisionEvent.DecisionGenerated(
@@ -130,6 +182,10 @@ object DecisionMapper {
 
 
             intelligenceDecision = intelligenceDecision,
+
+
+
+            validatedDecision = validatedDecision,
 
 
 

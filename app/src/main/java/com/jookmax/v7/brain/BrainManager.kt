@@ -13,6 +13,7 @@ import com.jookmax.v7.core.events.EventBus
 import com.jookmax.v7.core.logging.Logger
 import com.jookmax.v7.core.model.Symbol
 
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -182,6 +183,12 @@ class BrainManager @Inject constructor(
 
 
 
+        val validatedDecision =
+
+            executionResult.validatedDecision
+
+
+
 
 
 
@@ -194,7 +201,11 @@ class BrainManager @Inject constructor(
 
             message =
 
-                "Decision generated: ${decision.action} | Intelligence confidence: ${intelligenceDecision.confidence}"
+                "Decision generated: ${decision.action} | " +
+
+                "Intelligence confidence: ${intelligenceDecision.confidence} | " +
+
+                "Validation: ${validatedDecision.approved}"
 
         )
 
@@ -275,6 +286,12 @@ class BrainManager @Inject constructor(
 
 
                 intelligenceDecision = intelligenceDecision,
+
+
+
+
+
+                validatedDecision = validatedDecision,
 
 
 
@@ -388,7 +405,6 @@ class BrainManager @Inject constructor(
 
 
     }
-
 
 
 }

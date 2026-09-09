@@ -3,11 +3,16 @@ package com.jookmax.v7.data.repository
 
 import com.jookmax.v7.brain.decision.DecisionAction
 import com.jookmax.v7.brain.decision.DecisionResult
+
 import com.jookmax.v7.brain.intelligence.IntelligenceDecision
+import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
+
 import com.jookmax.v7.core.events.DecisionEvent
 import com.jookmax.v7.core.model.Symbol
-import com.jookmax.v7.data.local.entity.DecisionEntity
+
 import com.jookmax.v7.data.local.dao.DecisionDao
+import com.jookmax.v7.data.local.entity.DecisionEntity
+
 import com.jookmax.v7.domain.analytics.DecisionAnalyticsRepository
 
 import javax.inject.Inject
@@ -30,17 +35,22 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
     override suspend fun saveDecision(
 
+
         event: DecisionEvent.DecisionGenerated
+
 
     ) {
 
 
-        val decision = event.decision
+        val decision =
+
+            event.decision
+
+
 
 
 
         decisionDao.insertDecision(
-
 
 
             DecisionEntity(
@@ -82,27 +92,36 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
 
 
+
     override suspend fun getDecisions():
 
-            List<DecisionEvent.DecisionGenerated> {
 
+            List<DecisionEvent.DecisionGenerated> {
 
 
         return decisionDao
 
             .getDecisions()
 
-            .map {
+            .map { entity ->
+
+
 
 
 
                 val action =
 
+
                     DecisionAction.valueOf(
 
-                        it.action
+
+                        entity.action
+
 
                     )
+
+
+
 
 
 
@@ -110,13 +129,20 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
                 val decision =
 
+
                     DecisionResult(
+
 
                         action = action,
 
-                        confidence = it.confidence
+
+                        confidence = entity.confidence
+
 
                     )
+
+
+
 
 
 
@@ -124,17 +150,97 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
                 val intelligenceDecision =
 
+
                     IntelligenceDecision(
+
 
                         action = action,
 
-                        confidence = it.confidence,
+
+                        confidence = entity.confidence,
+
 
                         reason = "Loaded from analytics history",
 
-                        timestamp = it.timestamp
+
+                        timestamp = entity.timestamp
+
 
                     )
+
+
+
+
+
+
+
+
+                val validatedDecision =
+
+
+                    ValidatedDecision(
+
+
+                        originalDecision = intelligenceDecision,
+
+
+                        approved = entity.confidence >= 0.5,
+
+
+                        finalAction =
+
+
+                            if (entity.confidence >= 0.5) {
+
+
+                                action
+
+
+                            } else {
+
+
+                                DecisionAction.HOLD
+
+
+                            },
+
+
+                        validationScore = entity.confidence,
+
+
+                        validationReasons =
+
+
+                            if (entity.confidence >= 0.5) {
+
+
+                                listOf(
+
+                                    "Loaded from analytics history"
+
+                                )
+
+
+                            } else {
+
+
+                                listOf(
+
+                                    "Historical decision below validation threshold"
+
+                                )
+
+
+                            },
+
+
+                        timestamp = entity.timestamp
+
+
+                    )
+
+
+
 
 
 
@@ -146,7 +252,11 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
                     symbol = Symbol(
 
-                        code = it.symbol
+
+
+                        code = entity.symbol
+
+
 
                     ),
 
@@ -160,19 +270,23 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
 
 
-                    marketScore = it.marketScore,
+                    validatedDecision = validatedDecision,
 
 
 
-                    riskAllowed = it.riskAllowed,
+                    marketScore = entity.marketScore,
 
 
 
-                    learningReward = it.learningReward,
+                    riskAllowed = entity.riskAllowed,
 
 
 
-                    timestamp = it.timestamp
+                    learningReward = entity.learningReward,
+
+
+
+                    timestamp = entity.timestamp
 
 
 
@@ -183,6 +297,7 @@ class DecisionAnalyticsRepositoryImpl @Inject constructor(
 
 
     }
+
 
 
 

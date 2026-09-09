@@ -3,6 +3,7 @@ package com.jookmax.v7.core.events
 
 import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.intelligence.IntelligenceDecision
+import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
 import com.jookmax.v7.core.model.Symbol
 
 
@@ -40,6 +41,8 @@ sealed class DecisionEvent(
      * DecisionEngine Output
      * +
      * Intelligence Layer Output
+     * +
+     * Validation Result
      */
     data class DecisionGenerated(
 
@@ -58,6 +61,13 @@ sealed class DecisionEvent(
          * Intelligence adjusted decision.
          */
         val intelligenceDecision: IntelligenceDecision,
+
+
+
+        /**
+         * Final validation result.
+         */
+        val validatedDecision: ValidatedDecision,
 
 
 
