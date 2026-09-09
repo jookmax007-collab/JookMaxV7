@@ -34,9 +34,14 @@ import javax.inject.Singleton
  *        v                      v
  * DecisionAnalytics        DecisionMetrics
  * Repository               Collector
- *        |
- *        v
- * Room Database
+ *
+ * Metrics:
+ *
+ * Raw Decision
+ * +
+ * Intelligence Decision
+ * +
+ * Validation Result
  *
  */
 @Singleton
@@ -65,7 +70,7 @@ class DecisionEventSubscriber @Inject constructor(
     ) {
 
 
-        when (event) {
+        when(event) {
 
 
             is DecisionEvent.DecisionGenerated -> {
@@ -105,6 +110,19 @@ class DecisionEventSubscriber @Inject constructor(
 
 
 
+        /*
+         *
+         * Store complete decision event
+         *
+         * Contains:
+         *
+         * DecisionResult
+         * IntelligenceDecision
+         * ValidatedDecision
+         *
+         */
+
+
         repository.saveDecision(
 
             event
@@ -113,6 +131,15 @@ class DecisionEventSubscriber @Inject constructor(
 
 
 
+
+
+
+
+        /*
+         *
+         * Raw Decision Metrics
+         *
+         */
 
 
         metricsCollector.recordDecision(
@@ -131,6 +158,32 @@ class DecisionEventSubscriber @Inject constructor(
 
 
 
+
+        /*
+         *
+         * Validation Intelligence Metrics
+         *
+         */
+
+
+        metricsCollector.recordValidation(
+
+
+            approved = event.validatedDecision.approved,
+
+
+            validationScore = event.validatedDecision.validationScore
+
+
+        )
+
+
+
+
+
+
+
+
         logger.info(
 
 
@@ -139,13 +192,19 @@ class DecisionEventSubscriber @Inject constructor(
 
             message =
 
-                "Decision stored and measured: ${event.symbol.code} ${event.decision.action}"
+                "Decision stored: ${event.symbol.code} " +
+
+                "Action=${event.decision.action} " +
+
+                "Validated=${event.validatedDecision.approved}"
 
 
         )
 
 
     }
+
+
 
 
 

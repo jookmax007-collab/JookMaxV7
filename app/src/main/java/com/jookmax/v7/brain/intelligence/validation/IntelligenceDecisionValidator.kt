@@ -1,73 +1,77 @@
 package com.jookmax.v7.brain.intelligence.validation
 
 
-import com.jookmax.v7.brain.decision.DecisionAction
 import com.jookmax.v7.brain.intelligence.IntelligenceDecision
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-
-class IntelligenceDecisionValidator : DecisionValidator {
+@Singleton
+class IntelligenceDecisionValidator @Inject constructor() :
+    DecisionValidator {
 
 
     override fun validate(
-
         decision: IntelligenceDecision
-
     ): ValidatedDecision {
 
 
         val reasons = mutableListOf<String>()
 
 
-
-        val validationScore =
-
-            decision.confidence
-
-
+        var score = 1.0
 
 
 
         if (decision.confidence < 0.5) {
 
+            score -= 0.4
 
             reasons.add(
-
-                "Confidence below validation threshold"
-
-            )
-
-
-
-            return ValidatedDecision(
-
-                originalDecision = decision,
-
-                approved = false,
-
-                finalAction = DecisionAction.HOLD,
-
-                validationScore = validationScore,
-
-                validationReasons = reasons
-
+                "Low confidence score"
             )
 
         }
 
 
 
+        if (decision.reason.isBlank()) {
+
+            score -= 0.3
+
+            reasons.add(
+                "Decision reason is empty"
+            )
+
+        }
 
 
 
+        if (score < 0.0) {
 
-        reasons.add(
+            score = 0.0
 
-            "Decision passed intelligence validation"
-
-        )
+        }
 
 
+
+        val approved = score >= 0.5
+
+
+
+        if (approved) {
+
+            reasons.add(
+                "Decision passed validation"
+            )
+
+        } else {
+
+            reasons.add(
+                "Decision rejected by validator"
+            )
+
+        }
 
 
 
@@ -75,17 +79,16 @@ class IntelligenceDecisionValidator : DecisionValidator {
 
             originalDecision = decision,
 
-            approved = true,
+            approved = approved,
 
             finalAction = decision.action,
 
-            validationScore = validationScore,
+            validationScore = score,
 
             validationReasons = reasons
 
         )
 
     }
-
 
 }
