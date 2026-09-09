@@ -4,6 +4,7 @@ import com.jookmax.v7.brain.backtest.analytics.BacktestAnalytics
 import com.jookmax.v7.brain.backtest.model.BacktestTrade
 import com.jookmax.v7.brain.backtest.model.OpenBacktestPosition
 import com.jookmax.v7.brain.decision.DecisionAction
+import com.jookmax.v7.brain.intelligence.BacktestIntelligenceAdapter
 import com.jookmax.v7.brain.learning.BacktestLearningAdapter
 import com.jookmax.v7.brain.pipeline.BrainPipeline
 import com.jookmax.v7.core.model.MarketCandle
@@ -23,7 +24,9 @@ class BacktestRunner @Inject constructor(
 
     private val backtestAnalytics: BacktestAnalytics,
 
-    private val backtestLearningAdapter: BacktestLearningAdapter
+    private val backtestLearningAdapter: BacktestLearningAdapter,
+
+    private val backtestIntelligenceAdapter: BacktestIntelligenceAdapter
 
 ) {
 
@@ -43,6 +46,8 @@ class BacktestRunner @Inject constructor(
         val result = createResult(candles)
 
         backtestLearningAdapter.learnFromBacktest(result)
+
+        backtestIntelligenceAdapter.learnFromBacktest(result)
 
         return result
     }
@@ -117,9 +122,7 @@ class BacktestRunner @Inject constructor(
 
     ): BacktestResult {
 
-        val trades:
-
-                List<BacktestTrade> =
+        val trades: List<BacktestTrade> =
 
             tradeExecutor.getCompletedTrades()
 
@@ -201,13 +204,9 @@ class BacktestRunner @Inject constructor(
 
             holdSignals = 0,
 
-            startTime =
+            startTime = candles.firstOrNull()?.timestamp ?: 0L,
 
-                candles.firstOrNull()?.timestamp ?: 0L,
-
-            endTime =
-
-                candles.lastOrNull()?.timestamp ?: 0L,
+            endTime = candles.lastOrNull()?.timestamp ?: 0L,
 
             trades = trades,
 
