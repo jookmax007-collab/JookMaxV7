@@ -1,5 +1,6 @@
 package com.jookmax.v7.brain.backtest
 
+import com.jookmax.v7.brain.backtest.model.BacktestTrade
 
 
 /**
@@ -12,16 +13,15 @@ package com.jookmax.v7.brain.backtest
  * - Win/Loss statistics
  * - Profitability metrics
  * - Backtest period
+ * - Trade history
  *
  */
 data class BacktestResult(
-
 
     /**
      * Number of historical candles processed.
      */
     val totalCandles: Int,
-
 
 
     /**
@@ -30,12 +30,10 @@ data class BacktestResult(
     val totalTrades: Int,
 
 
-
     /**
      * Number of profitable trades.
      */
     val winningTrades: Int,
-
 
 
     /**
@@ -44,12 +42,10 @@ data class BacktestResult(
     val losingTrades: Int,
 
 
-
     /**
      * Net profit/loss from all trades.
      */
     val netProfit: Double,
-
 
 
     /**
@@ -61,12 +57,10 @@ data class BacktestResult(
     val winRate: Double,
 
 
-
     /**
      * Number of BUY executions.
      */
     val buySignals: Int,
-
 
 
     /**
@@ -75,12 +69,10 @@ data class BacktestResult(
     val sellSignals: Int,
 
 
-
     /**
      * Number of ignored HOLD decisions.
      */
     val holdSignals: Int,
-
 
 
     /**
@@ -89,11 +81,18 @@ data class BacktestResult(
     val startTime: Long,
 
 
-
     /**
      * Last candle timestamp.
      */
-    val endTime: Long
+    val endTime: Long,
 
+
+    /**
+     * Completed simulated trades.
+     *
+     * Used by analytics,
+     * reward engine and learning layer.
+     */
+    val trades: List<BacktestTrade>
 
 )
