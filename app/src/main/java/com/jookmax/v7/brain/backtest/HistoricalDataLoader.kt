@@ -2,56 +2,36 @@ package com.jookmax.v7.brain.backtest
 
 
 import com.jookmax.v7.core.model.MarketCandle
+import com.jookmax.v7.domain.repository.MarketRepository
 
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 
-/**
- * Historical Market Data Loader
- *
- * Phase 10 - Backtesting Engine
- *
- * Responsibility:
- *
- * Historical Source
- *        |
- *        v
- * List<MarketCandle>
- *        |
- *        v
- * BacktestRunner
- *
- *
- * Future implementations:
- *
- * - CSV Loader
- * - Database Loader
- * - Historical API Loader
- *
- */
 @Singleton
-class HistoricalDataLoader @Inject constructor() {
+class HistoricalDataLoader @Inject constructor(
+
+    private val marketRepository: MarketRepository
+
+) {
 
 
 
-    /**
-     * Load historical candles
-     *
-     * Phase 10 foundation:
-     * Empty implementation.
-     *
-     * Real data source will be connected later.
-     */
-    fun load(): List<MarketCandle> {
+    suspend fun load(): List<MarketCandle> {
 
 
-        return emptyList()
+        val history =
+
+            marketRepository.getMarketHistory()
+
+
+
+        return history?.candles
+            ?: emptyList()
 
 
     }
-
 
 
 }

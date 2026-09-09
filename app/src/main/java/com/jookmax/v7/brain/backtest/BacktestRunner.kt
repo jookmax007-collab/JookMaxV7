@@ -1,137 +1,402 @@
 package com.jookmax.v7.brain.backtest
 
 
+import com.jookmax.v7.brain.backtest.model.BacktestTrade
+import com.jookmax.v7.brain.backtest.model.OpenBacktestPosition
+import com.jookmax.v7.brain.decision.DecisionAction
 import com.jookmax.v7.brain.pipeline.BrainPipeline
+import com.jookmax.v7.core.model.MarketCandle
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 
 /**
- * Backtest Execution Engine
+ * Orchestrates one complete historical backtest.
  *
  * Flow:
  *
  * HistoricalDataLoader
- *          |
- *          v
+ *        |
+ *        v
  * MarketCandle
- *          |
- *          v
+ *        |
+ *        v
  * BrainPipeline
- *          |
- *          v
- * BrainExecutionResult
- *          |
- *          v
+ *        |
+ *        v
+ * ValidatedDecision + RiskDecision
+ *        |
+ *        v
+ * BacktestTradeExecutor
+ *        |
+ *        v
+ * BacktestTrade
+ *        |
+ *        v
  * BacktestResult
  *
  */
 @Singleton
 class BacktestRunner @Inject constructor(
 
-    private val dataLoader: HistoricalDataLoader,
+    private val historicalDataLoader: HistoricalDataLoader,
 
-    private val brainPipeline: BrainPipeline
+    private val brainPipeline: BrainPipeline,
+
+    private val tradeExecutor: BacktestTradeExecutor
 
 ) {
 
 
 
-    fun run(): BacktestResult {
+    /**
+     * Execute complete backtest session.
+     *
+     * Suspend because HistoricalDataLoader
+     * loads data asynchronously.
+     */
+    suspend fun run(): BacktestResult {
+
+
+        tradeExecutor.reset()
+
 
 
         val candles =
 
-            dataLoader.load()
+            historicalDataLoader.load()
 
 
-
-        var totalDecisions = 0
-
-        var buySignals = 0
-
-        var sellSignals = 0
-
-        var holdSignals = 0
-
-
-
-        val startTime =
-
-            System.currentTimeMillis()
 
 
 
         candles.forEach { candle ->
 
 
+            processCandle(
 
-            val result =
+                candle
 
-                brainPipeline.execute(
-
-                    candle
-
-                )
-
-
-
-            totalDecisions++
-
-
-
-            when(
-                result.validatedDecision.finalAction
-            ) {
-
-
-                com.jookmax.v7.brain.decision.DecisionAction.BUY ->
-
-                    buySignals++
-
-
-
-                com.jookmax.v7.brain.decision.DecisionAction.SELL ->
-
-                    sellSignals++
-
-
-
-                com.jookmax.v7.brain.decision.DecisionAction.HOLD ->
-
-                    holdSignals++
-
-            }
+            )
 
 
         }
 
 
 
-        val endTime =
 
-            System.currentTimeMillis()
+
+
+        return createResult(
+
+            candles
+
+        )
+
+
+    }
+
+
+
+
+
+
+
+
+
+    private fun processCandle(
+
+        candle: MarketCandle
+
+    ) {
+
+
+
+        /*
+         * Manage existing position first.
+         */
+
+        tradeExecutor.evaluateCandle(
+
+            candle
+
+        )
+
+
+
+
+
+
+
+        /*
+         * Prevent multiple open positions.
+         */
+
+        if (
+
+            tradeExecutor.hasOpenPosition()
+
+        ) {
+
+            return
+
+        }
+
+
+
+
+
+
+
+
+        val result =
+
+            brainPipeline.execute(
+
+                candle
+
+            )
+
+
+
+
+
+
+
+        val decision =
+
+            result.validatedDecision
+
+
+
+
+
+
+
+        if (
+
+            !decision.approved ||
+
+            decision.finalAction == DecisionAction.HOLD
+
+        ) {
+
+            return
+
+        }
+
+
+
+
+
+
+
+        val risk =
+
+            result.context.riskDecision
+
+
+
+
+
+
+
+        if (
+
+            risk.positionSize <= 0.0
+
+        ) {
+
+            return
+
+        }
+
+
+
+
+
+
+
+        tradeExecutor.openPosition(
+
+
+            OpenBacktestPosition(
+
+
+                action = decision.finalAction,
+
+
+                entryPrice = candle.close,
+
+
+                stopLoss = risk.stopLoss,
+
+
+                takeProfit = risk.takeProfit,
+
+
+                positionSize = risk.positionSize,
+
+
+                openedAt = candle.timestamp
+
+
+            )
+
+        )
+
+
+    }
+
+
+
+
+
+
+
+
+
+    private fun createResult(
+
+        candles: List<MarketCandle>
+
+    ): BacktestResult {
+
+
+        val trades:
+
+                List<BacktestTrade> =
+
+            tradeExecutor.getCompletedTrades()
+
+
+
+
+
+        val winningTrades =
+
+            trades.count {
+
+                it.profitLoss > 0.0
+
+            }
+
+
+
+
+
+        val losingTrades =
+
+            trades.count {
+
+                it.profitLoss <= 0.0
+
+            }
+
+
+
+
+
+        val netProfit =
+
+            trades.sumOf {
+
+                it.profitLoss
+
+            }
+
+
+
+
+
+        val winRate =
+
+            if (trades.isEmpty()) {
+
+                0.0
+
+            } else {
+
+                winningTrades.toDouble() /
+
+                        trades.size.toDouble()
+
+            }
+
+
+
+
+
+        val buySignals =
+
+            trades.count {
+
+                it.action == DecisionAction.BUY
+
+            }
+
+
+
+
+
+        val sellSignals =
+
+            trades.count {
+
+                it.action == DecisionAction.SELL
+
+            }
+
+
+
+
 
 
 
         return BacktestResult(
 
+
             totalCandles = candles.size,
 
-            totalDecisions = totalDecisions,
+
+            totalTrades = trades.size,
+
+
+            winningTrades = winningTrades,
+
+
+            losingTrades = losingTrades,
+
+
+            netProfit = netProfit,
+
+
+            winRate = winRate,
+
 
             buySignals = buySignals,
 
+
             sellSignals = sellSignals,
 
-            holdSignals = holdSignals,
 
-            startTime = startTime,
+            holdSignals = 0,
 
-            endTime = endTime
+
+            startTime =
+
+                candles.firstOrNull()?.timestamp ?: 0L,
+
+
+            endTime =
+
+                candles.lastOrNull()?.timestamp ?: 0L
+
 
         )
+
 
     }
 
