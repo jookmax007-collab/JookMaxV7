@@ -1,4 +1,4 @@
-package com.jookmax.v7.di
+﻿package com.jookmax.v7.di
 
 
 import com.jookmax.v7.brain.confidence.ConfidenceAnalytics
@@ -19,6 +19,7 @@ import com.jookmax.v7.brain.intelligence.validation.IntelligenceDecisionValidato
 
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.learning.LearningExperienceManager
+import com.jookmax.v7.brain.learning.LearningPatternAnalyzer
 
 import com.jookmax.v7.brain.risk.DynamicRiskManager
 import com.jookmax.v7.brain.risk.ExposureManager
@@ -390,13 +391,28 @@ object BrainModule {
 
     @Provides
     @Singleton
-    fun provideLearningExperienceManager():
-
+    fun provideLearningExperienceManager(
+        learningRepository: com.jookmax.v7.domain.repository.LearningRepository
+    ):
             LearningExperienceManager {
 
+        return LearningExperienceManager(
+            repository = learningRepository
+        )
 
-        return LearningExperienceManager()
+    }
 
+
+
+    @Provides
+    @Singleton
+    fun provideLearningPatternAnalyzer(
+        learningRepository: com.jookmax.v7.domain.repository.LearningRepository
+    ): LearningPatternAnalyzer {
+
+        return LearningPatternAnalyzer(
+            learningRepository = learningRepository
+        )
     }
 
 
@@ -440,3 +456,5 @@ object BrainModule {
 
 
 }
+
+

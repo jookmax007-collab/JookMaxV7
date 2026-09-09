@@ -1,4 +1,4 @@
-package com.jookmax.v7.brain
+﻿package com.jookmax.v7.brain
 
 
 import com.jookmax.v7.brain.decision.DecisionEngine
@@ -146,8 +146,9 @@ class BrainManager @Inject constructor(
 
 
         val executionResult =
-
-            brainPipeline.execute()
+            kotlinx.coroutines.runBlocking {
+                brainPipeline.execute()
+            }
 
 
 

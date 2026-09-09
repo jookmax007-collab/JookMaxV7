@@ -1,0 +1,82 @@
+package com.jookmax.v7.data.local.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+
+@Entity(
+    tableName = "learning_experiences"
+)
+data class LearningExperienceEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+
+    // Decision Information
+    val decision: String,
+
+    val confidence: Double,
+
+
+    // Risk Information
+    val riskApproved: Boolean,
+
+    val positionSize: Double,
+
+    val riskScore: Double,
+
+
+    // Market Context
+    val symbol: String,
+
+    val price: Double,
+
+    val timeframe: String,
+
+    val marketRegime: String,
+
+    val trendState: String,
+
+    val volatilityState: String,
+
+
+    // Technical Snapshot
+    val rsi: Double,
+
+    val macd: Double,
+
+    val movingAverage: Double,
+
+    val atr: Double,
+
+    val supportLevel: Double,
+
+    val resistanceLevel: Double,
+
+
+    // Learning Result
+    val reward: Double,
+
+    val profitLoss: Double,
+
+    val success: Boolean,
+
+    val holdingTime: Long,
+
+    val drawdown: Double,
+
+
+    // Version Control
+    val schemaVersion: Int,
+
+    val brainVersion: String,
+
+    val strategyVersion: String,
+
+    val featureVersion: String,
+
+
+    val timestamp: Long
+
+)

@@ -1,253 +1,152 @@
 package com.jookmax.v7.brain.learning
 
+import com.jookmax.v7.domain.repository.LearningRepository
+
+import kotlinx.coroutines.runBlocking
 
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
-
 /**
  * Learning Experience Manager
  *
- * Responsible for:
- *
- * - storing brain experiences
- * - keeping learning memory
- * - providing historical statistics
- * - supporting adaptive learning
- * - resetting memory
- *
- *
- * Flow:
- *
- * Brain Decision
- *        |
- *        v
- * LearningExperience
- *        |
- *        v
- * LearningExperienceManager
- *        |
- *        v
- * LearningBrain
- *
+ * Bridge between Brain Learning Layer and persistent LearningRepository
  */
 @Singleton
-class LearningExperienceManager @Inject constructor() {
+class LearningExperienceManager @Inject constructor(
+
+    private val repository: LearningRepository
+
+) {
 
 
-
-    private val experiences =
-
-        mutableListOf<LearningExperience>()
-
-
-
-
-
-
-    /**
-     * Add new learning experience
-     */
     fun addExperience(
 
         experience: LearningExperience
 
     ) {
 
+        runBlocking {
 
-        experiences.add(
+            repository.saveExperience(
 
-            experience
+                experience
 
-        )
+            )
+
+        }
 
     }
 
 
 
-
-
-
-
-
-    /**
-     * Return all stored experiences
-     */
     fun getExperiences():
 
             List<LearningExperience> {
 
 
-        return experiences.toList()
+        return runBlocking {
+
+            repository.getExperiences()
+
+        }
 
     }
 
 
 
 
-
-
-
-
-    /**
-     * Return latest brain experience
-     */
     fun getLatestExperience():
 
             LearningExperience? {
 
 
-        return experiences.lastOrNull()
+        return runBlocking {
+
+            repository.getLatestExperience()
+
+        }
 
     }
 
 
 
 
-
-
-
-
-    /**
-     * Total memory size
-     */
     fun getExperienceCount():
 
             Int {
 
 
-        return experiences.size
+        return runBlocking {
+
+            repository.getExperienceCount()
+
+        }
 
     }
 
 
 
 
-
-
-
-
-    /**
-     * Calculate average reward
-     */
     fun getAverageReward():
 
             Double {
 
 
-        if (experiences.isEmpty()) {
+        return runBlocking {
 
-            return 0.0
+            repository.getAverageReward()
 
         }
-
-
-
-
-        return experiences
-
-            .map {
-
-                it.reward
-
-            }
-
-            .average()
 
     }
 
 
 
 
-
-
-
-
-    /**
-     * Calculate success percentage
-     */
     fun getSuccessRate():
 
             Double {
 
 
-        if (experiences.isEmpty()) {
+        return runBlocking {
 
-            return 0.0
+            repository.getSuccessRate()
 
         }
-
-
-
-
-        val successfulTrades =
-
-            experiences
-
-                .count {
-
-                    it.success
-
-                }
-
-
-
-
-        return successfulTrades.toDouble() /
-
-                experiences.size.toDouble()
 
     }
 
 
 
 
-
-
-
-
-    /**
-     * Calculate failure percentage
-     */
     fun getFailureRate():
 
             Double {
 
 
-        return 1.0 -
-
-                getSuccessRate()
+        return 1.0 - getSuccessRate()
 
     }
 
 
 
 
-
-
-
-
-    /**
-     * Clear all learning memory
-     */
     fun clear() {
 
 
-        experiences.clear()
+        runBlocking {
+
+            repository.clearMemory()
+
+        }
 
     }
 
 
 
 
-
-
-
-
-    /**
-     * Reset learning memory
-     */
     fun reset() {
 
 

@@ -1,13 +1,14 @@
 package com.jookmax.v7.di
 
 
-import com.jookmax.v7.brain.intelligence.memory.DecisionMemory
-import com.jookmax.v7.brain.intelligence.memory.DecisionMemoryImpl
+import com.jookmax.v7.data.repository.PersistentDecisionMemoryRepositoryImpl
+import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
 
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+
 import javax.inject.Singleton
 
 
@@ -20,9 +21,10 @@ abstract class MemoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindDecisionMemory(
-        impl: DecisionMemoryImpl
+    abstract fun bindPersistentDecisionMemoryRepository(
+        impl: PersistentDecisionMemoryRepositoryImpl
     ):
-            DecisionMemory
+            PersistentDecisionMemoryRepository
+
 
 }

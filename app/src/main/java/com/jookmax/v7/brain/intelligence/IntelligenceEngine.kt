@@ -1,8 +1,10 @@
-package com.jookmax.v7.brain.intelligence
+﻿package com.jookmax.v7.brain.intelligence
 
 
 import com.jookmax.v7.brain.decision.DecisionAction
 import com.jookmax.v7.brain.decision.DecisionResult
+import com.jookmax.v7.brain.intelligence.memory.DecisionPattern
+import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,16 +21,15 @@ class IntelligenceEngine @Inject constructor(
     private val memoryAnalyzer: IntelligenceMemoryAnalyzer,
 
 
-    private val decisionMemory: DecisionMemory
+    private val persistentDecisionMemoryRepository:
+        PersistentDecisionMemoryRepository
 
 
 ) {
 
 
 
-
-
-    fun evaluate(
+    suspend fun evaluate(
 
         decisionResult: DecisionResult
 
@@ -42,13 +43,9 @@ class IntelligenceEngine @Inject constructor(
 
 
 
-
-
         val memoryAdjustment =
 
             memoryAnalyzer.calculateAdjustment()
-
-
 
 
 
@@ -58,7 +55,7 @@ class IntelligenceEngine @Inject constructor(
 
                     advisorAdjustment *
 
-                            memoryAdjustment
+                    memoryAdjustment
 
                     )
 
@@ -72,17 +69,13 @@ class IntelligenceEngine @Inject constructor(
 
 
 
-
-
-
-
         val confidence =
 
             (
 
                     decisionResult.confidence *
 
-                            finalAdjustment
+                    finalAdjustment
 
                     )
 
@@ -96,21 +89,14 @@ class IntelligenceEngine @Inject constructor(
 
 
 
-
-
-
-
         val reason =
 
             when(decisionResult.action) {
 
 
-
                 DecisionAction.BUY ->
 
                     "Bullish intelligence alignment"
-
-
 
 
 
@@ -120,17 +106,11 @@ class IntelligenceEngine @Inject constructor(
 
 
 
-
-
                 DecisionAction.HOLD ->
 
                     "Insufficient intelligence confidence"
 
             }
-
-
-
-
 
 
 
@@ -148,25 +128,29 @@ class IntelligenceEngine @Inject constructor(
 
 
 
+        persistentDecisionMemoryRepository.save(
 
+            DecisionPattern(
 
-        decisionMemory.add(
+                symbol = "XAUUSD",
 
-            DecisionExperience(
+                trend = "UNKNOWN",
+
+                rsi = 0.0,
+
+                volatility = 0.0,
 
                 action = decisionResult.action,
 
                 confidence = confidence,
 
-                reward = 0.0,
+                approved = true,
 
-                success = false
+                reward = 0.0
 
             )
 
         )
-
-
 
 
 

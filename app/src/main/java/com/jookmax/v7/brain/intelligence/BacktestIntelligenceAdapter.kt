@@ -2,59 +2,65 @@ package com.jookmax.v7.brain.intelligence
 
 
 import com.jookmax.v7.brain.backtest.BacktestResult
+import com.jookmax.v7.brain.intelligence.memory.DecisionPattern
+import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 
-/**
- * Converts backtest outcomes into intelligence memory.
- *
- * Backtest
- *    |
- *    v
- * DecisionExperience
- *    |
- *    v
- * DecisionMemory
- *
- */
 @Singleton
 class BacktestIntelligenceAdapter @Inject constructor(
 
-    private val decisionMemory: DecisionMemory
+    private val repository:
+        PersistentDecisionMemoryRepository
 
 ) {
 
 
-    fun learnFromBacktest(
+    suspend fun learnFromBacktest(
 
         result: BacktestResult
 
     ) {
 
 
-        result.trades.forEach { trade ->
+        val patterns = result.trades.map { trade ->
 
 
-            decisionMemory.add(
+            DecisionPattern(
 
-                DecisionExperience(
+                symbol = "XAUUSD",
 
-                    action = trade.action,
+                trend = "UNKNOWN",
 
-                    confidence = result.winRate,
+                rsi = 0.0,
 
-                    reward = trade.profitLoss,
+                volatility = 0.0,
 
-                    success = trade.success
+                action = trade.action,
 
-                )
+                confidence = result.winRate,
+
+                approved = true,
+
+                reward = trade.profitLoss
 
             )
 
+
         }
 
+
+        repository.saveAll(
+
+            patterns
+
+        )
+
+
     }
+
 
 }

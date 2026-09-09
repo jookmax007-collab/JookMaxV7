@@ -1,11 +1,9 @@
-package com.jookmax.v7.brain.pipeline
-
+﻿package com.jookmax.v7.brain.pipeline
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
 import com.jookmax.v7.core.model.MarketCandle
 
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
-
 import com.jookmax.v7.brain.decision.DecisionEngine
 
 import com.jookmax.v7.brain.intelligence.IntelligenceEngine
@@ -21,49 +19,35 @@ import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.risk.RiskEngine
 import com.jookmax.v7.brain.risk.RiskProfile
 
-
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 
 @Singleton
 class BrainPipeline @Inject constructor(
 
-
     private val marketBrain: MarketBrain,
-
 
     private val riskEngine: RiskEngine,
 
-
     private val learningBrain: LearningBrain,
-
 
     private val decisionEngine: DecisionEngine,
 
-
     private val confidenceFeedbackCollector: ConfidenceFeedbackCollector,
-
 
     private val learningExperienceManager: LearningExperienceManager,
 
-
     private val intelligenceEngine: IntelligenceEngine,
-
 
     private val intelligenceFeedbackBridge: IntelligenceFeedbackBridge,
 
-
     private val decisionValidator: DecisionValidator
 
-
-) {
-
+) : BrainExecutor {
 
 
-
-    fun execute(
+    override fun execute(
         candle: MarketCandle
     ): BrainExecutionResult {
 
@@ -71,38 +55,31 @@ class BrainPipeline @Inject constructor(
             candle
         )
 
-        return execute()
+        return kotlinx.coroutines.runBlocking {
+
+            execute()
+
+        }
     }
 
-    fun execute(): BrainExecutionResult {
 
+    suspend fun execute(): BrainExecutionResult {
 
-        val context = createContext()
-
+        val context =
+            createContext()
 
 
         val marketScore =
-
             calculateMarketScore(
-
                 context.marketAnalysis
-
             )
 
 
-
-
         val riskAllowed =
-
             context.riskDecision.positionSize > 0.0
 
 
-
-
-
-
         val decision =
-
             decisionEngine.decide(
 
                 marketScore = marketScore,
@@ -116,11 +93,6 @@ class BrainPipeline @Inject constructor(
             )
 
 
-
-
-
-
-
         confidenceFeedbackCollector.collect(
 
             decisionResult = decision,
@@ -130,27 +102,18 @@ class BrainPipeline @Inject constructor(
         )
 
 
-
-
-
-
-
         val experience =
-
             LearningExperience.from(
 
                 decisionResult = decision,
 
                 riskDecision = context.riskDecision,
 
+                marketAnalysis = context.marketAnalysis,
+
                 reward = context.learningReward
 
             )
-
-
-
-
-
 
 
         learningExperienceManager.addExperience(
@@ -160,14 +123,7 @@ class BrainPipeline @Inject constructor(
         )
 
 
-
-
-
-
-
-
         val intelligenceDecision =
-
             intelligenceEngine.evaluate(
 
                 decisionResult = decision
@@ -175,27 +131,13 @@ class BrainPipeline @Inject constructor(
             )
 
 
-
-
-
-
-
         val validatedDecision =
-
             decisionValidator.validate(
 
                 intelligenceDecision
 
             )
 
-
-
-
-
-
-
-
-        // Feedback باید از تصمیم نهایی Validation شده یاد بگیرد
 
         intelligenceFeedbackBridge.recordDecision(
 
@@ -206,25 +148,12 @@ class BrainPipeline @Inject constructor(
         )
 
 
-
-
-
-
-
-
         val finalContext =
-
             context.copy(
 
                 decisionResult = decision
 
             )
-
-
-
-
-
-
 
 
         return BrainExecutionResult(
@@ -242,27 +171,13 @@ class BrainPipeline @Inject constructor(
     }
 
 
-
-
-
-
-
-
     private fun createContext(): BrainContext {
 
-
         val marketAnalysis =
-
             marketBrain.analyze()
 
 
-
-
-
-
-
         val riskDecision =
-
             riskEngine.calculateTradeRisk(
 
                 profile = RiskProfile(),
@@ -276,25 +191,11 @@ class BrainPipeline @Inject constructor(
             )
 
 
-
-
-
-
-
         val learningReward =
-
             learningBrain
-
                 .getLastResult()
-
                 ?.reward
-
                 ?: 0.0
-
-
-
-
-
 
 
         return BrainContext(
@@ -310,54 +211,28 @@ class BrainPipeline @Inject constructor(
     }
 
 
-
-
-
-
-
-
-
     private fun calculateMarketScore(
-
         analysis: MarketAnalysis
-
     ): Double {
-
 
         return when {
 
-
             analysis.trend == "BULLISH" &&
-
                     analysis.rsi < 70 ->
-
                 0.8
 
 
-
-
-
-
             analysis.trend == "BEARISH" &&
-
                     analysis.rsi > 30 ->
-
                 0.2
 
 
-
-
-
-
             else ->
-
                 0.5
 
         }
 
     }
 
-
 }
-
 

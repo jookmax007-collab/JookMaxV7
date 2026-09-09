@@ -1,1101 +1,760 @@
-✅ Phase 14 Backtesting دیگر فقط Foundation نیست؛ Backtest Engine Foundation شروع شده و بخش اصلی Runner + Executor ساخته شده
-✅ BacktestRunner ساخته و به BrainPipeline متصل شده
-✅ BacktestTradeExecutor اضافه شده و منطق SL/TP/P&L از Runner جدا شده
-✅ BacktestTrade و OpenBacktestPosition ساخته شدند
-✅ BacktestResult ارتقا پیدا کرده
-✅ Build موفق ثبت شده
-✅ Git checkpoint جدید:
-2a47937
-Phase 10 Backtest engine integration completed
-
-نسخه جدید برای ذخیره:
-
 =========================================================
-JookMax V7 — Development Checkpoint
+JookMax V7 — MASTER DEVELOPMENT CHECKPOINT v2
 =========================================================
-آخرین بروزرسانی
+
+Version:
+
+v7.x Intelligence Core
++
+Personal Autonomous Trading Intelligence System
+
+
+Date:
+
 2026-09-09
 
-Current Branch
-main
-
-Latest Stable Commit
-
-2a47937
-Phase 10 Backtest engine integration completed
-
-Current Milestone
-
-v7.x Intelligence Core + Backtesting Expansion
-
-Current Development Stage
-
-🟢 Brain Intelligence + Backtest Integration
-
-=========================================================
-Build Status
-=========================================================
-
-Current Build
-
-✅ BUILD SUCCESSFUL
-
-Technology Stack
-
-Kotlin          2.2.0
-AGP             8.11.1
-Compose BOM     2025.06.00
-Hilt            2.57.1
-Gradle          9.2.1
-JVM             21
-
-minSdk          26
-targetSdk       36
-compileSdk      36
-
-
-=========================================================
-Architecture Status
-=========================================================
-
-Completed
-
-✅ Clean Architecture Foundation
-
-✅ MVVM
-
-✅ Repository Pattern
-
-✅ Dependency Injection (Hilt)
-
-✅ Event Driven Architecture
-
-✅ Package By Layer
-
-
-Architecture:
-
-Presentation
-
-        ↓
-
-Domain
-
-        ↓
-
-Data
-
-        ↓
-
-Core / Engine
-
-        ↓
-
-Brain
-
-        ↓
-
-Intelligence Layer
-
-        ↓
-
-Backtesting Layer
-
-
-=========================================================
-Project Structure Status
-=========================================================
-
-Current:
-
-app
-
- ├── core
- ├── engine
- ├── analysis
- ├── risk
- ├── learning
- ├── intelligence
- ├── brain
- ├── backtest
- ├── data
- ├── ui
- └── monitoring
-
-
-Future:
-
-Multi Module Migration
-
-:app
-
-:core
-
-:domain
-
-:data
-
-:engine
-
-:analysis
-
-:risk
-
-:learning
-
-:intelligence
-
-:logging
-
-:monitoring
-
-:ui
-
 
 Status:
 
-⚠️ Planned Migration
+ACTIVE DEVELOPMENT
 
 
 =========================================================
-Phase 0 — Foundation
+ARCHITECTURE PRINCIPLES
 =========================================================
 
-Status:
 
-✅ COMPLETED
+Application Type:
 
-
-Created:
-
-✅ Application Setup
-
-✅ Hilt Application
-
-✅ MainActivity
-
-✅ Core Models
-
-✅ Core Events
-
-✅ Logger Foundation
-
-✅ Time Provider
+PERSONAL SINGLE USER AI SYSTEM
 
 
-=========================================================
-Phase 1 — Event Driven Engine
-=========================================================
-
-Status:
-
-✅ COMPLETED
+Core Principles:
 
 
-Created:
+✅ Offline First
 
-✅ EngineEvent
+✅ Local Intelligence
 
-✅ EventBus
+✅ Permanent Learning Memory
 
-✅ EventDispatcher
+✅ Portable Backup
 
-✅ EventSubscriber
+✅ Long Term Experience Storage
 
-
-Subscribers:
-
-✅ MarketEventSubscriber
-
-✅ DecisionEventSubscriber
-
-✅ EngineEventSubscriber
-
-
-Flow:
-
-
-Event
-
-↓
-
-Dispatcher
-
-↓
-
-Subscriber
-
-↓
-
-Engine / Brain
+✅ No Cloud Dependency
 
 
 =========================================================
-Phase 2 — Engine Core
+STORAGE ARCHITECTURE RULE
 =========================================================
 
-Status:
 
-✅ COMPLETED
+IMPORTANT:
 
 
-Created:
+Google Drive is NOT the Brain Storage.
 
-✅ JookMaxEngine
 
-✅ EngineManager
+Correct Architecture:
 
-✅ EngineLifecycleManager
 
-✅ EngineRuntimeTracker
+JookMax App
 
-✅ EngineCoroutineScope
+        |
 
-✅ MetricsCollector
+        v
 
-✅ EngineMonitor
+Room Database
 
-✅ RuntimeObserver
+(Main Intelligence Memory)
 
+        |
 
-Lifecycle:
+        v
 
-START
+Encrypted Backup File
 
-↓
+        |
 
-RUNNING
+        v
 
-↓
+Optional Google Drive Sync
 
-PAUSE
 
-↓
 
-RESUME
-
-↓
-
-STOP
-
-
-=========================================================
-Phase 3 — Brain Pipeline
-=========================================================
-
-Status:
-
-🟢 ADVANCED FOUNDATION COMPLETED
-
-
-Created:
-
-✅ BrainManager
-
-✅ MarketBrain
-
-✅ RiskBrain
-
-✅ LearningBrain
-
-✅ DecisionEngine
-
-✅ BrainContext
-
-✅ BrainPipeline
-
-✅ BrainExecutionResult
-
-
-Connected:
-
-✅ RiskEngine
-
-✅ Learning Memory
-
-✅ Intelligence Engine
-
-✅ Feedback Loop
-
-
-Current Flow:
-
-
-MarketBrain
-
-↓
-
-Technical Analysis
-
-↓
-
-MarketAnalysis
-
-↓
-
-RiskEngine
-
-↓
-
-DecisionEngine
-
-↓
-
-Confidence Layer
-
-↓
-
-Learning System
-
-↓
-
-IntelligenceEngine
-
-↓
-
-IntelligenceDecision
-
-
-Remaining:
-
-❌ Decision Validator
-
-
-=========================================================
-Phase 4 — Persistence Layer
-=========================================================
-
-Status:
-
-⚠️ FOUNDATION COMPLETED
-
-
-Created:
-
-✅ Room Database
-
-✅ Entity
-
-✅ DAO
-
-✅ Database
-
-
-Market:
-
-✅ MarketPriceEntity
-
-✅ MarketCandleEntity
-
-
-Decision:
-
-✅ DecisionEntity
-
-✅ DecisionDao
-
-✅ DecisionMapper
-
-
-Repository:
-
-✅ Domain Repository
-
-✅ Data Implementation
-
-
-Remaining:
-
-❌ Migration Strategy
-
-❌ Database Optimization
-
-❌ Cache Strategy
-
-❌ Offline Sync
-
-
-=========================================================
-Phase 5 — Decision Analytics
-=========================================================
-
-Status:
-
-✅ COMPLETED
-
-
-Created:
-
-✅ DecisionAnalytics
-
-✅ DecisionRecord
-
-✅ DecisionStatistics
-
-✅ DecisionMetricsCollector
-
-✅ DecisionEventSubscriber
-
-
-Metrics:
-
-✅ Total Decisions
-
-✅ BUY Count
-
-✅ SELL Count
-
-✅ HOLD Count
-
-✅ Average Confidence
-
-
-=========================================================
-Phase 6 — Monitoring System
-=========================================================
-
-Status:
-
-✅ FOUNDATION COMPLETED
-
-
-Created:
-
-Engine:
-
-✅ EngineMonitor
-
-✅ EngineHealth
-
-✅ RuntimeObserver
-
-✅ MetricsHistory
-
-✅ PerformanceSnapshot
-
-
-Domain:
-
-✅ PerformanceReport
-
-✅ GetPerformanceReportUseCase
-
-
-UI:
-
-✅ MonitoringViewModel
-
-✅ MonitoringUiState
-
-✅ MonitoringStateMapper
-
-✅ MonitoringScreen
-
-
-=========================================================
-Phase 7 — Monitoring Dashboard
-=========================================================
-
-Status:
-
-⚠️ FOUNDATION
-
-
-Available:
-
-✅ Engine State
-
-✅ Events
-
-✅ Latency
-
-✅ Failure Rate
-
-✅ Decision Metrics
-
-
-Remaining:
-
-❌ Professional Dashboard UI
-
-❌ Charts
-
-❌ Real Time Graph
-
-❌ Advanced Cards
-
-
-=========================================================
-Phase 8 — Market Data Feed
-=========================================================
-
-Status:
-
-🟡 FOUNDATION COMPLETED
-
-
-Created:
-
-✅ MarketSocketClient
-
-✅ MarketSocketListener
-
-✅ SocketConnectionState
-
-✅ ReconnectStrategy
-
-
-Pipeline:
-
-WebSocket
-
-↓
-
-MarketTick
-
-↓
-
-Repository
-
-
-Remaining:
-
-❌ Production API Validation
-
-❌ Advanced Recovery
-
-❌ Connection Monitoring
-
-
-=========================================================
-Phase 9 — Tick Engine
-=========================================================
-
-Status:
-
-✅ COMPLETED
-
-
-Created:
-
-✅ MarketTick
-
-✅ TickBuffer
-
-✅ CandleInterval
-
-✅ CandleBuilder
-
-✅ TickEngine
-
-
-Flow:
-
-
-MarketTick
-
-↓
-
-TickEngine
-
-↓
-
-CandleBuilder
-
-↓
-
-MarketCandle
-
-↓
-
-CandleClosed Event
-
-
-=========================================================
-Phase 10 — Technical Analysis Engine
-=========================================================
-
-Status:
-
-🟡 FOUNDATION COMPLETED
-
-
-Indicators:
-
-✅ RSI
-
-✅ MACD
-
-✅ MovingAverage
-
-✅ ATR
-
-
-Analysis:
-
-✅ MarketAnalysis
-
-✅ TechnicalAnalyzer
-
-✅ TrendDetector
-
-✅ MarketStructure
-
-
-Remaining:
-
-❌ Advanced Indicators
-
-❌ Pattern Recognition
-
-❌ Smart Market Structure
-
-
-=========================================================
-Phase 11 — Risk Engine
-=========================================================
-
-Status:
-
-🟡 FOUNDATION COMPLETED
-
-
-Created:
-
-✅ RiskBrain
-
-✅ RiskEngine
-
-✅ RiskDecision
-
-✅ RiskProfile
-
-✅ PositionSizer
-
-✅ StopLossCalculator
-
-✅ TakeProfitCalculator
-
-
-Remaining:
-
-❌ Portfolio Risk
-
-❌ Exposure Model
-
-❌ Dynamic Risk Optimization
-
-
-=========================================================
-Phase 12 — Learning System
-=========================================================
-
-Status:
-
-🟡 ADVANCED FOUNDATION
-
-
-Created:
-
-✅ LearningBrain
-
-✅ LearningResult
-
-✅ LearningExperience
-
-✅ LearningExperienceManager
-
-✅ LearningAnalytics
+Meaning:
 
 
 Memory:
 
-✅ Experience Storage
-
-✅ Average Reward
-
-✅ Success Rate
-
-✅ Learning Performance Score
+Local
 
 
-Remaining:
+Backup:
 
-❌ Reward Engine
+Portable
 
-❌ Training Dataset
 
-❌ Weight Storage
+Cloud:
 
-❌ Model Adaptation
+Optional
+
 
 
 =========================================================
-Phase 13 — Intelligence System
+PHASE 0.5 — ARCHITECTURE CLEANUP
 =========================================================
 
-Status:
 
-🟢 ADVANCED FOUNDATION COMPLETED
+Priority:
 
+🔥 BEFORE DATABASE DEVELOPMENT
 
-Decision Intelligence:
-
-✅ IntelligenceDecision
-
-✅ IntelligenceEngine
-
-✅ IntelligenceAdvisor
-
-
-Memory:
-
-✅ DecisionMemory
-
-✅ DecisionExperience
-
-✅ IntelligenceMemoryAnalyzer
-
-
-Feedback:
-
-✅ IntelligenceFeedback
-
-✅ IntelligenceFeedbackManager
-
-✅ IntelligenceFeedbackAnalyzer
-
-✅ IntelligenceFeedbackBridge
-
-
-Connected:
-
-
-BrainPipeline
-
-↓
-
-IntelligenceEngine
-
-↓
-
-Feedback Loop
-
-↓
-
-Memory
-
-
-Remaining:
-
-❌ Intelligence Decision Validator
-
-❌ Adaptive Strategy Selection
-
-❌ Autonomous Optimization
-
-
-=========================================================
-Phase 14 — Backtesting Engine
-=========================================================
-
-Status:
-
-🟢 ACTIVE DEVELOPMENT
-
-
-Completed:
-
-✅ Backtest Package
-
-✅ BacktestResult
-
-✅ HistoricalDataLoader
-
-✅ BacktestRunner
-
-✅ BacktestTradeExecutor
-
-✅ BacktestTrade
-
-✅ OpenBacktestPosition
-
-
-Current Architecture:
-
-
-HistoricalDataLoader
-
-↓
-
-MarketCandle
-
-↓
-
-BrainPipeline
-
-↓
-
-ValidatedDecision
-
-↓
-
-RiskDecision
-
-↓
-
-BacktestTradeExecutor
-
-↓
-
-BacktestTrade
-
-↓
-
-BacktestResult
-
-
-
-Remaining:
-
-❌ Real Historical Data Source
-
-❌ CSV Loader
-
-❌ Database Historical Loader
-
-❌ Performance Analytics
-
-❌ Strategy Comparison
-
-❌ Monte Carlo Simulation
-
-
-Next:
-
-BacktestAnalytics
-
-
-=========================================================
-Phase 15 — UI / UX
-=========================================================
-
-Status:
-
-⚠️ FOUNDATION
-
-
-Created:
-
-✅ Navigation
-
-✅ Monitoring Screen
-
-
-Remaining:
-
-❌ Main Dashboard
-
-❌ Trading Chart
-
-❌ Risk Settings
-
-❌ Backtest Screen
-
-❌ AI Insight Screen
-
-
-=========================================================
-Phase 16 — Testing & Hardening
-=========================================================
 
 Status:
 
 ❌ NOT STARTED
 
 
-Required:
 
-❌ Unit Tests
-
-❌ Repository Tests
-
-❌ Engine Tests
-
-❌ Brain Tests
-
-❌ UI Tests
-
-❌ Performance Tests
+Task:
 
 
-=========================================================
-Current Live Pipeline
-=========================================================
+Rename package:
 
 
-MarketSocket
-
-↓
-
-MarketRemoteDataSource
-
-↓
-
-MarketRepository
-
-↓
-
-MarketTick
-
-↓
-
-TickEngine
-
-↓
-
-CandleBuilder
-
-↓
-
-MarketCandle
-
-↓
-
-MarketBrain
-
-↓
-
-TechnicalAnalyzer
-
-↓
-
-MarketAnalysis
-
-↓
-
-RiskEngine
-
-↓
-
-DecisionEngine
-
-↓
-
-Confidence Engine
-
-↓
-
-Learning System
-
-↓
-
-Intelligence Engine
-
-↓
-
-Intelligence Decision
-
-↓
-
-Decision Validator   ⬅️ NEXT
-
-↓
-
-Decision Analytics
-
-↓
-
-Monitoring
+FROM:
 
 
-Parallel Pipeline:
+com.jookmax.v7.core.events
 
-HistoricalDataLoader
 
-↓
+TO:
 
-BacktestRunner
 
-↓
+com.jookmax.v7.core.event
 
-BrainPipeline
 
-↓
 
-BacktestTradeExecutor
+Reason:
 
-↓
 
-BacktestResult
+Prevent future refactoring cost.
 
-↓
 
-BacktestAnalytics
+Must complete before:
+
+
+- Learning Entity
+- DAO
+- Backup
+- UI Connection
+
 
 
 =========================================================
-Development Order
+PHASE 0 — FOUNDATION
 =========================================================
 
 
-NEXT STEP 1
+Status:
 
-🟢 Intelligence Decision Validator
+✅ COMPLETED
+
+
+Created:
+
+
+✅ Project Structure
+
+✅ Hilt
+
+✅ Core Models
+
+✅ Logger
+
+✅ Time Provider
+
+✅ Event Base
+
+
+
+=========================================================
+PHASE 1 — EVENT SYSTEM
+=========================================================
+
+
+Status:
+
+🟢 FUNCTIONAL
+
+
+Created:
+
+
+✅ EventBus
+
+✅ EventDispatcher
+
+✅ Subscribers
+
+✅ Market Events
+
+✅ Engine Events
+
+✅ Decision Events
+
+
+
+Remaining:
+
+
+Phase 0.5 Package Rename
+
+
+
+=========================================================
+PHASE 2 — ENGINE CORE
+=========================================================
+
+
+Status:
+
+✅ COMPLETED
+
+
+Created:
+
+
+✅ JookMaxEngine
+
+✅ EngineManager
+
+✅ Lifecycle
+
+✅ Runtime Tracker
+
+✅ Engine State
+
+
+
+=========================================================
+PHASE 3 — BRAIN PIPELINE
+=========================================================
+
+
+Status:
+
+🟢 COMPLETED
+
+
+
+Flow:
+
+
+Market
+
+↓
+
+Analysis
+
+↓
+
+Decision
+
+↓
+
+Risk
+
+↓
+
+Learning
+
+↓
+
+Intelligence
+
+↓
+
+Validation
+
+
+
+=========================================================
+PHASE 4 — DATABASE & PERSISTENCE
+=========================================================
+
+
+Status:
+
+⚠️ FOUNDATION ONLY
+
+
+
+Existing:
+
+
+✅ Room Database
+
+✅ Entities
+
+✅ DAO
+
+
+Problems:
+
+
+❌ Migration Strategy
+
+❌ Schema Version Control
+
+❌ Learning Persistence
+
+
+
+=========================================================
+PHASE 4.1 — ROOM MIGRATION
+=========================================================
+
+
+Priority:
+
+🔥 VERY HIGH
+
+
+Create:
+
+
+✅ Migration Chain
+
+✅ Schema Export
+
+✅ Migration Tests
+
+✅ Database Version Control
+
+
+
+Rule:
+
+
+No destructive data loss.
+
+
+
+=========================================================
+PHASE 12 — LEARNING MEMORY
+=========================================================
+
+
+Current Status:
+
+
+🟡 FOUNDATION ONLY
+
+
+
+Existing:
+
+
+✅ Learning Brain
+
+✅ Learning Logic
+
+✅ Experience Model
+
+
+Critical Problem:
+
+
+❌ Memory exists only in RAM
+
+
+
+Current:
+
+
+mutableListOf()
+
+
+
+Result:
+
+
+App Restart
+
+=
+
+Memory Loss
+
+
+
+=========================================================
+PHASE 12.5 — PERMANENT LEARNING MEMORY
+=========================================================
+
+
+Priority:
+
+🔥 HIGHEST
 
 
 Goal:
 
 
-IntelligenceDecision
+Human Like Long Term Memory
 
-↓
-
-Validator
-
-↓
-
-ValidatedDecision
-
-↓
-
-Final Decision
-
-
--------------------------
-
-
-NEXT STEP 2
-
-🟢 Backtest Analytics
 
 
 Create:
 
-BacktestStatistics
 
-BacktestAnalytics
+✅ LearningExperienceEntity
 
+✅ DecisionPatternEntity
 
-Metrics:
+✅ DAO Layer
 
-Profit Factor
+✅ Room Storage
 
-Drawdown
+✅ Index Strategy
 
-Expectancy
-
-Average Win
-
-Average Loss
+✅ Retrieval System
 
 
--------------------------
+
+Storage:
 
 
-NEXT STEP 3
+Room SQLite
 
-🟡 Reward Engine
+
+
+NOT:
+
+
+Google Drive
+
+
+
+=========================================================
+LEARNING DATA DESIGN
+=========================================================
+
+
+Every Learning Record Must Store:
+
+
+Decision
+
+Confidence
+
+Risk
+
+Position
+
+Reward
+
+Success
+
+
+
+Market:
+
+
+Price
+
+Volume
+
+Volatility
+
+Trend
+
+
+Technical:
+
+
+RSI
+
+MACD
+
+ATR
+
+Indicators
+
+
+System:
+
+
+Brain Version
+
+Strategy Version
+
+Schema Version
+
+Timestamp
+
+
+
+Rule:
+
+
+NO automatic deletion.
+
+
+
+=========================================================
+PHASE 12.6 — MEMORY RETRIEVAL ENGINE
+=========================================================
+
+
+Goal:
+
+
+Do not load all history.
+
+
+
+Create:
+
+
+Similarity Search
+
+Recent Experience Query
+
+Market Regime Matching
+
+Pattern Retrieval
+
+
+
+Brain should receive:
+
+
+Relevant Memory
+
+NOT:
+
+Entire Database
+
+
+
+=========================================================
+PHASE 12.7 — BACKUP SYSTEM
+=========================================================
+
+
+Priority:
+
+HIGH
+
+
+
+Create:
+
+
+✅ Backup Manager
+
+✅ Export
+
+✅ Import
+
+✅ Encryption
+
+✅ Integrity Check
+
+✅ Metadata Version
+
+
+
+Encryption:
+
+
+Separate Recovery Key
+
+
+
+NOT:
+
+
+PIN
+
+
+
+=========================================================
+PHASE 12.8 — OPTIONAL GOOGLE DRIVE SYNC
+=========================================================
+
+
+Status:
+
+
+Optional
+
+
+
+Purpose:
+
+
+Store encrypted backup file only.
+
+
+
+NOT:
+
+
+Live Memory
+
+NOT:
+
+Database
+
+
+
+=========================================================
+PHASE 8 — MARKET DATA
+=========================================================
+
+
+Status:
+
+
+🟡 FOUNDATION
+
+
+
+Existing:
+
+
+✅ Socket
+
+✅ Feed Manager
+
+✅ Tick Pipeline
+
+
+
+Missing:
+
+
+❌ Real Provider
+
+❌ Production API
+
+❌ Recovery
+
+❌ Rate Limit Handling
+
+
+
+=========================================================
+PHASE 13 — INTELLIGENCE
+=========================================================
+
+
+Status:
+
+
+🟢 FOUNDATION COMPLETE
+
+
+
+Existing:
+
+
+✅ Intelligence Engine
+
+✅ Decision Memory
+
+✅ Pattern Matcher
+
+✅ Feedback
+
+✅ Validation
+
+
+
+Remaining:
+
+
+❌ Adaptive Strategy
+
+❌ Autonomous Optimization
+
+
+
+=========================================================
+PHASE 14 — BACKTEST
+=========================================================
+
+
+Status:
+
+
+🟢 ACTIVE
+
+
+
+Completed:
+
+
+✅ Historical Loader
+
+✅ Runner
+
+✅ Executor
+
+✅ Trade Simulation
+
+✅ Analytics
+
+
+
+Advanced:
+
+
+✅ Sharpe
+
+✅ Drawdown
+
+✅ Recovery Factor
+
+
+
+Remaining:
+
+
+❌ Monte Carlo
+
+❌ Database Historical Provider
+
+❌ Real Historical Provider
+
+
+
+=========================================================
+PHASE 14.5 — REWARD ENGINE
+=========================================================
+
+
+Status:
+
+
+❌ NOT CREATED
+
+
+Priority:
+
+
+🔥 HIGH
+
+
+Create:
+
+
+RewardEngine.kt
+
 
 
 Flow:
@@ -1105,95 +764,216 @@ Trade Result
 
 ↓
 
-Reward Calculation
+Reward Engine
 
 ↓
 
-Learning Update
+Learning Brain
 
 ↓
 
-Brain Improvement
+Permanent Memory
 
-
--------------------------
-
-
-NEXT STEP 4
-
-Testing & Hardening
 
 
 =========================================================
-Overall Project Status
+PHASE 15 — SECURITY + UI
 =========================================================
 
 
-Architecture              ✅
+Status:
 
-Engine Core               ✅
 
-Event System              ✅
+❌ NOT STARTED
 
-Brain Foundation          ✅
 
-Decision System           🟡
 
-Decision Analytics        ✅
+Security:
 
-Monitoring                🟡
 
-Market Feed               🟡
+Create:
 
-Tick Engine               ✅
 
-Candle Pipeline           ✅
+✅ PIN Setup
 
-Technical Analysis        🟡
+✅ PIN Hash
 
-Risk Engine               🟡
+✅ Unlock
 
-Learning System           🟡
+✅ Local Protection
 
-Intelligence System       🟢
 
-Backtesting               🟢
 
-Persistence               ⚠️
+Rule:
 
-Dashboard                 ⚠️
 
-Testing                   ❌
+PIN ≠ Encryption Key
+
 
 
 =========================================================
-CURRENT POSITION
+LANGUAGE SYSTEM
 =========================================================
 
 
-JookMax V7 has passed:
-
-Foundation Stage
-
-and entered:
-
-🟢 Intelligent Decision + Backtesting Stage
+Create:
 
 
-Current Objective:
+✅ English
 
-Build a validated autonomous trading intelligence pipeline.
+✅ Persian
 
+✅ RTL
 
-Next Build Target:
+✅ Language Switch
 
-1. Intelligence Decision Validator
-
-2. Backtest Analytics Engine
-
-3. Reward Based Learning Loop
 
 
 =========================================================
-END OF CHECKPOINT
+UI DASHBOARD
+=========================================================
+
+
+Create:
+
+
+Dashboard
+
+Market Status
+
+AI Decision
+
+Risk View
+
+Learning Status
+
+Backtest View
+
+Brain Health
+
+Backup Management
+
+
+
+=========================================================
+PHASE 16 — TESTING
+=========================================================
+
+
+Create:
+
+
+Unit Tests
+
+Integration Tests
+
+Performance Tests
+
+Migration Tests
+
+Backup Restore Tests
+
+New Device Restore Test
+
+
+
+=========================================================
+FINAL DEVELOPMENT ORDER
+=========================================================
+
+
+STEP 1
+
+Rename core.events → core.event
+
+
+STEP 2
+
+Fix Room Migration
+
+
+STEP 3
+
+Create Permanent Learning Memory
+
+
+STEP 4
+
+Create Retrieval Engine
+
+
+STEP 5
+
+Create Backup / Restore
+
+
+STEP 6
+
+Create Recovery Key System
+
+
+STEP 7
+
+Optional Google Drive Backup Sync
+
+
+STEP 8
+
+Connect Real Market Provider
+
+
+STEP 9
+
+Create Reward Engine
+
+
+STEP 10
+
+Improve Intelligence Optimization
+
+
+STEP 11
+
+Security PIN
+
+
+STEP 12
+
+Language + RTL
+
+
+STEP 13
+
+Dashboard UI
+
+
+STEP 14
+
+Full Testing
+
+
+STEP 15
+
+Release Build
+
+
+
+=========================================================
+MASTER RULE
+
+
+Nothing is Complete unless:
+
+
+✅ Code Exists
+
+✅ Test Passed
+
+✅ Data Persistent
+
+✅ Documentation Updated
+
+
+
+END CHECKPOINT
 =========================================================

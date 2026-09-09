@@ -1,13 +1,18 @@
-package com.jookmax.v7.di
-
+﻿package com.jookmax.v7.di
 
 import android.content.Context
 import androidx.room.Room
 
-import com.jookmax.v7.data.local.dao.MarketDao
 import com.jookmax.v7.data.local.dao.DecisionDao
+import com.jookmax.v7.data.local.dao.DecisionPatternDao
+import com.jookmax.v7.data.local.dao.DecisionMemoryDao
+import com.jookmax.v7.data.local.dao.LearningExperienceDao
+import com.jookmax.v7.data.local.dao.MarketDao
 
 import com.jookmax.v7.data.local.database.JookMaxDatabase
+import com.jookmax.v7.data.local.database.migration.MIGRATION_2_3
+import com.jookmax.v7.data.local.database.migration.MIGRATION_3_4
+import com.jookmax.v7.data.local.database.migration.MIGRATION_4_5
 
 import dagger.Module
 import dagger.Provides
@@ -18,11 +23,9 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
 
 
     @Provides
@@ -33,19 +36,18 @@ object DatabaseModule {
 
 
         return Room.databaseBuilder(
-
             context,
-
             JookMaxDatabase::class.java,
-
             "jookmax_database"
-
-        ).build()
-
+        )
+            .addMigrations(
+                MIGRATION_2_3,
+                MIGRATION_3_4,
+                MIGRATION_4_5
+            )
+            .build()
 
     }
-
-
 
 
 
@@ -55,13 +57,9 @@ object DatabaseModule {
         database: JookMaxDatabase
     ): MarketDao {
 
-
         return database.marketDao()
 
-
     }
-
-
 
 
 
@@ -71,11 +69,44 @@ object DatabaseModule {
         database: JookMaxDatabase
     ): DecisionDao {
 
-
         return database.decisionDao()
-
 
     }
 
+
+
+    @Provides
+    @Singleton
+    fun provideLearningExperienceDao(
+        database: JookMaxDatabase
+    ): LearningExperienceDao {
+
+        return database.learningExperienceDao()
+
+    }
+
+
+
+    @Provides
+    @Singleton
+    fun provideDecisionPatternDao(
+        database: JookMaxDatabase
+    ): DecisionPatternDao {
+
+        return database.decisionPatternDao()
+
+    }
+
+
+
+    @Provides
+    @Singleton
+    fun provideDecisionMemoryDao(
+        database: JookMaxDatabase
+    ): DecisionMemoryDao {
+
+        return database.decisionMemoryDao()
+
+    }
 
 }

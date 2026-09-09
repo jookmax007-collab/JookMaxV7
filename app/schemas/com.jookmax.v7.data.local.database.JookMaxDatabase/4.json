@@ -1,0 +1,509 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 4,
+    "identityHash": "376e3df624c649a27b5f8f04dbc65979",
+    "entities": [
+      {
+        "tableName": "market_price",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `price` REAL NOT NULL, `timestamp` INTEGER NOT NULL, `bid` REAL, `ask` REAL, PRIMARY KEY(`symbol`))",
+        "fields": [
+          {
+            "fieldPath": "symbol",
+            "columnName": "symbol",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "price",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bid",
+            "columnName": "bid",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "ask",
+            "columnName": "ask",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "symbol"
+          ]
+        }
+      },
+      {
+        "tableName": "market_candle",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `symbol` TEXT NOT NULL, `timeframe` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `open` REAL NOT NULL, `high` REAL NOT NULL, `low` REAL NOT NULL, `close` REAL NOT NULL, `volume` REAL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "symbol",
+            "columnName": "symbol",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeframe",
+            "columnName": "timeframe",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "open",
+            "columnName": "open",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "high",
+            "columnName": "high",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "low",
+            "columnName": "low",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "close",
+            "columnName": "close",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "volume",
+            "columnName": "volume",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "decision",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `symbol` TEXT NOT NULL, `action` TEXT NOT NULL, `confidence` REAL NOT NULL, `marketScore` REAL NOT NULL, `riskAllowed` INTEGER NOT NULL, `learningReward` REAL NOT NULL, `timestamp` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "symbol",
+            "columnName": "symbol",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "action",
+            "columnName": "action",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confidence",
+            "columnName": "confidence",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "marketScore",
+            "columnName": "marketScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "riskAllowed",
+            "columnName": "riskAllowed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "learningReward",
+            "columnName": "learningReward",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "learning_experiences",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `decision` TEXT NOT NULL, `confidence` REAL NOT NULL, `riskApproved` INTEGER NOT NULL, `positionSize` REAL NOT NULL, `riskScore` REAL NOT NULL, `symbol` TEXT NOT NULL, `price` REAL NOT NULL, `timeframe` TEXT NOT NULL, `marketRegime` TEXT NOT NULL, `trendState` TEXT NOT NULL, `volatilityState` TEXT NOT NULL, `rsi` REAL NOT NULL, `macd` REAL NOT NULL, `movingAverage` REAL NOT NULL, `atr` REAL NOT NULL, `supportLevel` REAL NOT NULL, `resistanceLevel` REAL NOT NULL, `reward` REAL NOT NULL, `profitLoss` REAL NOT NULL, `success` INTEGER NOT NULL, `holdingTime` INTEGER NOT NULL, `drawdown` REAL NOT NULL, `schemaVersion` INTEGER NOT NULL, `brainVersion` TEXT NOT NULL, `strategyVersion` TEXT NOT NULL, `featureVersion` TEXT NOT NULL, `timestamp` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "decision",
+            "columnName": "decision",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confidence",
+            "columnName": "confidence",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "riskApproved",
+            "columnName": "riskApproved",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "positionSize",
+            "columnName": "positionSize",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "riskScore",
+            "columnName": "riskScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "symbol",
+            "columnName": "symbol",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "price",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeframe",
+            "columnName": "timeframe",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "marketRegime",
+            "columnName": "marketRegime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trendState",
+            "columnName": "trendState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "volatilityState",
+            "columnName": "volatilityState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rsi",
+            "columnName": "rsi",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "macd",
+            "columnName": "macd",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "movingAverage",
+            "columnName": "movingAverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atr",
+            "columnName": "atr",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "supportLevel",
+            "columnName": "supportLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resistanceLevel",
+            "columnName": "resistanceLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reward",
+            "columnName": "reward",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "profitLoss",
+            "columnName": "profitLoss",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "success",
+            "columnName": "success",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "holdingTime",
+            "columnName": "holdingTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "drawdown",
+            "columnName": "drawdown",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "schemaVersion",
+            "columnName": "schemaVersion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brainVersion",
+            "columnName": "brainVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "strategyVersion",
+            "columnName": "strategyVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "featureVersion",
+            "columnName": "featureVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_learning_experiences_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_experiences_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_learning_experiences_symbol",
+            "unique": false,
+            "columnNames": [
+              "symbol"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_experiences_symbol` ON `${TABLE_NAME}` (`symbol`)"
+          },
+          {
+            "name": "index_learning_experiences_marketRegime",
+            "unique": false,
+            "columnNames": [
+              "marketRegime"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_experiences_marketRegime` ON `${TABLE_NAME}` (`marketRegime`)"
+          },
+          {
+            "name": "index_learning_experiences_brainVersion",
+            "unique": false,
+            "columnNames": [
+              "brainVersion"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_experiences_brainVersion` ON `${TABLE_NAME}` (`brainVersion`)"
+          }
+        ]
+      },
+      {
+        "tableName": "decision_patterns",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `patternName` TEXT NOT NULL, `marketRegime` TEXT NOT NULL, `trendState` TEXT NOT NULL, `volatilityState` TEXT NOT NULL, `successfulCount` INTEGER NOT NULL, `failedCount` INTEGER NOT NULL, `averageReward` REAL NOT NULL, `confidenceScore` REAL NOT NULL, `usageCount` INTEGER NOT NULL, `brainVersion` TEXT NOT NULL, `timestamp` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patternName",
+            "columnName": "patternName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "marketRegime",
+            "columnName": "marketRegime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trendState",
+            "columnName": "trendState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "volatilityState",
+            "columnName": "volatilityState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "successfulCount",
+            "columnName": "successfulCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "failedCount",
+            "columnName": "failedCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "averageReward",
+            "columnName": "averageReward",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confidenceScore",
+            "columnName": "confidenceScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usageCount",
+            "columnName": "usageCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brainVersion",
+            "columnName": "brainVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_decision_patterns_patternName",
+            "unique": false,
+            "columnNames": [
+              "patternName"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_decision_patterns_patternName` ON `${TABLE_NAME}` (`patternName`)"
+          },
+          {
+            "name": "index_decision_patterns_marketRegime",
+            "unique": false,
+            "columnNames": [
+              "marketRegime"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_decision_patterns_marketRegime` ON `${TABLE_NAME}` (`marketRegime`)"
+          },
+          {
+            "name": "index_decision_patterns_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_decision_patterns_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '376e3df624c649a27b5f8f04dbc65979')"
+    ]
+  }
+}

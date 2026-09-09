@@ -6,7 +6,7 @@ import com.jookmax.v7.brain.backtest.model.OpenBacktestPosition
 import com.jookmax.v7.brain.decision.DecisionAction
 import com.jookmax.v7.brain.intelligence.BacktestIntelligenceAdapter
 import com.jookmax.v7.brain.learning.BacktestLearningAdapter
-import com.jookmax.v7.brain.pipeline.BrainPipeline
+import com.jookmax.v7.brain.pipeline.BrainExecutor
 import com.jookmax.v7.core.model.MarketCandle
 
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class BacktestRunner @Inject constructor(
 
     private val historicalDataLoader: HistoricalDataLoader,
 
-    private val brainPipeline: BrainPipeline,
+    private val brainExecutor: BrainExecutor,
 
     private val tradeExecutor: BacktestTradeExecutor,
 
@@ -66,13 +66,16 @@ class BacktestRunner @Inject constructor(
             return
         }
 
+
         val result =
 
-            brainPipeline.execute(candle)
+            brainExecutor.execute(candle)
+
 
         val decision =
 
             result.validatedDecision
+
 
         if (
 
@@ -85,14 +88,17 @@ class BacktestRunner @Inject constructor(
             return
         }
 
+
         val risk =
 
             result.context.riskDecision
+
 
         if (risk.positionSize <= 0.0) {
 
             return
         }
+
 
         tradeExecutor.openPosition(
 
@@ -122,9 +128,11 @@ class BacktestRunner @Inject constructor(
 
     ): BacktestResult {
 
+
         val trades: List<BacktestTrade> =
 
             tradeExecutor.getCompletedTrades()
+
 
         val winningTrades =
 
@@ -134,6 +142,7 @@ class BacktestRunner @Inject constructor(
 
             }
 
+
         val losingTrades =
 
             trades.count {
@@ -142,6 +151,7 @@ class BacktestRunner @Inject constructor(
 
             }
 
+
         val netProfit =
 
             trades.sumOf {
@@ -149,6 +159,7 @@ class BacktestRunner @Inject constructor(
                 it.profitLoss
 
             }
+
 
         val winRate =
 
@@ -164,6 +175,7 @@ class BacktestRunner @Inject constructor(
 
             }
 
+
         val buySignals =
 
             trades.count {
@@ -171,6 +183,7 @@ class BacktestRunner @Inject constructor(
                 it.action == DecisionAction.BUY
 
             }
+
 
         val sellSignals =
 
@@ -180,9 +193,11 @@ class BacktestRunner @Inject constructor(
 
             }
 
+
         val metrics =
 
             backtestAnalytics.analyze(trades)
+
 
         return BacktestResult(
 

@@ -1,85 +1,98 @@
 package com.jookmax.v7.brain.intelligence
 
 
+import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 
-/**
- * Intelligence Memory Analyzer
- *
- * Reads decision history
- * and adjusts intelligence confidence.
- *
- */
 @Singleton
 class IntelligenceMemoryAnalyzer @Inject constructor(
 
-
-    private val decisionMemory: DecisionMemory
-
+    private val repository:
+        PersistentDecisionMemoryRepository
 
 ) {
 
 
 
-    fun calculateMemoryScore():
+    suspend fun calculateMemoryScore():
 
             Double {
 
 
-        return decisionMemory
+        val memories = repository.getAll()
 
-            .calculateIntelligenceScore()
+
+
+        if (memories.isEmpty()) {
+
+            return 0.0
+
+        }
+
+
+
+        val accuracy =
+            memories.count {
+                it.reward > 0
+            }.toDouble() / memories.size.toDouble()
+
+
+
+        val confidence =
+            memories
+                .map {
+                    it.confidence
+                }
+                .average()
+
+
+
+        val reward =
+            memories
+                .map {
+                    it.reward
+                }
+                .average()
+
+
+
+        return (
+                accuracy * 0.5 +
+                confidence * 0.3 +
+                normalizeReward(reward) * 0.2
+                )
+            .coerceIn(
+                0.0,
+                1.0
+            )
 
     }
 
 
 
 
-
-    fun detectWeakPerformance():
-
-            Boolean {
-
-
-        return calculateMemoryScore() < 0.45
-
-    }
-
-
-
-
-
-    fun detectStrongPerformance():
-
-            Boolean {
-
-
-        return calculateMemoryScore() > 0.75
-
-    }
-
-
-
-
-
-    fun calculateAdjustment():
+    suspend fun calculateAdjustment():
 
             Double {
+
+
+        val score = calculateMemoryScore()
 
 
         return when {
 
 
-            detectStrongPerformance() ->
+            score > 0.75 ->
 
                 1.05
 
 
 
-            detectWeakPerformance() ->
+            score < 0.45 ->
 
                 0.95
 
@@ -96,13 +109,45 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
 
 
 
-
-    fun getMemorySize():
+    suspend fun getMemorySize():
 
             Int {
 
 
-        return decisionMemory.size()
+        return repository.count()
+
+    }
+
+
+
+
+    private fun normalizeReward(
+
+        reward: Double
+
+    ): Double {
+
+
+        return when {
+
+
+            reward <= 0 ->
+
+                0.0
+
+
+
+            reward >= 1 ->
+
+                1.0
+
+
+
+            else ->
+
+                reward
+
+        }
 
     }
 
