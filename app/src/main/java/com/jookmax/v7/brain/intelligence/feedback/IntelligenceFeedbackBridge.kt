@@ -1,7 +1,7 @@
 package com.jookmax.v7.brain.intelligence.feedback
 
 
-import com.jookmax.v7.brain.intelligence.IntelligenceDecision
+import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -11,12 +11,12 @@ import javax.inject.Singleton
 /**
  * Intelligence Feedback Bridge
  *
- * Connects intelligence decisions
+ * Connects validated intelligence decisions
  * with feedback memory.
  *
  * Flow:
  *
- * IntelligenceDecision
+ * ValidatedDecision
  *          |
  *          v
  * IntelligenceFeedback
@@ -38,7 +38,7 @@ class IntelligenceFeedbackBridge @Inject constructor(
 
     fun recordDecision(
 
-        decision: IntelligenceDecision,
+        decision: ValidatedDecision,
 
         reward: Double
 
@@ -50,16 +50,18 @@ class IntelligenceFeedbackBridge @Inject constructor(
             IntelligenceFeedback(
 
 
-                action = decision.action,
+                action = decision.finalAction,
 
 
-                confidence = decision.confidence,
+                confidence = decision.validationScore,
 
 
                 reward = reward,
 
 
-                success = reward > 0.0
+                success =
+
+                    decision.approved && reward > 0.0
 
 
             )

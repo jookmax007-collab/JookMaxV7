@@ -9,6 +9,7 @@ import com.jookmax.v7.brain.decision.DecisionEngine
 
 import com.jookmax.v7.brain.intelligence.IntelligenceEngine
 import com.jookmax.v7.brain.intelligence.feedback.IntelligenceFeedbackBridge
+import com.jookmax.v7.brain.intelligence.validation.DecisionValidator
 
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.learning.LearningExperience
@@ -50,7 +51,10 @@ class BrainPipeline @Inject constructor(
     private val intelligenceEngine: IntelligenceEngine,
 
 
-    private val intelligenceFeedbackBridge: IntelligenceFeedbackBridge
+    private val intelligenceFeedbackBridge: IntelligenceFeedbackBridge,
+
+
+    private val decisionValidator: DecisionValidator
 
 
 ) {
@@ -60,10 +64,7 @@ class BrainPipeline @Inject constructor(
     fun execute(): BrainExecutionResult {
 
 
-
         val context = createContext()
-
-
 
 
 
@@ -78,10 +79,10 @@ class BrainPipeline @Inject constructor(
 
 
 
-
         val riskAllowed =
 
             context.riskDecision.positionSize > 0.0
+
 
 
 
@@ -137,11 +138,14 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         learningExperienceManager.addExperience(
 
             experience
 
         )
+
 
 
 
@@ -163,13 +167,31 @@ class BrainPipeline @Inject constructor(
 
 
 
+        val validatedDecision =
+
+            decisionValidator.validate(
+
+                intelligenceDecision
+
+            )
+
+
+
+
+
+
+
+
+        // Feedback باید از تصمیم نهایی Validation شده یاد بگیرد
+
         intelligenceFeedbackBridge.recordDecision(
 
-            decision = intelligenceDecision,
+            decision = validatedDecision,
 
             reward = context.learningReward
 
         )
+
 
 
 
@@ -191,13 +213,16 @@ class BrainPipeline @Inject constructor(
 
 
 
+
         return BrainExecutionResult(
 
             context = finalContext,
 
             decision = decision,
 
-            intelligenceDecision = intelligenceDecision
+            intelligenceDecision = intelligenceDecision,
+
+            validatedDecision = validatedDecision
 
         )
 
@@ -210,14 +235,14 @@ class BrainPipeline @Inject constructor(
 
 
 
-
     private fun createContext(): BrainContext {
-
 
 
         val marketAnalysis =
 
             marketBrain.analyze()
+
+
 
 
 
@@ -257,6 +282,8 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
         return BrainContext(
 
             marketAnalysis = marketAnalysis,
@@ -284,9 +311,7 @@ class BrainPipeline @Inject constructor(
     ): Double {
 
 
-
         return when {
-
 
 
             analysis.trend == "BULLISH" &&
@@ -299,11 +324,13 @@ class BrainPipeline @Inject constructor(
 
 
 
+
             analysis.trend == "BEARISH" &&
 
                     analysis.rsi > 30 ->
 
                 0.2
+
 
 
 

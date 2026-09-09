@@ -2,26 +2,39 @@ package com.jookmax.v7.brain.analytics
 
 
 import com.jookmax.v7.brain.decision.DecisionAction
+import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 
 /**
- * Provides analytics on generated trading decisions.
+ * Decision Analytics
  *
- * Used for:
+ * Responsible for:
+ *
  * - Decision statistics
- * - Future learning system
+ * - Intelligence validation metrics
  * - Performance evaluation
+ * - Future learning feedback
+ *
  */
 @Singleton
 class DecisionAnalytics @Inject constructor() {
 
 
 
+    // =========================
+    // Decision Statistics
+    // =========================
+
+
+
     fun countBuyDecisions(
+
         records: List<DecisionRecord>
+
     ): Int {
 
 
@@ -31,15 +44,18 @@ class DecisionAnalytics @Inject constructor() {
 
         }
 
-
     }
 
 
 
 
 
+
+
     fun countSellDecisions(
+
         records: List<DecisionRecord>
+
     ): Int {
 
 
@@ -49,15 +65,18 @@ class DecisionAnalytics @Inject constructor() {
 
         }
 
-
     }
 
 
 
 
 
+
+
     fun countHoldDecisions(
+
         records: List<DecisionRecord>
+
     ): Int {
 
 
@@ -67,15 +86,18 @@ class DecisionAnalytics @Inject constructor() {
 
         }
 
-
     }
 
 
 
 
 
+
+
     fun averageConfidence(
+
         records: List<DecisionRecord>
+
     ): Double {
 
 
@@ -88,13 +110,143 @@ class DecisionAnalytics @Inject constructor() {
 
 
         return records
+
             .map {
 
                 it.confidence
 
             }
+
             .average()
 
+    }
+
+
+
+
+
+
+    // =========================
+    // Validation Analytics
+    // =========================
+
+
+
+    /**
+     * Number of approved intelligence decisions
+     */
+    fun countValidatedDecisions(
+
+        decisions: List<ValidatedDecision>
+
+    ): Int {
+
+
+        return decisions.count {
+
+            it.approved
+
+        }
+
+    }
+
+
+
+
+
+
+
+    /**
+     * Number of rejected intelligence decisions
+     */
+    fun countRejectedDecisions(
+
+        decisions: List<ValidatedDecision>
+
+    ): Int {
+
+
+        return decisions.count {
+
+            !it.approved
+
+        }
+
+    }
+
+
+
+
+
+
+
+    /**
+     * Validator approval rate
+     */
+    fun validationSuccessRate(
+
+        decisions: List<ValidatedDecision>
+
+    ): Double {
+
+
+        if (decisions.isEmpty()) {
+
+            return 0.0
+
+        }
+
+
+
+        return (
+
+                decisions.count {
+
+                    it.approved
+
+                }.toDouble()
+
+                /
+
+                decisions.size.toDouble()
+
+                )
+
+    }
+
+
+
+
+
+
+
+    /**
+     * Average validation confidence score
+     */
+    fun averageValidationScore(
+
+        decisions: List<ValidatedDecision>
+
+    ): Double {
+
+
+        if (decisions.isEmpty()) {
+
+            return 0.0
+
+        }
+
+
+
+        return decisions
+
+            .map {
+
+                it.validationScore
+
+            }
+
+            .average()
 
     }
 

@@ -14,6 +14,9 @@ import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.decision.DecisionScoreCalculator
 import com.jookmax.v7.brain.decision.SignalAggregator
 
+import com.jookmax.v7.brain.intelligence.validation.DecisionValidator
+import com.jookmax.v7.brain.intelligence.validation.IntelligenceDecisionValidator
+
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.learning.LearningExperienceManager
 
@@ -59,7 +62,6 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideConfidenceFeedbackCollector(
@@ -79,18 +81,15 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideConfidenceAnalytics():
 
             ConfidenceAnalytics {
 
-
         return ConfidenceAnalytics()
 
     }
-
 
 
 
@@ -117,7 +116,6 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideMarketConfidenceCalculator():
@@ -127,7 +125,6 @@ object BrainModule {
         return MarketConfidenceCalculator()
 
     }
-
 
 
 
@@ -143,7 +140,6 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideLearningConfidenceCalculator():
@@ -153,7 +149,6 @@ object BrainModule {
         return LearningConfidenceCalculator()
 
     }
-
 
 
 
@@ -207,7 +202,6 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideDecisionScoreCalculator():
@@ -217,7 +211,6 @@ object BrainModule {
         return DecisionScoreCalculator()
 
     }
-
 
 
 
@@ -274,7 +267,6 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun providePositionSizer():
@@ -284,7 +276,6 @@ object BrainModule {
         return PositionSizer()
 
     }
-
 
 
 
@@ -300,7 +291,6 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideTakeProfitCalculator():
@@ -310,7 +300,6 @@ object BrainModule {
         return TakeProfitCalculator()
 
     }
-
 
 
 
@@ -326,7 +315,6 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideRiskMultiplier():
@@ -336,7 +324,6 @@ object BrainModule {
         return RiskMultiplier()
 
     }
-
 
 
 
@@ -356,7 +343,6 @@ object BrainModule {
         )
 
     }
-
 
 
 
@@ -415,7 +401,6 @@ object BrainModule {
 
 
 
-
     @Provides
     @Singleton
     fun provideLearningBrain(
@@ -430,6 +415,26 @@ object BrainModule {
             experienceManager = experienceManager
 
         )
+
+    }
+
+
+
+
+
+    // =========================
+    // Intelligence Validation Layer
+    // =========================
+
+
+    @Provides
+    @Singleton
+    fun provideDecisionValidator():
+
+            DecisionValidator {
+
+
+        return IntelligenceDecisionValidator()
 
     }
 

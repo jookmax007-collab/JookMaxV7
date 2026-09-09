@@ -3,13 +3,14 @@ package com.jookmax.v7.brain.pipeline
 
 import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.intelligence.IntelligenceDecision
+import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
 
 
 
 /**
  * Result of one complete brain execution cycle.
  *
- * Pipeline Output:
+ * Pipeline:
  *
  * Market Analysis
  *        |
@@ -19,39 +20,24 @@ import com.jookmax.v7.brain.intelligence.IntelligenceDecision
  *        |
  * Intelligence Engine
  *        |
+ * Decision Validator
+ *        |
  * Final Brain Result
- *
- *
- * Used by:
- *
- * - BrainManager
- * - Decision Analytics
- * - Learning System
- * - Intelligence Layer
  *
  */
 data class BrainExecutionResult(
 
 
-    /**
-     * Complete brain context
-     */
     val context: BrainContext,
 
 
-
-    /**
-     * Raw decision from DecisionEngine
-     */
     val decision: DecisionResult,
 
 
+    val intelligenceDecision: IntelligenceDecision,
 
-    /**
-     * Intelligence adjusted decision
-     */
-    val intelligenceDecision: IntelligenceDecision
 
+    val validatedDecision: ValidatedDecision
 
 
 )
