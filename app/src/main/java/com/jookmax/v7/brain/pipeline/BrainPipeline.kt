@@ -2,6 +2,7 @@ package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
+import com.jookmax.v7.core.model.MarketCandle
 
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
 
@@ -60,6 +61,18 @@ class BrainPipeline @Inject constructor(
 ) {
 
 
+
+
+    fun execute(
+        candle: MarketCandle
+    ): BrainExecutionResult {
+
+        marketBrain.updateCandle(
+            candle
+        )
+
+        return execute()
+    }
 
     fun execute(): BrainExecutionResult {
 
@@ -346,3 +359,5 @@ class BrainPipeline @Inject constructor(
 
 
 }
+
+
