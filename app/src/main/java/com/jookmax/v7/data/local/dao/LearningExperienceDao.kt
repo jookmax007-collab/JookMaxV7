@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.local.dao
+package com.jookmax.v7.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

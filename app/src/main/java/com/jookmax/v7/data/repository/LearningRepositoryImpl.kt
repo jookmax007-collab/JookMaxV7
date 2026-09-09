@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.repository
+package com.jookmax.v7.data.repository
 
 import com.jookmax.v7.brain.learning.LearningExperience
 import com.jookmax.v7.data.local.dao.LearningExperienceDao

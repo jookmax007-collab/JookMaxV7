@@ -3,9 +3,9 @@ package com.jookmax.v7.engine
 
 import com.jookmax.v7.brain.BrainManager
 
-import com.jookmax.v7.core.events.EventBus
-import com.jookmax.v7.core.events.EventDispatcher
-import com.jookmax.v7.core.events.SystemEvent
+import com.jookmax.v7.core.event.EventBus
+import com.jookmax.v7.core.event.EventDispatcher
+import com.jookmax.v7.core.event.SystemEvent
 
 import com.jookmax.v7.engine.events.subscriber.DecisionEventSubscriber
 import com.jookmax.v7.engine.events.subscriber.EngineEventSubscriber

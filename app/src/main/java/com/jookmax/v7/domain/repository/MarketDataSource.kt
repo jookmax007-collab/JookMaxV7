@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.domain.repository
+package com.jookmax.v7.domain.repository
 
 import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.core.model.MarketPrice

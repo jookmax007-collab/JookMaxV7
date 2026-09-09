@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.brain.pipeline
+package com.jookmax.v7.brain.pipeline
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
 import com.jookmax.v7.core.model.MarketCandle

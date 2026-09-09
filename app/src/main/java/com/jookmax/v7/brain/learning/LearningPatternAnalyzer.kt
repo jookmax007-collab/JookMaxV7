@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.brain.learning
+package com.jookmax.v7.brain.learning
 
 import com.jookmax.v7.domain.repository.LearningRepository
 

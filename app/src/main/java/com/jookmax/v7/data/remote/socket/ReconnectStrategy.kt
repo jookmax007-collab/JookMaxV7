@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.remote.socket
+package com.jookmax.v7.data.remote.socket
 
 /**
  * Calculates the delay between WebSocket reconnect attempts.

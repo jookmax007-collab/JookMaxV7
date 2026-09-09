@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.local.entity
+package com.jookmax.v7.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,8 +1,8 @@
 package com.jookmax.v7.engine.market
 
 
-import com.jookmax.v7.core.events.EventBus
-import com.jookmax.v7.core.events.MarketEvent
+import com.jookmax.v7.core.event.EventBus
+import com.jookmax.v7.core.event.MarketEvent
 import com.jookmax.v7.domain.repository.MarketRepository
 import com.jookmax.v7.engine.market.tick.TickEngine
 

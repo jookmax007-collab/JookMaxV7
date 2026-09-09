@@ -1,9 +1,9 @@
 package com.jookmax.v7.engine.events.subscriber
 
 
-import com.jookmax.v7.core.events.EngineEvent
-import com.jookmax.v7.core.events.EventSubscriber
-import com.jookmax.v7.core.events.SystemEvent
+import com.jookmax.v7.core.event.EngineEvent
+import com.jookmax.v7.core.event.EventSubscriber
+import com.jookmax.v7.core.event.SystemEvent
 
 import com.jookmax.v7.core.logging.Logger
 

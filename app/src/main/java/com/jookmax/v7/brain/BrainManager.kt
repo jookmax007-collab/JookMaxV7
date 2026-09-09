@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.brain
+package com.jookmax.v7.brain
 
 
 import com.jookmax.v7.brain.decision.DecisionEngine
@@ -7,8 +7,8 @@ import com.jookmax.v7.brain.market.MarketBrain
 import com.jookmax.v7.brain.pipeline.BrainPipeline
 import com.jookmax.v7.brain.risk.RiskBrain
 
-import com.jookmax.v7.core.events.DecisionEvent
-import com.jookmax.v7.core.events.EventBus
+import com.jookmax.v7.core.event.DecisionEvent
+import com.jookmax.v7.core.event.EventBus
 
 import com.jookmax.v7.core.logging.Logger
 import com.jookmax.v7.core.model.Symbol

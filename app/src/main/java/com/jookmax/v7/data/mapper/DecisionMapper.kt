@@ -7,7 +7,7 @@ import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.intelligence.IntelligenceDecision
 import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
 
-import com.jookmax.v7.core.events.DecisionEvent
+import com.jookmax.v7.core.event.DecisionEvent
 import com.jookmax.v7.core.model.Symbol
 
 import com.jookmax.v7.data.local.entity.DecisionEntity

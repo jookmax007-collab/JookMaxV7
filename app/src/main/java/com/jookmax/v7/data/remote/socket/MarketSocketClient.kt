@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.remote.socket
+package com.jookmax.v7.data.remote.socket
 
 import com.jookmax.v7.core.model.MarketTick
 import com.jookmax.v7.core.model.Symbol

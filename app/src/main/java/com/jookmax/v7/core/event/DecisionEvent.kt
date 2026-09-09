@@ -1,4 +1,4 @@
-package com.jookmax.v7.core.events
+package com.jookmax.v7.core.event
 
 
 import com.jookmax.v7.brain.decision.DecisionResult

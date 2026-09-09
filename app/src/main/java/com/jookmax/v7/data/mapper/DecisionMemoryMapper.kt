@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.mapper
+package com.jookmax.v7.data.mapper
 
 
 import com.jookmax.v7.brain.intelligence.memory.DecisionPattern

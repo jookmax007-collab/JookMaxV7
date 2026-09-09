@@ -1,7 +1,7 @@
 package com.jookmax.v7.domain.analytics
 
 
-import com.jookmax.v7.core.events.DecisionEvent
+import com.jookmax.v7.core.event.DecisionEvent
 
 
 

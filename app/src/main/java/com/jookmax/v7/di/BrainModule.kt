@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.di
+package com.jookmax.v7.di
 
 
 import com.jookmax.v7.brain.confidence.ConfidenceAnalytics

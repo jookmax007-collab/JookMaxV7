@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.brain.intelligence
+package com.jookmax.v7.brain.intelligence
 
 
 import com.jookmax.v7.brain.decision.DecisionAction

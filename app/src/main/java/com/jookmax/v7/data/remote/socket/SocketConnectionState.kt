@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.remote.socket
+package com.jookmax.v7.data.remote.socket
 
 /**
  * Represents the current state of the market WebSocket connection.

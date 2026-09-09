@@ -1,7 +1,7 @@
 package com.jookmax.v7.di
 
 
-import com.jookmax.v7.core.events.EventBus
+import com.jookmax.v7.core.event.EventBus
 
 import dagger.Module
 import dagger.Provides

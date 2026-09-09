@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.remote
+package com.jookmax.v7.data.remote
 
 
 import com.jookmax.v7.core.model.MarketCandle

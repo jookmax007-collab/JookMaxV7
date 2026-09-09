@@ -1,4 +1,4 @@
-﻿package com.jookmax.v7.data.local.database
+package com.jookmax.v7.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
