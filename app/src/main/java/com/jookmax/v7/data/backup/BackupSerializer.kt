@@ -1,6 +1,10 @@
 package com.jookmax.v7.data.backup
 
 
+import com.jookmax.v7.data.local.entity.DecisionMemoryEntity
+import com.jookmax.v7.data.local.entity.DecisionPatternEntity
+import com.jookmax.v7.data.local.entity.LearningExperienceEntity
+
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -15,63 +19,35 @@ class BackupSerializer @Inject constructor() {
 
 
     fun serialize(
-
         snapshot: BackupSnapshot
-
     ): String {
-
 
 
         val root = JSONObject()
 
 
-
         root.put(
-
             "metadata",
-
-            serializeMetadata(
-                snapshot.metadata
-            )
-
+            serializeMetadata(snapshot.metadata)
         )
 
 
-
         root.put(
-
             "decisionMemory",
-
-            serializeDecisionMemory(
-                snapshot.decisionMemory
-            )
-
+            serializeDecisionMemory(snapshot.decisionMemory)
         )
 
 
-
         root.put(
-
             "decisionPatterns",
-
-            serializeDecisionPatterns(
-                snapshot.decisionPatterns
-            )
-
+            serializeDecisionPatterns(snapshot.decisionPatterns)
         )
-
 
 
         root.put(
-
             "learningExperiences",
-
-            serializeLearningExperiences(
-                snapshot.learningExperiences
-            )
-
+            serializeLearningExperiences(snapshot.learningExperiences)
         )
-
 
 
         return root.toString(4)
@@ -83,49 +59,23 @@ class BackupSerializer @Inject constructor() {
 
 
     private fun serializeMetadata(
-
         metadata: BackupMetadata
-
     ): JSONObject {
 
 
         return JSONObject().apply {
 
+            put("backupId", metadata.backupId)
 
-            put(
-                "backupId",
-                metadata.backupId
-            )
+            put("createdAt", metadata.createdAt)
 
+            put("appVersion", metadata.appVersion)
 
-            put(
-                "createdAt",
-                metadata.createdAt
-            )
+            put("databaseVersion", metadata.databaseVersion)
 
+            put("brainVersion", metadata.brainVersion)
 
-            put(
-                "appVersion",
-                metadata.appVersion
-            )
-
-
-            put(
-                "databaseVersion",
-                metadata.databaseVersion
-            )
-
-
-            put(
-                "brainVersion",
-                metadata.brainVersion
-            )
-
-
-            put(
-                "backupType",
-                metadata.backupType
-            )
+            put("backupType", metadata.backupType)
 
         }
 
@@ -138,84 +88,41 @@ class BackupSerializer @Inject constructor() {
 
 
     private fun serializeDecisionMemory(
-
-        items: List<com.jookmax.v7.data.local.entity.DecisionMemoryEntity>
-
+        items: List<DecisionMemoryEntity>
     ): JSONArray {
 
 
         val array = JSONArray()
 
 
-        items.forEach {
+        items.forEach { item ->
 
 
             array.put(
-
                 JSONObject().apply {
 
 
-                    put(
-                        "id",
-                        it.id
-                    )
+                    put("id", item.id)
 
+                    put("symbol", item.symbol)
 
-                    put(
-                        "symbol",
-                        it.symbol
-                    )
+                    put("trend", item.trend)
 
+                    put("rsi", item.rsi)
 
-                    put(
-                        "trend",
-                        it.trend
-                    )
+                    put("volatility", item.volatility)
 
+                    put("action", item.action)
 
-                    put(
-                        "rsi",
-                        it.rsi
-                    )
+                    put("confidence", item.confidence)
 
+                    put("approved", item.approved)
 
-                    put(
-                        "volatility",
-                        it.volatility
-                    )
+                    put("reward", item.reward)
 
-
-                    put(
-                        "action",
-                        it.action
-                    )
-
-
-                    put(
-                        "confidence",
-                        it.confidence
-                    )
-
-
-                    put(
-                        "approved",
-                        it.approved
-                    )
-
-
-                    put(
-                        "reward",
-                        it.reward
-                    )
-
-
-                    put(
-                        "timestamp",
-                        it.timestamp
-                    )
+                    put("timestamp", item.timestamp)
 
                 }
-
             )
 
         }
@@ -224,6 +131,7 @@ class BackupSerializer @Inject constructor() {
         return array
 
     }
+
 
 
 
@@ -232,16 +140,14 @@ class BackupSerializer @Inject constructor() {
 
 
     private fun serializeDecisionPatterns(
-
-        items: List<com.jookmax.v7.data.local.entity.DecisionPatternEntity>
-
+        items: List<DecisionPatternEntity>
     ): JSONArray {
 
 
         val array = JSONArray()
 
 
-        items.forEach {
+        items.forEach { item ->
 
 
             array.put(
@@ -249,38 +155,35 @@ class BackupSerializer @Inject constructor() {
                 JSONObject().apply {
 
 
-                    put(
-                        "id",
-                        it.id
-                    )
+                    put("id", item.id)
 
+                    put("patternName", item.patternName)
 
-                    put(
-                        "patternName",
-                        it.patternName
-                    )
+                    put("marketRegime", item.marketRegime)
 
+                    put("trendState", item.trendState)
 
-                    put(
-                        "marketRegime",
-                        it.marketRegime
-                    )
+                    put("volatilityState", item.volatilityState)
 
+                    put("successfulCount", item.successfulCount)
 
-                    put(
-                        "confidenceScore",
-                        it.confidenceScore
-                    )
+                    put("failedCount", item.failedCount)
 
+                    put("averageReward", item.averageReward)
 
-                    put(
-                        "timestamp",
-                        it.timestamp
-                    )
+                    put("confidenceScore", item.confidenceScore)
+
+                    put("usageCount", item.usageCount)
+
+                    put("brainVersion", item.brainVersion)
+
+                    put("timestamp", item.timestamp)
+
 
                 }
 
             )
+
 
         }
 
@@ -288,6 +191,7 @@ class BackupSerializer @Inject constructor() {
         return array
 
     }
+
 
 
 
@@ -296,16 +200,14 @@ class BackupSerializer @Inject constructor() {
 
 
     private fun serializeLearningExperiences(
-
-        items: List<com.jookmax.v7.data.local.entity.LearningExperienceEntity>
-
+        items: List<LearningExperienceEntity>
     ): JSONArray {
 
 
         val array = JSONArray()
 
 
-        items.forEach {
+        items.forEach { item ->
 
 
             array.put(
@@ -313,44 +215,66 @@ class BackupSerializer @Inject constructor() {
                 JSONObject().apply {
 
 
-                    put(
-                        "id",
-                        it.id
-                    )
+                    put("id", item.id)
 
+                    put("decision", item.decision)
 
-                    put(
-                        "decision",
-                        it.decision
-                    )
+                    put("confidence", item.confidence)
 
+                    put("riskApproved", item.riskApproved)
 
-                    put(
-                        "symbol",
-                        it.symbol
-                    )
+                    put("positionSize", item.positionSize)
 
+                    put("riskScore", item.riskScore)
 
-                    put(
-                        "reward",
-                        it.reward
-                    )
+                    put("symbol", item.symbol)
 
+                    put("price", item.price)
 
-                    put(
-                        "success",
-                        it.success
-                    )
+                    put("timeframe", item.timeframe)
 
+                    put("marketRegime", item.marketRegime)
 
-                    put(
-                        "timestamp",
-                        it.timestamp
-                    )
+                    put("trendState", item.trendState)
+
+                    put("volatilityState", item.volatilityState)
+
+                    put("rsi", item.rsi)
+
+                    put("macd", item.macd)
+
+                    put("movingAverage", item.movingAverage)
+
+                    put("atr", item.atr)
+
+                    put("supportLevel", item.supportLevel)
+
+                    put("resistanceLevel", item.resistanceLevel)
+
+                    put("reward", item.reward)
+
+                    put("profitLoss", item.profitLoss)
+
+                    put("success", item.success)
+
+                    put("holdingTime", item.holdingTime)
+
+                    put("drawdown", item.drawdown)
+
+                    put("schemaVersion", item.schemaVersion)
+
+                    put("brainVersion", item.brainVersion)
+
+                    put("strategyVersion", item.strategyVersion)
+
+                    put("featureVersion", item.featureVersion)
+
+                    put("timestamp", item.timestamp)
 
                 }
 
             )
+
 
         }
 
@@ -358,7 +282,6 @@ class BackupSerializer @Inject constructor() {
         return array
 
     }
-
 
 
 }
