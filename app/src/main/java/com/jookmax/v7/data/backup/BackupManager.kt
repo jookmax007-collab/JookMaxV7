@@ -2,7 +2,11 @@ package com.jookmax.v7.data.backup
 
 
 import android.content.Context
+
+import com.jookmax.v7.data.local.entity.BackupRecordEntity
+
 import java.io.File
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,52 +15,160 @@ import javax.inject.Singleton
 @Singleton
 class BackupManager @Inject constructor(
 
-    private val exporter: BackupExporter,
 
-    private val importer: BackupImporter,
+    private val backupService: BackupService,
 
-    private val validator: BackupValidator
+
+    private val restoreService: BackupRestoreService,
+
+
+    private val provider: BackupProvider,
+
+
+    private val repository: BackupRecordRepository
+
 
 ) {
 
 
 
-    fun createBackup(
+    suspend fun createBackup(
+
 
         context: Context,
 
+
         appVersion: String,
+
 
         databaseVersion: Int,
 
+
         brainVersion: String
+
 
     ): File {
 
 
-        val metadata = BackupMetadata(
+        val file =
 
-            backupId =
-                exporter.generateBackupId(),
+            backupService.createBackup(
 
-            createdAt =
-                System.currentTimeMillis(),
+                context,
 
-            appVersion =
                 appVersion,
 
-            databaseVersion =
                 databaseVersion,
 
-            brainVersion =
                 brainVersion
 
+            )
+
+
+
+        val uploadResult =
+
+            provider.uploadBackup(
+                file
+            )
+
+
+
+        val record =
+
+            BackupRecordEntity(
+
+
+                backupId =
+                    uploadResult.backupId,
+
+
+                fileName =
+                    file.name,
+
+
+                filePath =
+                    file.absolutePath,
+
+
+                fileSize =
+                    file.length(),
+
+
+                createdAt =
+                    System.currentTimeMillis(),
+
+
+                appVersion =
+                    appVersion,
+
+
+                databaseVersion =
+                    databaseVersion,
+
+
+                brainVersion =
+                    brainVersion,
+
+
+                backupType =
+                    "LOCAL",
+
+
+                encrypted =
+                    true
+
+            )
+
+
+
+        repository.insertBackup(
+            record
         )
 
 
-        return exporter.createBackupFile(
-            context,
-            metadata
+
+        return file
+
+    }
+
+
+
+
+
+
+    suspend fun restoreBackup(
+
+        backupId: String
+
+    ): BackupRestoreResult {
+
+
+        val backup =
+
+            repository.findBackup(
+                backupId
+            )
+                ?: return BackupRestoreResult(
+
+                    success = false,
+
+                    message = "Backup record not found"
+
+                )
+
+
+
+        val file =
+
+            File(
+                backup.filePath
+            )
+
+
+
+        return restoreService.restoreBackup(
+            file
         )
 
     }
@@ -65,38 +177,53 @@ class BackupManager @Inject constructor(
 
 
 
-    fun validateBackup(
 
-        file: File
+    suspend fun getBackupHistory():
+
+            List<BackupRecordEntity> {
+
+
+        return repository.getAllBackups()
+
+    }
+
+
+
+
+
+
+    suspend fun deleteBackup(
+
+        backup: BackupRecordEntity
 
     ): Boolean {
 
 
-        val content =
-            importer.readBackupFile(file)
+        val deleted =
 
+            provider.deleteBackup(
 
-        return validator.isValid(
-            content
-        )
+                backup.backupId
 
-    }
-
+            )
 
 
 
-
-    fun hasBackup(
-
-        context: Context
-
-    ): Boolean {
+        if (deleted) {
 
 
-        return importer.backupExists(
-            context
-        )
+            repository.deleteBackup(
+                backup
+            )
+
+        }
+
+
+
+        return deleted
 
     }
+
+
 
 }
