@@ -5,7 +5,20 @@ import androidx.room.PrimaryKey
 
 
 @Entity(
-    tableName = "decision_memory"
+    tableName = "decision_memory",
+    indices = [
+        androidx.room.Index(
+            value = [
+                "symbol",
+                "trend"
+            ]
+        ),
+        androidx.room.Index(
+            value = [
+                "timestamp"
+            ]
+        )
+    ]
 )
 data class DecisionMemoryEntity(
 
@@ -14,60 +27,30 @@ data class DecisionMemoryEntity(
     val id: Long = 0,
 
 
-    /**
-     * Trading symbol
-     *
-     * Example:
-     * XAUUSD
-     */
     val symbol: String,
 
 
-    /**
-     * Market trend
-     */
     val trend: String,
 
 
-    /**
-     * RSI value
-     */
     val rsi: Double,
 
 
-    /**
-     * Market volatility
-     */
     val volatility: Double,
 
 
-    /**
-     * Brain decision action
-     */
     val action: String,
 
 
-    /**
-     * Intelligence confidence
-     */
     val confidence: Double,
 
 
-    /**
-     * Validation result
-     */
     val approved: Boolean,
 
 
-    /**
-     * Reward after result
-     */
     val reward: Double,
 
 
-    /**
-     * Creation timestamp
-     */
     val timestamp: Long
 
 )

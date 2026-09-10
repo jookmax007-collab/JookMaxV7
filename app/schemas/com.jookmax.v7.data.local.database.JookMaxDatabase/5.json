@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "a5341fb537869e959927a65fc8556464",
+    "identityHash": "3f46c335031f244c822ea25fdd56dc26",
     "entities": [
       {
         "tableName": "market_price",
@@ -570,12 +570,33 @@
           "columnNames": [
             "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_decision_memory_symbol_trend",
+            "unique": false,
+            "columnNames": [
+              "symbol",
+              "trend"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_decision_memory_symbol_trend` ON `${TABLE_NAME}` (`symbol`, `trend`)"
+          },
+          {
+            "name": "index_decision_memory_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_decision_memory_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a5341fb537869e959927a65fc8556464')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3f46c335031f244c822ea25fdd56dc26')"
     ]
   }
 }
