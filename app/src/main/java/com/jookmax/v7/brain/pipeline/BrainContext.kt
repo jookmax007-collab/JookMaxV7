@@ -2,6 +2,7 @@ package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
+import com.jookmax.v7.brain.context.MarketContext
 import com.jookmax.v7.brain.decision.DecisionResult
 import com.jookmax.v7.brain.risk.RiskDecision
 
@@ -10,6 +11,8 @@ import com.jookmax.v7.brain.risk.RiskDecision
 data class BrainContext(
 
     val marketAnalysis: MarketAnalysis,
+
+    val marketContext: MarketContext,
 
     val riskDecision: RiskDecision,
 

@@ -4,6 +4,7 @@ import com.jookmax.v7.analysis.model.MarketAnalysis
 import com.jookmax.v7.core.model.MarketCandle
 
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
+import com.jookmax.v7.brain.context.MarketContextMapper
 import com.jookmax.v7.brain.decision.DecisionEngine
 
 import com.jookmax.v7.brain.intelligence.IntelligenceEngine
@@ -42,7 +43,9 @@ class BrainPipeline @Inject constructor(
 
     private val intelligenceFeedbackBridge: IntelligenceFeedbackBridge,
 
-    private val decisionValidator: DecisionValidator
+    private val decisionValidator: DecisionValidator,
+
+    private val marketContextMapper: MarketContextMapper
 
 ) : BrainExecutor {
 
@@ -177,6 +180,12 @@ class BrainPipeline @Inject constructor(
             marketBrain.analyze()
 
 
+        val marketContext =
+            marketContextMapper.map(
+                analysis = marketAnalysis
+            )
+
+
         val riskDecision =
             riskEngine.calculateTradeRisk(
 
@@ -201,6 +210,8 @@ class BrainPipeline @Inject constructor(
         return BrainContext(
 
             marketAnalysis = marketAnalysis,
+
+            marketContext = marketContext,
 
             riskDecision = riskDecision,
 
@@ -235,4 +246,3 @@ class BrainPipeline @Inject constructor(
     }
 
 }
-
