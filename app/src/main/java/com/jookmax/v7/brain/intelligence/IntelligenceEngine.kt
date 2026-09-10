@@ -4,12 +4,14 @@ package com.jookmax.v7.brain.intelligence
 import com.jookmax.v7.brain.context.MarketContext
 import com.jookmax.v7.brain.decision.DecisionAction
 import com.jookmax.v7.brain.decision.DecisionResult
+import com.jookmax.v7.brain.intelligence.memory.CurrentMarketPatternMapper
 import com.jookmax.v7.brain.intelligence.memory.DecisionPatternFactory
 import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
 import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
 
 import javax.inject.Inject
 import javax.inject.Singleton
+
 
 
 @Singleton
@@ -27,7 +29,15 @@ class IntelligenceEngine @Inject constructor(
 
 
     private val decisionPatternFactory:
-    DecisionPatternFactory
+    DecisionPatternFactory,
+
+
+    private val currentMarketPatternMapper:
+    CurrentMarketPatternMapper,
+
+
+    private val memoryRetrievalEngine:
+    MemoryRetrievalEngine
 
 
 ) {
@@ -36,9 +46,31 @@ class IntelligenceEngine @Inject constructor(
 
     suspend fun generateDecision(
 
-        decisionResult: DecisionResult
+        decisionResult: DecisionResult,
+
+        marketContext: MarketContext
 
     ): IntelligenceDecision {
+
+
+
+        val currentPattern =
+
+            currentMarketPatternMapper.map(
+
+                marketContext
+
+            )
+
+
+
+        val similarMemories =
+
+            memoryRetrievalEngine.retrieve(
+
+                currentPattern
+
+            )
 
 
 
@@ -54,13 +86,29 @@ class IntelligenceEngine @Inject constructor(
 
 
 
+        val retrievalAdjustment =
+
+            if (similarMemories.isNotEmpty()) {
+
+                1.05
+
+            } else {
+
+                1.0
+
+            }
+
+
+
         val finalAdjustment =
 
             (
 
                     advisorAdjustment *
 
-                            memoryAdjustment
+                            memoryAdjustment *
+
+                            retrievalAdjustment
 
                     )
 

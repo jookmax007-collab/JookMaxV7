@@ -1,5 +1,6 @@
 package com.jookmax.v7.brain.pipeline
 
+
 import com.jookmax.v7.analysis.model.MarketAnalysis
 import com.jookmax.v7.core.model.MarketCandle
 
@@ -24,72 +25,116 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+
 @Singleton
 class BrainPipeline @Inject constructor(
 
+
     private val marketBrain: MarketBrain,
+
 
     private val riskEngine: RiskEngine,
 
+
     private val learningBrain: LearningBrain,
+
 
     private val decisionEngine: DecisionEngine,
 
+
     private val confidenceFeedbackCollector: ConfidenceFeedbackCollector,
+
 
     private val learningExperienceManager: LearningExperienceManager,
 
+
     private val intelligenceEngine: IntelligenceEngine,
+
 
     private val intelligenceFeedbackBridge: IntelligenceFeedbackBridge,
 
+
     private val decisionValidator: DecisionValidator,
 
+
     private val marketContextMapper: MarketContextMapper
+
 
 ) : BrainExecutor {
 
 
+
     override fun execute(
+
         candle: MarketCandle
+
     ): BrainExecutionResult {
+
 
         marketBrain.updateCandle(candle)
 
+
         return kotlinx.coroutines.runBlocking {
+
             execute()
+
         }
+
     }
 
 
-    suspend fun execute(): BrainExecutionResult {
+
+
+    suspend fun execute():
+
+            BrainExecutionResult {
+
 
         val context =
+
             createContext()
 
 
+
+
         val marketScore =
+
             calculateMarketScore(
+
                 context.marketAnalysis
+
             )
+
+
 
 
         val riskAllowed =
+
             context.riskDecision.positionSize > 0.0
 
 
+
+
         val decision =
+
             decisionEngine.decide(
+
 
                 marketScore = marketScore,
 
+
                 riskAllowed = riskAllowed,
+
 
                 learningReward = context.learningReward,
 
+
                 riskDecision = context.riskDecision
 
+
             )
+
+
 
 
         confidenceFeedbackCollector.collect(
@@ -101,18 +146,28 @@ class BrainPipeline @Inject constructor(
         )
 
 
+
+
         val experience =
+
             LearningExperience.from(
+
 
                 decisionResult = decision,
 
+
                 riskDecision = context.riskDecision,
+
 
                 marketAnalysis = context.marketAnalysis,
 
+
                 reward = context.learningReward
 
+
             )
+
+
 
 
         learningExperienceManager.addExperience(
@@ -122,15 +177,26 @@ class BrainPipeline @Inject constructor(
         )
 
 
+
+
         val intelligenceDecision =
+
             intelligenceEngine.generateDecision(
 
-                decisionResult = decision
+
+                decisionResult = decision,
+
+
+                marketContext = context.marketContext
+
 
             )
 
 
+
+
         val validatedDecision =
+
             decisionValidator.validate(
 
                 intelligenceDecision
@@ -138,122 +204,202 @@ class BrainPipeline @Inject constructor(
             )
 
 
+
+
         intelligenceEngine.saveExperience(
+
 
             decisionResult = decision,
 
+
             marketContext = context.marketContext,
+
 
             validatedDecision = validatedDecision,
 
+
             reward = context.learningReward
 
+
         )
+
+
 
 
         intelligenceFeedbackBridge.recordDecision(
 
+
             decision = validatedDecision,
 
+
             reward = context.learningReward
+
 
         )
 
 
+
+
         val finalContext =
+
             context.copy(
+
 
                 decisionResult = decision
 
+
             )
+
+
 
 
         return BrainExecutionResult(
 
+
             context = finalContext,
+
 
             decision = decision,
 
+
             intelligenceDecision = intelligenceDecision,
+
 
             validatedDecision = validatedDecision
 
+
         )
+
 
     }
 
 
-    private fun createContext(): BrainContext {
+
+
+
+
+    private fun createContext():
+
+            BrainContext {
+
 
         val marketAnalysis =
+
             marketBrain.analyze()
 
 
+
+
         val marketContext =
+
             marketContextMapper.map(
+
 
                 analysis = marketAnalysis
 
+
             )
+
+
 
 
         val riskDecision =
+
             riskEngine.calculateTradeRisk(
+
 
                 profile = RiskProfile(),
 
+
                 entryPrice = 0.0,
+
 
                 volatility = marketAnalysis.volatility,
 
+
                 isLong = marketAnalysis.trend == "BULLISH"
+
 
             )
 
 
+
+
         val learningReward =
+
             learningBrain
+
                 .getLastResult()
+
                 ?.reward
+
                 ?: 0.0
+
+
 
 
         return BrainContext(
 
+
             marketAnalysis = marketAnalysis,
+
 
             marketContext = marketContext,
 
+
             riskDecision = riskDecision,
+
 
             learningReward = learningReward
 
+
         )
 
+
     }
+
+
+
+
 
 
     private fun calculateMarketScore(
+
         analysis: MarketAnalysis
+
     ): Double {
+
 
         return when {
 
+
             analysis.trend == "BULLISH" &&
+
                     analysis.rsi < 70 ->
+
                 0.8
 
 
+
+
             analysis.trend == "BEARISH" &&
+
                     analysis.rsi > 30 ->
+
                 0.2
 
 
+
+
             else ->
+
                 0.5
+
 
         }
 
+
     }
+
 
 }
