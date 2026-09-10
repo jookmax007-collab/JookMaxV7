@@ -7,28 +7,21 @@ import javax.inject.Singleton
 import kotlin.math.abs
 
 
-
 @Singleton
 class PatternMatcher @Inject constructor() {
 
 
-
     companion object {
 
-        /**
-         * Minimum similarity required
-         * to consider a memory relevant.
-         */
         private const val MIN_SIMILARITY = 0.70
 
     }
 
 
 
-
     fun match(
 
-        current: DecisionPattern,
+        current: CurrentMarketPattern,
 
         history: List<DecisionPattern>
 
@@ -51,13 +44,11 @@ class PatternMatcher @Inject constructor() {
 
             }
 
-
             .filter {
 
                 it.second >= MIN_SIMILARITY
 
             }
-
 
             .sortedByDescending {
 
@@ -65,13 +56,11 @@ class PatternMatcher @Inject constructor() {
 
             }
 
-
             .map {
 
                 it.first
 
             }
-
 
     }
 
@@ -79,10 +68,9 @@ class PatternMatcher @Inject constructor() {
 
 
 
-
     private fun calculateSimilarity(
 
-        current: DecisionPattern,
+        current: CurrentMarketPattern,
 
         historical: DecisionPattern
 
@@ -90,7 +78,6 @@ class PatternMatcher @Inject constructor() {
 
 
         var score = 0.0
-
 
 
 
@@ -102,11 +89,9 @@ class PatternMatcher @Inject constructor() {
 
         ) {
 
-            score += 0.25
+            score += 0.20
 
         }
-
-
 
 
 
@@ -118,11 +103,24 @@ class PatternMatcher @Inject constructor() {
 
         ) {
 
-            score += 0.25
+            score += 0.20
 
         }
 
 
+
+        // Market regime similarity
+
+        // Current pattern does not store history value separately,
+        // so this will be added when DecisionPattern evolves.
+
+        score += 0.0
+
+
+
+        // Session similarity
+
+        score += 0.0
 
 
 
@@ -132,20 +130,17 @@ class PatternMatcher @Inject constructor() {
 
             1.0 -
 
-            (
+                    (
 
-                abs(
+                            abs(
 
-                    current.rsi -
+                                current.rsi -
 
-                    historical.rsi
+                                        historical.rsi
 
-                )
+                            ) / 100.0
 
-                / 100.0
-
-            )
-
+                            )
 
 
         score +=
@@ -156,7 +151,7 @@ class PatternMatcher @Inject constructor() {
 
                 1.0
 
-            ) * 0.15
+            ) * 0.20
 
 
 
@@ -170,75 +165,33 @@ class PatternMatcher @Inject constructor() {
 
                 current.volatility -
 
-                historical.volatility
+                        historical.volatility
 
             )
-
 
 
         val volatilitySimilarity =
 
             1.0 -
 
-            volatilityDifference.coerceAtMost(
+                    volatilityDifference.coerceAtMost(
 
-                1.0
+                        1.0
 
-            )
-
-
-
-        score +=
-
-            volatilitySimilarity * 0.15
-
-
-
-
-
-        // Action similarity
-
-        if (
-
-            current.action == historical.action
-
-        ) {
-
-            score += 0.10
-
-        }
-
-
-
-
-
-        // Confidence similarity
-
-        val confidenceSimilarity =
-
-            1.0 -
-
-            abs(
-
-                current.confidence -
-
-                historical.confidence
-
-            )
-
+                    )
 
 
         score +=
 
-            confidenceSimilarity.coerceIn(
-
-                0.0,
-
-                1.0
-
-            ) * 0.10
+            volatilitySimilarity * 0.20
 
 
+
+
+
+        // Confidence/reward are intentionally ignored.
+        // They belong to historical evaluation,
+        // not current market retrieval.
 
 
 

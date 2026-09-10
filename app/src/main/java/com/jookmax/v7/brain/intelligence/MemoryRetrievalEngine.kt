@@ -1,6 +1,7 @@
 package com.jookmax.v7.brain.intelligence
 
 
+import com.jookmax.v7.brain.intelligence.memory.CurrentMarketPattern
 import com.jookmax.v7.brain.intelligence.memory.DecisionPattern
 import com.jookmax.v7.brain.intelligence.memory.PatternMatcher
 import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
@@ -13,28 +14,28 @@ import javax.inject.Singleton
 /**
  * Memory Retrieval Engine
  *
- * Phase 12.6
+ * Phase 12.7
  *
  * Responsible for retrieving relevant memories
- * instead of loading the entire history.
+ * based on current market pattern.
  *
  *
- * Intelligence
+ * Current Market Pattern
  *
- *      |
- *      v
+ *        |
+ *        v
  *
  * MemoryRetrievalEngine
  *
- *      |
- *      v
+ *        |
+ *        v
  *
  * PersistentDecisionMemoryRepository
  *
- *      |
- *      v
+ *        |
+ *        v
  *
- * Room Database
+ * Historical Decision Patterns
  *
  */
 @Singleton
@@ -55,7 +56,7 @@ class MemoryRetrievalEngine @Inject constructor(
 
     suspend fun retrieve(
 
-        currentPattern: DecisionPattern
+        currentPattern: CurrentMarketPattern
 
     ): List<DecisionPattern> {
 
@@ -89,6 +90,8 @@ class MemoryRetrievalEngine @Inject constructor(
 
 
 
+
+
     suspend fun latest():
 
             DecisionPattern? {
@@ -97,6 +100,8 @@ class MemoryRetrievalEngine @Inject constructor(
         return repository.getLatest()
 
     }
+
+
 
 
 
