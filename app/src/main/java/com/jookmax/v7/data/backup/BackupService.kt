@@ -20,7 +20,7 @@ class BackupService @Inject constructor(
     private val serializer: BackupSerializer,
 
 
-    private val exporter: BackupExporter
+    private val encryption: BackupEncryption
 
 
 ) {
@@ -55,6 +55,8 @@ class BackupService @Inject constructor(
 
 
 
+
+
         val json =
 
             serializer.serialize(
@@ -63,9 +65,23 @@ class BackupService @Inject constructor(
 
 
 
+
+
+        val encryptedBackup =
+
+            encryption.encrypt(
+                json
+            )
+
+
+
+
+
         val fileName =
 
-            "jookmax_full_backup_${snapshot.metadata.backupId}.json"
+            "jookmax_full_backup_${snapshot.metadata.backupId}.enc"
+
+
 
 
 
@@ -81,11 +97,15 @@ class BackupService @Inject constructor(
 
 
 
+
+
         if (!directory.exists()) {
 
             directory.mkdirs()
 
         }
+
+
 
 
 
@@ -101,16 +121,21 @@ class BackupService @Inject constructor(
 
 
 
+
+
         file.writeText(
-            json
+
+            encryptedBackup
+
         )
+
+
 
 
 
         return file
 
     }
-
 
 
 }
