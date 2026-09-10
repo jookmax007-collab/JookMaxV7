@@ -11,20 +11,16 @@ import javax.inject.Singleton
 @Singleton
 class IntelligenceMemoryAnalyzer @Inject constructor(
 
-    private val repository:
-        PersistentDecisionMemoryRepository
+    private val repository: PersistentDecisionMemoryRepository
 
 ) {
 
 
 
-    suspend fun calculateMemoryScore():
-
-            Double {
+    suspend fun calculateMemoryScore(): Double {
 
 
         val memories = repository.getAll()
-
 
 
         if (memories.isEmpty()) {
@@ -36,38 +32,61 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
 
 
         val accuracy =
+
             memories.count {
+
                 it.reward > 0
-            }.toDouble() / memories.size.toDouble()
+
+            }.toDouble() /
+
+            memories.size.toDouble()
 
 
 
         val confidence =
+
             memories
+
                 .map {
+
                     it.confidence
+
                 }
+
                 .average()
 
 
 
         val reward =
+
             memories
+
                 .map {
+
                     it.reward
+
                 }
+
                 .average()
 
 
 
         return (
+
                 accuracy * 0.5 +
+
                 confidence * 0.3 +
+
                 normalizeReward(reward) * 0.2
+
                 )
+
             .coerceIn(
+
                 0.0,
+
                 1.0
+
             )
 
     }
@@ -75,12 +94,11 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
 
 
 
-    suspend fun calculateAdjustment():
-
-            Double {
+    suspend fun calculateAdjustment(): Double {
 
 
         val score = calculateMemoryScore()
+
 
 
         return when {
@@ -109,14 +127,14 @@ class IntelligenceMemoryAnalyzer @Inject constructor(
 
 
 
-    suspend fun getMemorySize():
 
-            Int {
+    suspend fun getMemorySize(): Int {
 
 
         return repository.count()
 
     }
+
 
 
 
