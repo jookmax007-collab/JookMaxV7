@@ -1,14 +1,15 @@
 package com.jookmax.v7.brain.intelligence
 
 
+import com.jookmax.v7.brain.context.MarketContext
 import com.jookmax.v7.brain.decision.DecisionAction
 import com.jookmax.v7.brain.decision.DecisionResult
-import com.jookmax.v7.brain.intelligence.memory.DecisionPattern
+import com.jookmax.v7.brain.intelligence.memory.DecisionPatternFactory
+import com.jookmax.v7.brain.intelligence.validation.ValidatedDecision
 import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
 
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 
 @Singleton
@@ -22,14 +23,18 @@ class IntelligenceEngine @Inject constructor(
 
 
     private val persistentDecisionMemoryRepository:
-        PersistentDecisionMemoryRepository
+    PersistentDecisionMemoryRepository,
+
+
+    private val decisionPatternFactory:
+    DecisionPatternFactory
 
 
 ) {
 
 
 
-    suspend fun evaluate(
+    suspend fun generateDecision(
 
         decisionResult: DecisionResult
 
@@ -55,7 +60,7 @@ class IntelligenceEngine @Inject constructor(
 
                     advisorAdjustment *
 
-                    memoryAdjustment
+                            memoryAdjustment
 
                     )
 
@@ -75,7 +80,7 @@ class IntelligenceEngine @Inject constructor(
 
                     decisionResult.confidence *
 
-                    finalAdjustment
+                            finalAdjustment
 
                     )
 
@@ -114,15 +119,50 @@ class IntelligenceEngine @Inject constructor(
 
 
 
-        val intelligenceDecision =
+        return IntelligenceDecision(
 
-            IntelligenceDecision(
+            action = decisionResult.action,
 
-                action = decisionResult.action,
+            confidence = confidence,
 
-                confidence = confidence,
+            reason = reason
 
-                reason = reason
+        )
+
+    }
+
+
+
+
+
+
+    suspend fun saveExperience(
+
+        decisionResult: DecisionResult,
+
+
+        marketContext: MarketContext,
+
+
+        validatedDecision: ValidatedDecision,
+
+
+        reward: Double
+
+    ) {
+
+
+        val pattern =
+
+            decisionPatternFactory.create(
+
+                marketContext = marketContext,
+
+                decisionResult = decisionResult,
+
+                validatedDecision = validatedDecision,
+
+                reward = reward
 
             )
 
@@ -130,31 +170,9 @@ class IntelligenceEngine @Inject constructor(
 
         persistentDecisionMemoryRepository.save(
 
-            DecisionPattern(
-
-                symbol = "XAUUSD",
-
-                trend = "UNKNOWN",
-
-                rsi = 0.0,
-
-                volatility = 0.0,
-
-                action = decisionResult.action,
-
-                confidence = confidence,
-
-                approved = true,
-
-                reward = 0.0
-
-            )
+            pattern
 
         )
-
-
-
-        return intelligenceDecision
 
     }
 

@@ -54,14 +54,10 @@ class BrainPipeline @Inject constructor(
         candle: MarketCandle
     ): BrainExecutionResult {
 
-        marketBrain.updateCandle(
-            candle
-        )
+        marketBrain.updateCandle(candle)
 
         return kotlinx.coroutines.runBlocking {
-
             execute()
-
         }
     }
 
@@ -127,7 +123,7 @@ class BrainPipeline @Inject constructor(
 
 
         val intelligenceDecision =
-            intelligenceEngine.evaluate(
+            intelligenceEngine.generateDecision(
 
                 decisionResult = decision
 
@@ -140,6 +136,19 @@ class BrainPipeline @Inject constructor(
                 intelligenceDecision
 
             )
+
+
+        intelligenceEngine.saveExperience(
+
+            decisionResult = decision,
+
+            marketContext = context.marketContext,
+
+            validatedDecision = validatedDecision,
+
+            reward = context.learningReward
+
+        )
 
 
         intelligenceFeedbackBridge.recordDecision(
@@ -182,7 +191,9 @@ class BrainPipeline @Inject constructor(
 
         val marketContext =
             marketContextMapper.map(
+
                 analysis = marketAnalysis
+
             )
 
 
