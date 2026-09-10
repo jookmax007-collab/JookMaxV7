@@ -1,8 +1,6 @@
 package com.jookmax.v7.data.backup
 
 
-import android.content.Context
-
 import com.jookmax.v7.data.local.dao.DecisionMemoryDao
 import com.jookmax.v7.data.local.dao.DecisionPatternDao
 import com.jookmax.v7.data.local.dao.LearningExperienceDao
@@ -22,6 +20,12 @@ class BackupRestoreService @Inject constructor(
 
 
     private val deserializer: BackupDeserializer,
+
+
+    private val integrityValidator: BackupIntegrityValidator,
+
+
+    private val compatibilityChecker: BackupCompatibilityChecker,
 
 
     private val decisionMemoryDao: DecisionMemoryDao,
@@ -47,6 +51,20 @@ class BackupRestoreService @Inject constructor(
         return try {
 
 
+            if (!file.exists()) {
+
+                return BackupRestoreResult(
+
+                    success = false,
+
+                    message = "Backup file does not exist"
+
+                )
+
+            }
+
+
+
             val encryptedContent =
 
                 file.readText()
@@ -56,7 +74,9 @@ class BackupRestoreService @Inject constructor(
             val json =
 
                 encryption.decrypt(
+
                     encryptedContent
+
                 )
 
 
@@ -64,9 +84,53 @@ class BackupRestoreService @Inject constructor(
             val snapshot =
 
                 deserializer.deserialize(
+
                     json
+
                 )
 
+
+
+            val metadata =
+
+                BackupMetadataVersion(
+
+                    backupSchemaVersion = 1,
+
+                    appVersion = snapshot.metadata.appVersion,
+
+                    databaseVersion = snapshot.metadata.databaseVersion,
+
+                    brainVersion = snapshot.metadata.brainVersion,
+
+                    createdAt = snapshot.metadata.createdAt
+
+                )
+
+
+
+            val compatibility =
+
+                compatibilityChecker.validate(
+
+                    metadata
+
+                )
+
+
+
+            if (!compatibility.compatible) {
+
+
+                return BackupRestoreResult(
+
+                    success = false,
+
+                    message = compatibility.message
+
+                )
+
+            }
 
 
 
@@ -84,8 +148,6 @@ class BackupRestoreService @Inject constructor(
 
 
 
-
-
             if (snapshot.decisionPatterns.isNotEmpty()) {
 
 
@@ -96,8 +158,6 @@ class BackupRestoreService @Inject constructor(
                 )
 
             }
-
-
 
 
 
@@ -115,23 +175,17 @@ class BackupRestoreService @Inject constructor(
 
 
 
-
             BackupRestoreResult(
 
                 success = true,
 
-
-                message =
-                    "Backup restored successfully",
-
+                message = "Backup restored successfully",
 
                 restoredDecisionMemoryCount =
                     snapshot.decisionMemory.size,
 
-
                 restoredDecisionPatternsCount =
                     snapshot.decisionPatterns.size,
-
 
                 restoredLearningExperiencesCount =
                     snapshot.learningExperiences.size
@@ -147,7 +201,6 @@ class BackupRestoreService @Inject constructor(
 
                 success = false,
 
-
                 message =
                     e.message
                         ?: "Restore failed"
@@ -156,9 +209,6 @@ class BackupRestoreService @Inject constructor(
 
         }
 
-
     }
-
-
 
 }

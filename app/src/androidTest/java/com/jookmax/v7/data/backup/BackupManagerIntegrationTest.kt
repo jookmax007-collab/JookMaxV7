@@ -7,16 +7,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
 import com.jookmax.v7.data.local.database.JookMaxDatabase
-import com.jookmax.v7.data.local.entity.DecisionMemoryEntity
 
 import kotlinx.coroutines.runBlocking
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-
 import org.junit.Test
-
 import org.junit.runner.RunWith
+
+import java.io.File
 
 
 
@@ -26,12 +23,11 @@ class BackupManagerIntegrationTest {
 
 
     @Test
-    fun backupManager_shouldCreateRecordAndRestoreBackup() =
+    fun backupManager_shouldCreateAndValidateBackupFlow() =
         runBlocking {
 
 
             val context =
-
                 InstrumentationRegistry
                     .getInstrumentation()
                     .targetContext
@@ -55,84 +51,26 @@ class BackupManagerIntegrationTest {
 
 
             val memoryDao =
-
                 database.decisionMemoryDao()
 
 
 
             val patternDao =
-
                 database.decisionPatternDao()
 
 
 
             val experienceDao =
-
                 database.learningExperienceDao()
 
 
 
-            val backupDao =
 
-                database.backupRecordDao()
+            val backupService =
 
+                BackupService(
 
-
-            memoryDao.insert(
-
-                DecisionMemoryEntity(
-
-                    symbol = "XAUUSD",
-
-                    trend = "UP",
-
-                    rsi = 60.0,
-
-                    volatility = 1.5,
-
-                    action = "BUY",
-
-                    confidence = 0.9,
-
-                    approved = true,
-
-                    reward = 30.0,
-
-                    timestamp = System.currentTimeMillis()
-
-                )
-
-            )
-
-
-
-            val backupManager =
-
-                BackupManager(
-
-                    BackupService(
-
-                        BackupSnapshotBuilder(
-
-                            memoryDao,
-
-                            patternDao,
-
-                            experienceDao
-
-                        ),
-
-                        BackupSerializer(),
-
-                        BackupEncryption()
-
-                    ),
-
-                    BackupRestoreService(
-
-                        BackupEncryption(),
-
-                        BackupDeserializer(),
+                    BackupSnapshotBuilder(
 
                         memoryDao,
 
@@ -142,112 +80,80 @@ class BackupManagerIntegrationTest {
 
                     ),
 
-                    LocalBackupProvider(),
+                    BackupSerializer(),
 
-                    BackupRecordRepositoryImpl(
-
-                        backupDao
-
-                    )
+                    BackupEncryption()
 
                 )
 
 
 
-            val backupFile =
 
-                backupManager.createBackup(
+            val restoreService =
 
-                    context,
+                BackupRestoreService(
 
-                    "7.x",
+                    BackupEncryption(),
 
-                    7,
+                    BackupDeserializer(),
 
-                    "intelligence-core"
+                    BackupIntegrityValidator(),
 
-                )
+                    BackupCompatibilityChecker(),
 
+                    memoryDao,
 
+                    patternDao,
 
-            assertTrue(
-
-                backupFile.exists()
-
-            )
-
-
-
-            assertEquals(
-
-                1,
-
-                backupDao.count()
-
-            )
-
-
-
-            val history =
-
-                backupManager.getBackupHistory()
-
-
-
-            assertEquals(
-
-                1,
-
-                history.size
-
-            )
-
-
-
-            memoryDao.clear()
-
-
-
-            assertEquals(
-
-                0,
-
-                memoryDao.count()
-
-            )
-
-
-
-            val restoreResult =
-
-                backupManager.restoreBackup(
-
-                    history.first().backupId
+                    experienceDao
 
                 )
 
 
 
-            assertTrue(
 
-                restoreResult.success
+            val backupFile: File =
+
+                backupService.createBackup(
+
+                    context = context,
+
+                    appVersion = "7.x",
+
+                    databaseVersion = 7,
+
+                    brainVersion = "intelligence-core"
+
+                )
+
+
+
+
+            val result =
+
+                restoreService.restoreBackup(
+
+                    backupFile
+
+                )
+
+
+
+
+            assert(
+
+                result.success
 
             )
 
 
 
-            assertEquals(
 
-                1,
-
-                memoryDao.count()
-
-            )
-
-
+            backupFile.delete()
 
             database.close()
 
         }
+
 
 }

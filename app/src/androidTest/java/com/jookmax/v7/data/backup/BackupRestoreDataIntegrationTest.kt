@@ -13,6 +13,7 @@ import kotlinx.coroutines.runBlocking
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+
 import org.junit.Test
 
 import org.junit.runner.RunWith
@@ -25,109 +26,90 @@ class BackupRestoreDataIntegrationTest {
 
 
     @Test
-    fun backupAndRestore_shouldRecoverDecisionMemory() = runBlocking {
+    fun backupAndRestore_shouldRecoverDecisionMemory() =
+        runBlocking {
 
 
 
-        val context =
+            val context =
 
-            InstrumentationRegistry
-                .getInstrumentation()
-                .targetContext
+                InstrumentationRegistry
+                    .getInstrumentation()
+                    .targetContext
 
 
 
 
 
-        val database =
+            val database =
 
-            Room.databaseBuilder(
+                Room.databaseBuilder(
 
-                context,
+                    context,
 
-                JookMaxDatabase::class.java,
+                    JookMaxDatabase::class.java,
 
-                "restore_test_database"
+                    "restore_test_database"
 
-            )
-            .allowMainThreadQueries()
-            .build()
+                )
+                .allowMainThreadQueries()
+                .build()
 
 
 
 
 
-        val memoryDao =
+            val memoryDao =
 
-            database.decisionMemoryDao()
+                database.decisionMemoryDao()
 
 
 
+            val patternDao =
 
+                database.decisionPatternDao()
 
-        val patternDao =
 
-            database.decisionPatternDao()
 
+            val experienceDao =
 
+                database.learningExperienceDao()
 
 
 
-        val experienceDao =
 
-            database.learningExperienceDao()
 
+            val testMemory =
 
+                DecisionMemoryEntity(
 
+                    symbol = "XAUUSD",
 
+                    trend = "UP",
 
-        val testMemory =
+                    rsi = 55.5,
 
-            DecisionMemoryEntity(
+                    volatility = 1.2,
 
-                symbol = "XAUUSD",
+                    action = "BUY",
 
-                trend = "UP",
+                    confidence = 0.85,
 
-                rsi = 55.5,
+                    approved = true,
 
-                volatility = 1.2,
+                    reward = 25.0,
 
-                action = "BUY",
+                    timestamp = System.currentTimeMillis()
 
-                confidence = 0.85,
+                )
 
-                approved = true,
 
-                reward = 25.0,
 
-                timestamp = System.currentTimeMillis()
 
-            )
 
+            memoryDao.insert(
 
-
-
-
-        memoryDao.insert(
-
-            testMemory
-
-        )
-
-
-
-
-
-        val snapshotBuilder =
-
-            BackupSnapshotBuilder(
-
-                memoryDao,
-
-                patternDao,
-
-                experienceDao
+                testMemory
 
             )
 
@@ -135,81 +117,59 @@ class BackupRestoreDataIntegrationTest {
 
 
 
-        val backupService =
+            val snapshotBuilder =
 
-            BackupService(
+                BackupSnapshotBuilder(
 
-                snapshotBuilder,
+                    memoryDao,
 
-                BackupSerializer(),
+                    patternDao,
 
-                BackupEncryption()
+                    experienceDao
 
-            )
-
-
-
-
-
-        val backupFile =
-
-            backupService.createBackup(
-
-                context,
-
-                "7.x",
-
-                6,
-
-                "intelligence-core"
-
-            )
+                )
 
 
 
 
 
-        assertTrue(
+            val backupService =
 
-            backupFile.exists()
+                BackupService(
 
-        )
+                    snapshotBuilder,
 
+                    BackupSerializer(),
 
+                    BackupEncryption()
 
-
-
-        memoryDao.clear()
-
-
-
-
-
-        assertEquals(
-
-            0,
-
-            memoryDao.count()
-
-        )
+                )
 
 
 
 
 
-        val restoreService =
+            val backupFile =
 
-            BackupRestoreService(
+                backupService.createBackup(
 
-                BackupEncryption(),
+                    context,
 
-                BackupDeserializer(),
+                    "7.x",
 
-                memoryDao,
+                    7,
 
-                patternDao,
+                    "intelligence-core"
 
-                experienceDao
+                )
+
+
+
+
+
+            assertTrue(
+
+                backupFile.exists()
 
             )
 
@@ -217,11 +177,17 @@ class BackupRestoreDataIntegrationTest {
 
 
 
-        val result =
+            memoryDao.clear()
 
-            restoreService.restoreBackup(
 
-                backupFile
+
+
+
+            assertEquals(
+
+                0,
+
+                memoryDao.count()
 
             )
 
@@ -229,31 +195,71 @@ class BackupRestoreDataIntegrationTest {
 
 
 
-        assertTrue(
+            val restoreService =
 
-            result.success
+                BackupRestoreService(
 
-        )
+                    BackupEncryption(),
+
+                    BackupDeserializer(),
+
+                    BackupIntegrityValidator(),
+
+                    BackupCompatibilityChecker(),
+
+                    memoryDao,
+
+                    patternDao,
+
+                    experienceDao
+
+                )
 
 
 
 
 
-        assertEquals(
+            val result =
 
-            1,
+                restoreService.restoreBackup(
 
-            memoryDao.count()
+                    backupFile
 
-        )
-
-
+                )
 
 
 
-        database.close()
 
-    }
+
+            assertTrue(
+
+                result.success
+
+            )
+
+
+
+
+
+            assertEquals(
+
+                1,
+
+                memoryDao.count()
+
+            )
+
+
+
+
+
+            backupFile.delete()
+
+
+
+            database.close()
+
+        }
 
 
 }
