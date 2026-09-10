@@ -74,8 +74,7 @@ android {
 
         buildConfig = true
 
-}
-
+    }
 
 }
 
@@ -144,7 +143,7 @@ dependencies {
 
 
     // =========================
-    // Navigation Compose
+    // Navigation
     // =========================
 
     implementation(
@@ -228,6 +227,11 @@ dependencies {
 
 
     androidTestImplementation(
+        "androidx.room:room-testing:2.7.2"
+    )
+
+
+    androidTestImplementation(
         libs.androidx.junit
     )
 
@@ -262,7 +266,6 @@ dependencies {
 
 
 
-
 ksp {
 
     arg(
@@ -271,4 +274,3 @@ ksp {
     )
 
 }
-
