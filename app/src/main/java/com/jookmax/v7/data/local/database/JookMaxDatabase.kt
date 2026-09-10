@@ -26,7 +26,7 @@ import com.jookmax.v7.data.local.entity.DecisionMemoryEntity
         DecisionPatternEntity::class,
         DecisionMemoryEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 abstract class JookMaxDatabase : RoomDatabase() {
