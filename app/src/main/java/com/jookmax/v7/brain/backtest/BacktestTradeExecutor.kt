@@ -3,44 +3,40 @@ package com.jookmax.v7.brain.backtest
 
 import com.jookmax.v7.brain.backtest.model.BacktestTrade
 import com.jookmax.v7.brain.backtest.model.OpenBacktestPosition
-import com.jookmax.v7.brain.decision.DecisionAction
+import com.jookmax.v7.brain.trading.PositionTracker
+import com.jookmax.v7.brain.trading.model.TradeOutcome
+import com.jookmax.v7.brain.trading.model.TradePosition
 import com.jookmax.v7.core.model.MarketCandle
+
+import java.util.UUID
 
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 
-/**
- * Executes simulated trades during backtesting.
- *
- * Flow:
- *
- * ValidatedDecision
- *        +
- * RiskDecision
- *        |
- *        v
- * Open Position
- *        |
- *        v
- * Candle Evaluation
- *        |
- *        v
- * Closed BacktestTrade
- *
- */
 @Singleton
-class BacktestTradeExecutor @Inject constructor() {
+class BacktestTradeExecutor @Inject constructor(
 
 
+    private val positionTracker: PositionTracker
 
-    private var openPosition: OpenBacktestPosition? = null
+
+) {
 
 
 
     private val completedTrades =
+
         mutableListOf<BacktestTrade>()
+
+
+
+
+
+    private var lastOutcome: TradeOutcome? = null
+
+
 
 
 
@@ -48,9 +44,13 @@ class BacktestTradeExecutor @Inject constructor() {
 
     fun hasOpenPosition(): Boolean {
 
-        return openPosition != null
+
+        return positionTracker.hasPosition()
+
 
     }
+
+
 
 
 
@@ -60,13 +60,92 @@ class BacktestTradeExecutor @Inject constructor() {
 
     fun openPosition(
 
+
         position: OpenBacktestPosition
+
 
     ) {
 
-        openPosition = position
+
+
+        positionTracker.open(
+
+
+
+            TradePosition(
+
+
+                positionId = UUID.randomUUID().toString(),
+
+
+                action = position.action,
+
+
+                entryPrice = position.entryPrice,
+
+
+                stopLoss = position.stopLoss,
+
+
+                takeProfit = position.takeProfit,
+
+
+                positionSize = position.positionSize,
+
+
+                openedAt = position.openedAt,
+
+
+
+                learningContext = position.learningContext
+
+
+            )
+
+
+        )
+
 
     }
+
+
+
+
+
+
+
+
+
+    fun evaluateOutcome(
+
+
+        candle: MarketCandle
+
+
+    ): TradeOutcome? {
+
+
+
+        val outcome =
+
+
+            positionTracker.evaluate(candle)
+
+
+
+
+
+        lastOutcome = outcome
+
+
+
+
+
+        return outcome
+
+
+    }
+
 
 
 
@@ -77,136 +156,26 @@ class BacktestTradeExecutor @Inject constructor() {
 
     fun evaluateCandle(
 
+
         candle: MarketCandle
+
 
     ): BacktestTrade? {
 
 
-        val position =
 
-            openPosition
-                ?: return null
+        val outcome =
 
 
+            evaluateOutcome(candle)
 
 
 
-        val exitPrice = when(position.action) {
 
 
-            DecisionAction.BUY -> {
+        outcome ?: return null
 
 
-                when {
-
-
-                    candle.low <= position.stopLoss ->
-
-                        position.stopLoss
-
-
-
-                    candle.high >= position.takeProfit ->
-
-                        position.takeProfit
-
-
-
-                    else -> null
-
-                }
-
-            }
-
-
-
-
-            DecisionAction.SELL -> {
-
-
-                when {
-
-
-                    candle.high >= position.stopLoss ->
-
-                        position.stopLoss
-
-
-
-                    candle.low <= position.takeProfit ->
-
-                        position.takeProfit
-
-
-
-                    else -> null
-
-                }
-
-            }
-
-
-
-
-            DecisionAction.HOLD -> null
-
-        }
-
-
-
-
-
-        if(exitPrice == null) {
-
-            return null
-
-        }
-
-
-
-
-
-        return closePosition(
-
-            exitPrice,
-
-            candle.timestamp
-
-        )
-
-    }
-
-
-
-
-
-
-
-
-    private fun closePosition(
-
-        exitPrice: Double,
-
-        timestamp: Long
-
-    ): BacktestTrade {
-
-
-        val position =
-
-            openPosition!!
-
-
-
-
-
-        val profitLoss = calculateProfitLoss(
-
-            position,
-
-            exitPrice
-
-        )
 
 
 
@@ -215,34 +184,59 @@ class BacktestTradeExecutor @Inject constructor() {
         val trade = BacktestTrade(
 
 
-            action = position.action,
+
+            action = outcome.action,
 
 
-            entryPrice = position.entryPrice,
+
+            entryPrice = outcome.entryPrice,
 
 
-            exitPrice = exitPrice,
+
+            exitPrice = outcome.exitPrice,
 
 
-            stopLoss = position.stopLoss,
+
+            stopLoss = outcome.stopLoss,
 
 
-            takeProfit = position.takeProfit,
+
+            takeProfit = outcome.takeProfit,
 
 
-            positionSize = position.positionSize,
+
+            positionSize = outcome.positionSize,
 
 
-            profitLoss = profitLoss,
+
+            profitLoss = outcome.profitLoss,
 
 
-            openedAt = position.openedAt,
+
+            openedAt = outcome.openedAt,
 
 
-            closedAt = timestamp,
+
+            closedAt = outcome.closedAt,
 
 
-            success = profitLoss > 0
+
+            success = outcome.success,
+
+
+
+            /**
+             * انتقال Intelligence Snapshot
+             *
+             * Trade Outcome
+             *        |
+             *        v
+             * BacktestTrade
+             *        |
+             *        v
+             * Intelligence Memory
+             */
+            learningContext = outcome.learningContext
 
 
         )
@@ -250,59 +244,40 @@ class BacktestTradeExecutor @Inject constructor() {
 
 
 
+
+
+
         completedTrades.add(trade)
 
 
-        openPosition = null
+
+
 
 
 
         return trade
 
+
+    }
+
+
+
+
+
+
+
+
+
+    fun getLastOutcome(): TradeOutcome? {
+
+
+
+        return lastOutcome
+
+
     }
 
 
-
-
-
-
-
-
-    private fun calculateProfitLoss(
-
-        position: OpenBacktestPosition,
-
-        exitPrice: Double
-
-    ): Double {
-
-
-        val difference = when(position.action) {
-
-
-            DecisionAction.BUY ->
-
-                exitPrice - position.entryPrice
-
-
-
-            DecisionAction.SELL ->
-
-                position.entryPrice - exitPrice
-
-
-
-            DecisionAction.HOLD ->
-
-                0.0
-
-        }
-
-
-
-        return difference * position.positionSize
-
-    }
 
 
 
@@ -312,7 +287,10 @@ class BacktestTradeExecutor @Inject constructor() {
 
     fun getCompletedTrades(): List<BacktestTrade> {
 
+
+
         return completedTrades.toList()
+
 
     }
 
@@ -320,11 +298,24 @@ class BacktestTradeExecutor @Inject constructor() {
 
 
 
+
+
+
+
     fun reset() {
 
-        openPosition = null
+
+
+        positionTracker.reset()
+
+
 
         completedTrades.clear()
+
+
+
+        lastOutcome = null
+
 
     }
 

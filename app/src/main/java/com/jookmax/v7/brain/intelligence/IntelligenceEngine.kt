@@ -24,6 +24,9 @@ class IntelligenceEngine @Inject constructor(
     private val memoryAnalyzer: IntelligenceMemoryAnalyzer,
 
 
+    private val memoryScorer: IntelligenceMemoryScorer,
+
+
     private val persistentDecisionMemoryRepository:
     PersistentDecisionMemoryRepository,
 
@@ -46,9 +49,12 @@ class IntelligenceEngine @Inject constructor(
 
     suspend fun generateDecision(
 
+
         decisionResult: DecisionResult,
 
+
         marketContext: MarketContext
+
 
     ): IntelligenceDecision {
 
@@ -64,6 +70,8 @@ class IntelligenceEngine @Inject constructor(
 
 
 
+
+
         val similarMemories =
 
             memoryRetrievalEngine.retrieve(
@@ -74,9 +82,13 @@ class IntelligenceEngine @Inject constructor(
 
 
 
+
+
         val advisorAdjustment =
 
             advisor.calculateAdjustment()
+
+
 
 
 
@@ -86,17 +98,19 @@ class IntelligenceEngine @Inject constructor(
 
 
 
+
+
         val retrievalAdjustment =
 
-            if (similarMemories.isNotEmpty()) {
+            memoryScorer.calculateAdjustment(
 
-                1.05
+                similarMemories
 
-            } else {
+            )
 
-                1.0
 
-            }
+
+
 
 
 
@@ -106,9 +120,9 @@ class IntelligenceEngine @Inject constructor(
 
                     advisorAdjustment *
 
-                            memoryAdjustment *
+                    memoryAdjustment *
 
-                            retrievalAdjustment
+                    retrievalAdjustment
 
                     )
 
@@ -122,13 +136,18 @@ class IntelligenceEngine @Inject constructor(
 
 
 
+
+
+
+
         val confidence =
+
 
             (
 
                     decisionResult.confidence *
 
-                            finalAdjustment
+                    finalAdjustment
 
                     )
 
@@ -142,40 +161,79 @@ class IntelligenceEngine @Inject constructor(
 
 
 
+
+
+
+
         val reason =
 
             when(decisionResult.action) {
 
 
+
                 DecisionAction.BUY ->
 
-                    "Bullish intelligence alignment"
+
+                    if(similarMemories.isNotEmpty())
+
+                        "Bullish intelligence alignment with historical memory"
+
+                    else
+
+                        "Bullish intelligence alignment"
+
+
+
+
 
 
 
                 DecisionAction.SELL ->
 
-                    "Bearish intelligence alignment"
+
+                    if(similarMemories.isNotEmpty())
+
+                        "Bearish intelligence alignment with historical memory"
+
+                    else
+
+                        "Bearish intelligence alignment"
+
+
+
+
 
 
 
                 DecisionAction.HOLD ->
 
+
                     "Insufficient intelligence confidence"
+
+
 
             }
 
 
 
+
+
+
+
         return IntelligenceDecision(
+
 
             action = decisionResult.action,
 
+
             confidence = confidence,
+
 
             reason = reason
 
+
         )
+
 
     }
 
@@ -184,7 +242,13 @@ class IntelligenceEngine @Inject constructor(
 
 
 
+
+
+
+
+
     suspend fun saveExperience(
+
 
         decisionResult: DecisionResult,
 
@@ -197,32 +261,48 @@ class IntelligenceEngine @Inject constructor(
 
         reward: Double
 
+
     ) {
+
 
 
         val pattern =
 
+
             decisionPatternFactory.create(
+
 
                 marketContext = marketContext,
 
+
                 decisionResult = decisionResult,
+
 
                 validatedDecision = validatedDecision,
 
+
                 reward = reward
+
 
             )
 
 
 
+
+
+
+
         persistentDecisionMemoryRepository.save(
+
 
             pattern
 
+
         )
 
+
     }
+
 
 
 }

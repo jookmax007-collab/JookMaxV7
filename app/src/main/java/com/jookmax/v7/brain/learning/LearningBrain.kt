@@ -22,10 +22,6 @@ class LearningBrain @Inject constructor(
 
 
 
-
-
-
-
     fun learn(
 
         success: Boolean,
@@ -39,9 +35,6 @@ class LearningBrain @Inject constructor(
         learningRuns++
 
 
-
-
-
         val adjustedReward =
 
             calculateAdjustedReward(
@@ -52,32 +45,19 @@ class LearningBrain @Inject constructor(
 
 
 
+        val result = LearningResult(
 
+            success = success,
 
+            reward = adjustedReward,
 
+            runNumber = learningRuns
 
-        val result =
-
-            LearningResult(
-
-                success = success,
-
-                reward = adjustedReward,
-
-                runNumber = learningRuns
-
-            )
-
-
-
-
+        )
 
 
 
         lastResult = result
-
-
-
 
 
         return result
@@ -85,6 +65,23 @@ class LearningBrain @Inject constructor(
     }
 
 
+
+
+
+    fun addExperience(
+
+        experience: LearningExperience
+
+    ) {
+
+
+        experienceManager.addExperience(
+
+            experience
+
+        )
+
+    }
 
 
 
@@ -99,7 +96,6 @@ class LearningBrain @Inject constructor(
     ): Double {
 
 
-
         val historicalReward =
 
             experienceManager
@@ -108,15 +104,13 @@ class LearningBrain @Inject constructor(
 
 
 
-
-
         return (
 
-            reward * 0.7 +
+                reward * 0.7 +
 
-            historicalReward * 0.3
+                historicalReward * 0.3
 
-        )
+                )
 
     }
 
@@ -126,11 +120,7 @@ class LearningBrain @Inject constructor(
 
 
 
-
-
     fun getLearningRuns(): Int {
-
-
 
         return learningRuns
 
@@ -141,12 +131,7 @@ class LearningBrain @Inject constructor(
 
 
 
-
-
-
     fun getLastResult(): LearningResult? {
-
-
 
         return lastResult
 
@@ -158,10 +143,7 @@ class LearningBrain @Inject constructor(
 
 
 
-
-
     fun getLearningMemorySize(): Int {
-
 
 
         return experienceManager
@@ -175,11 +157,22 @@ class LearningBrain @Inject constructor(
 
 
 
+    fun getAverageReward(): Double {
+
+
+        return experienceManager
+
+            .getAverageReward()
+
+    }
+
+
+
+
 
 
 
     fun reset() {
-
 
 
         learningRuns = 0
@@ -199,16 +192,11 @@ class LearningBrain @Inject constructor(
 
 
 
-
-
 data class LearningResult(
-
 
     val success: Boolean,
 
-
     val reward: Double,
-
 
     val runNumber: Int
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "e874acfece8409109e07ebb183800769",
+    "identityHash": "6a27e78c8bd3801be43bc306ec129981",
     "entities": [
       {
         "tableName": "market_price",
@@ -690,11 +690,125 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_backup_records_createdAt` ON `${TABLE_NAME}` (`createdAt`)"
           }
         ]
+      },
+      {
+        "tableName": "reward_experiences",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `action` TEXT NOT NULL, `entryPrice` REAL NOT NULL, `exitPrice` REAL NOT NULL, `reward` REAL NOT NULL, `success` INTEGER NOT NULL, `reason` TEXT NOT NULL, `confidence` REAL NOT NULL, `positionSize` REAL NOT NULL, `stopLoss` REAL NOT NULL, `takeProfit` REAL NOT NULL, `symbol` TEXT NOT NULL, `trend` TEXT NOT NULL, `rsi` REAL NOT NULL, `movingAverage` REAL NOT NULL, `volatility` REAL NOT NULL, `timestamp` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "action",
+            "columnName": "action",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "entryPrice",
+            "columnName": "entryPrice",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exitPrice",
+            "columnName": "exitPrice",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reward",
+            "columnName": "reward",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "success",
+            "columnName": "success",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reason",
+            "columnName": "reason",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confidence",
+            "columnName": "confidence",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "positionSize",
+            "columnName": "positionSize",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stopLoss",
+            "columnName": "stopLoss",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "takeProfit",
+            "columnName": "takeProfit",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "symbol",
+            "columnName": "symbol",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trend",
+            "columnName": "trend",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rsi",
+            "columnName": "rsi",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "movingAverage",
+            "columnName": "movingAverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "volatility",
+            "columnName": "volatility",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e874acfece8409109e07ebb183800769')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6a27e78c8bd3801be43bc306ec129981')"
     ]
   }
 }

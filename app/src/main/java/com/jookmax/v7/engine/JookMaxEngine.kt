@@ -24,6 +24,10 @@ import com.jookmax.v7.monitoring.EngineMonitor
 import com.jookmax.v7.monitoring.MetricsCollector
 import com.jookmax.v7.monitoring.RuntimeObserver
 
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 import kotlinx.coroutines.flow.StateFlow
 
 import javax.inject.Inject
@@ -37,39 +41,27 @@ class JookMaxEngine @Inject constructor(
 
     private val brainManager: BrainManager,
 
-
     private val eventBus: EventBus,
-
 
     private val eventDispatcher: EventDispatcher,
 
-
     private val marketEventSubscriber: MarketEventSubscriber,
-
 
     private val engineEventSubscriber: EngineEventSubscriber,
 
-
     private val decisionEventSubscriber: DecisionEventSubscriber,
-
 
     private val lifecycleManager: EngineLifecycleManager,
 
-
     private val runtimeTracker: EngineRuntimeTracker,
-
 
     private val coroutineScope: EngineCoroutineScope,
 
-
     private val engineMonitor: EngineMonitor,
-
 
     private val runtimeObserver: RuntimeObserver,
 
-
     private val metricsCollector: MetricsCollector,
-
 
     private val marketFeedManager: MarketFeedManager
 
@@ -78,9 +70,12 @@ class JookMaxEngine @Inject constructor(
 
 
 
+    private var monitoringJob: Job? = null
+
+
+
     val state: StateFlow<EngineState>
         get() = lifecycleManager.state
-
 
 
 
@@ -145,6 +140,9 @@ class JookMaxEngine @Inject constructor(
         updatePerformanceSnapshot()
 
 
+        startMonitoringLoop()
+
+
 
         eventBus.publish(
             SystemEvent.EngineStarted
@@ -152,8 +150,6 @@ class JookMaxEngine @Inject constructor(
 
 
     }
-
-
 
 
 
@@ -197,13 +193,13 @@ class JookMaxEngine @Inject constructor(
         )
 
 
+        stopMonitoringLoop()
+
 
         updatePerformanceSnapshot()
 
 
     }
-
-
 
 
 
@@ -235,8 +231,6 @@ class JookMaxEngine @Inject constructor(
 
 
 
-
-
     fun resume() {
 
 
@@ -263,51 +257,75 @@ class JookMaxEngine @Inject constructor(
 
 
 
-
-
     fun reset() {
 
 
         lifecycleManager.reset()
 
 
-
         runtimeTracker.reset()
-
 
 
         engineMonitor.reset()
 
 
-
         runtimeObserver.reset()
-
 
 
         metricsCollector.reset()
 
 
+        stopMonitoringLoop()
+
+
+    }
+
+
+
+
+
+    private fun startMonitoringLoop() {
+
+
+        if (monitoringJob != null) return
+
+
+
+        monitoringJob =
+            coroutineScope.scope.launch {
+
+
+                while (true) {
+
+
+                    delay(5000)
+
+
+                    updatePerformanceSnapshot()
+
+
+                }
+
+
+            }
+
+
     }
 
 
 
 
 
+    private fun stopMonitoringLoop() {
 
 
-    fun shutdown() {
+        monitoringJob?.cancel()
 
 
-        stop()
-
-
-
-        coroutineScope.cancel()
+        monitoringJob = null
 
 
     }
-
-
 
 
 
@@ -323,12 +341,15 @@ class JookMaxEngine @Inject constructor(
                 runtimeObserver.getCurrentState(),
 
 
+
             processedEvents =
                 metricsCollector.getProcessedEvents(),
 
 
+
             failedEvents =
                 metricsCollector.getFailedEvents(),
+
 
 
             processingLatencyMs =
@@ -345,6 +366,7 @@ class JookMaxEngine @Inject constructor(
 
 
     }
+
 
 
 }

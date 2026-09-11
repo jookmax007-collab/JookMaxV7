@@ -5,21 +5,23 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 
+import com.jookmax.v7.data.local.dao.BackupRecordDao
 import com.jookmax.v7.data.local.dao.DecisionDao
+import com.jookmax.v7.data.local.dao.DecisionMemoryDao
 import com.jookmax.v7.data.local.dao.DecisionPatternDao
 import com.jookmax.v7.data.local.dao.LearningExperienceDao
 import com.jookmax.v7.data.local.dao.MarketDao
-import com.jookmax.v7.data.local.dao.DecisionMemoryDao
-import com.jookmax.v7.data.local.dao.BackupRecordDao
+import com.jookmax.v7.data.local.dao.RewardExperienceDao
 
 
+import com.jookmax.v7.data.local.entity.BackupRecordEntity
 import com.jookmax.v7.data.local.entity.DecisionEntity
+import com.jookmax.v7.data.local.entity.DecisionMemoryEntity
 import com.jookmax.v7.data.local.entity.DecisionPatternEntity
 import com.jookmax.v7.data.local.entity.LearningExperienceEntity
 import com.jookmax.v7.data.local.entity.MarketCandleEntity
 import com.jookmax.v7.data.local.entity.MarketPriceEntity
-import com.jookmax.v7.data.local.entity.DecisionMemoryEntity
-import com.jookmax.v7.data.local.entity.BackupRecordEntity
+import com.jookmax.v7.data.local.entity.RewardExperienceEntity
 
 
 
@@ -38,7 +40,9 @@ import com.jookmax.v7.data.local.entity.BackupRecordEntity
 
         DecisionMemoryEntity::class,
 
-        BackupRecordEntity::class
+        BackupRecordEntity::class,
+
+        RewardExperienceEntity::class
 
     ],
 
@@ -71,6 +75,10 @@ abstract class JookMaxDatabase : RoomDatabase() {
 
 
     abstract fun backupRecordDao(): BackupRecordDao
+
+
+
+    abstract fun rewardExperienceDao(): RewardExperienceDao
 
 
 }

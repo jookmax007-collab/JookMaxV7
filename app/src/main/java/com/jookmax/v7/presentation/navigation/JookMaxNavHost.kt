@@ -2,22 +2,27 @@ package com.jookmax.v7.presentation.navigation
 
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 
 import androidx.hilt.navigation.compose.hiltViewModel
 
+import androidx.navigation.NavHostController
+
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+
+
 import com.jookmax.v7.presentation.market.ui.MarketScreen
 import com.jookmax.v7.presentation.monitoring.ui.MonitoringScreen
+import com.jookmax.v7.presentation.backtest.BacktestScreen
 
 
 
 @Composable
-fun JookMaxNavHost() {
+fun JookMaxNavHost(
 
+    navController: NavHostController
 
-    val navController = rememberNavController()
+) {
 
 
 
@@ -50,6 +55,7 @@ fun JookMaxNavHost() {
 
 
 
+
         composable(
 
             route = ScreenRoute.Monitoring.route
@@ -65,6 +71,28 @@ fun JookMaxNavHost() {
 
 
         }
+
+
+
+
+
+
+        composable(
+
+            route = ScreenRoute.Backtest.route
+
+        ) {
+
+
+            BacktestScreen(
+
+                viewModel = hiltViewModel()
+
+            )
+
+
+        }
+
 
 
     }

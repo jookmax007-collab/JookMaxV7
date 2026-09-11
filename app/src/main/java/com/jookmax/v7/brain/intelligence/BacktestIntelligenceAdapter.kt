@@ -13,51 +13,113 @@ import javax.inject.Singleton
 @Singleton
 class BacktestIntelligenceAdapter @Inject constructor(
 
-    private val repository:
-        PersistentDecisionMemoryRepository
+
+    private val repository: PersistentDecisionMemoryRepository
+
 
 ) {
 
 
+
     suspend fun learnFromBacktest(
 
+
         result: BacktestResult
+
 
     ) {
 
 
-        val patterns = result.trades.map { trade ->
+
+        val patterns = result.trades.mapNotNull { trade ->
+
+
+
+            val context =
+
+                trade.learningContext
+
+                    ?: return@mapNotNull null
+
+
+
+
 
 
             DecisionPattern(
 
-                symbol = "XAUUSD",
 
-                trend = "UNKNOWN",
 
-                rsi = 0.0,
+                /**
+                 * Real market snapshot
+                 */
+                symbol = context.symbol,
 
-                volatility = 0.0,
 
+
+                trend = context.trend,
+
+
+
+                rsi = context.rsi,
+
+
+
+                volatility = context.volatility,
+
+
+
+                /**
+                 * Brain action
+                 */
                 action = trade.action,
 
-                confidence = result.winRate,
 
+
+                /**
+                 * Confidence at decision time
+                 */
+                confidence = context.confidence,
+
+
+
+                /**
+                 * Decision passed validation
+                 */
                 approved = true,
 
-                reward = trade.profitLoss
+
+
+                /**
+                 * Real trade result
+                 */
+                reward = trade.profitLoss,
+
+
+
+                timestamp = trade.closedAt
+                    ?: System.currentTimeMillis()
+
+            )
+
+        }
+
+
+
+
+
+
+        if (patterns.isNotEmpty()) {
+
+
+            repository.saveAll(
+
+                patterns
 
             )
 
 
         }
-
-
-        repository.saveAll(
-
-            patterns
-
-        )
 
 
     }

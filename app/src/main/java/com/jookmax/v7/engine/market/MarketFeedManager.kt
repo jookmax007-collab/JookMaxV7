@@ -3,10 +3,14 @@ package com.jookmax.v7.engine.market
 
 import com.jookmax.v7.core.event.EventBus
 import com.jookmax.v7.core.event.MarketEvent
+
+import com.jookmax.v7.domain.repository.CandleRepository
 import com.jookmax.v7.domain.repository.MarketRepository
+
 import com.jookmax.v7.engine.market.tick.TickEngine
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -36,18 +40,13 @@ import javax.inject.Singleton
  *                           v
  *                     MarketCandle
  *                           |
+ *                           +------------+
+ *                           |            |
+ *                           v            v
+ *                  CandleRepository   EventBus
+ *                           |
  *                           v
- *                    CandleClosed
- *
- *      |
- *      v
- * EventBus
- *      |
- *      v
- * MarketEventSubscriber
- *      |
- *      v
- * MarketBrain
+ *                       Room Database
  *
  */
 @Singleton
@@ -55,6 +54,9 @@ class MarketFeedManager @Inject constructor(
 
 
     private val marketRepository: MarketRepository,
+
+
+    private val candleRepository: CandleRepository,
 
 
     private val eventBus: EventBus,
@@ -88,7 +90,6 @@ class MarketFeedManager @Inject constructor(
 
 
         started = true
-
 
 
 
@@ -155,9 +156,12 @@ class MarketFeedManager @Inject constructor(
          *      |
          *      v
          * MarketCandle
+         *
          *      |
-         *      v
-         * CandleClosed Event
+         *      +----------------+
+         *      |                |
+         *      v                v
+         * CandleRepository   EventBus
          *
          */
         scope.launch {
@@ -180,6 +184,19 @@ class MarketFeedManager @Inject constructor(
 
 
                     candles.forEach { candle ->
+
+
+
+
+
+                        candleRepository.saveCandles(
+
+                            listOf(candle)
+
+                        )
+
+
+
 
 
 

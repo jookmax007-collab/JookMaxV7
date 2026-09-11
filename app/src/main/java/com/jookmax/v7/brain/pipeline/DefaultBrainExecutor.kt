@@ -17,7 +17,7 @@ class DefaultBrainExecutor @Inject constructor(
 
 
 
-    override fun execute(
+    override suspend fun execute(
 
         candle: MarketCandle
 

@@ -3,17 +3,24 @@ package com.jookmax.v7
 
 import android.os.Bundle
 
+
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 
+
 import com.jookmax.v7.engine.manager.EngineManager
-import com.jookmax.v7.presentation.navigation.JookMaxNavHost
+
+import com.jookmax.v7.presentation.navigation.MainScaffold
+
 import com.jookmax.v7.ui.theme.JookMaxV7Theme
+
 
 import dagger.hilt.android.AndroidEntryPoint
 
+
 import javax.inject.Inject
+
 
 
 
@@ -28,11 +35,16 @@ class MainActivity : ComponentActivity() {
 
 
 
+
     override fun onCreate(
+
         savedInstanceState: Bundle?
+
     ) {
 
+
         super.onCreate(savedInstanceState)
+
 
 
         enableEdgeToEdge()
@@ -43,13 +55,17 @@ class MainActivity : ComponentActivity() {
 
 
 
+
+
         setContent {
 
 
             JookMaxV7Theme {
 
 
-                JookMaxNavHost()
+
+                MainScaffold()
+
 
 
             }
@@ -57,7 +73,9 @@ class MainActivity : ComponentActivity() {
 
         }
 
+
     }
+
 
 
 
@@ -68,7 +86,9 @@ class MainActivity : ComponentActivity() {
         engineManager.stopEngine()
 
 
+
         super.onDestroy()
+
 
     }
 
