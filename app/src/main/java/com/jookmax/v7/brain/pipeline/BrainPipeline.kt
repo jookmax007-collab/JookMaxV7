@@ -23,7 +23,6 @@ import com.jookmax.v7.brain.risk.RiskProfile
 
 import com.jookmax.v7.core.model.MarketCandle
 
-import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -61,10 +60,7 @@ class BrainPipeline @Inject constructor(
     private val decisionValidator: DecisionValidator,
 
 
-    private val marketContextMapper: MarketContextMapper,
-
-
-    private val persistentDecisionMemoryRepository: PersistentDecisionMemoryRepository
+    private val marketContextMapper: MarketContextMapper
 
 
 ) : BrainExecutor {
@@ -239,46 +235,6 @@ class BrainPipeline @Inject constructor(
 
         )
 
-
-
-
-
-
-
-
-        persistentDecisionMemoryRepository.save(
-
-
-            DecisionPattern(
-
-
-                symbol = "XAUUSD",
-
-
-                trend = context.marketAnalysis.trend,
-
-
-                rsi = context.marketAnalysis.rsi,
-
-
-                volatility = context.marketAnalysis.volatility,
-
-
-                action = decision.action,
-
-
-                confidence = intelligenceDecision.confidence,
-
-
-                approved = validatedDecision.approved,
-
-
-                reward = context.learningReward
-
-
-            )
-
-        )
 
 
 
@@ -473,3 +429,6 @@ class BrainPipeline @Inject constructor(
 
 
 }
+
+
+
