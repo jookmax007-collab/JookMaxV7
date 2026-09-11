@@ -20,4 +20,6 @@ captures/
 .cxx/
 
 # OS
-.DS_Store
+.DS_Store*.backup.kt
+*.backup.kt
+*.before-*.kt
