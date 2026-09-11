@@ -35,7 +35,7 @@ fun DashboardScreen(
 
         horizontalAlignment = Alignment.CenterHorizontally,
 
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
 
     ) {
 
@@ -53,9 +53,11 @@ fun DashboardScreen(
 
         Spacer(
 
-            modifier = Modifier.height(24.dp)
+            modifier = Modifier.height(20.dp)
 
         )
+
+
 
 
 
@@ -69,6 +71,8 @@ fun DashboardScreen(
 
 
 
+
+
         DashboardCard(
 
             title = "Market",
@@ -79,19 +83,69 @@ fun DashboardScreen(
 
 
 
+
+
         DashboardCard(
 
-            title = "AI Brain",
+            title = "AI Brain Decision",
 
-            value = "${state.brainDecision} (${state.confidence}%)"
+            value =
+                "${state.latestAction} (${state.confidence}%)"
 
         )
 
 
 
+
+
         DashboardCard(
 
-            title = "Trend",
+            title = "Validation",
+
+            value =
+                "${state.validationStatus}  Score: ${state.validationScore}"
+
+        )
+
+
+
+
+
+        DashboardCard(
+
+            title = "Risk Permission",
+
+            value =
+                if(state.riskAllowed)
+
+                    "ALLOWED"
+
+                else
+
+                    "BLOCKED"
+
+        )
+
+
+
+
+
+        DashboardCard(
+
+            title = "Learning Reward",
+
+            value =
+                state.learningReward.toString()
+
+        )
+
+
+
+
+
+        DashboardCard(
+
+            title = "Market Trend",
 
             value = state.marketTrend
 
@@ -99,23 +153,18 @@ fun DashboardScreen(
 
 
 
-        DashboardCard(
-
-            title = "Risk",
-
-            value = state.riskStatus
-
-        )
-
 
 
         DashboardCard(
 
             title = "Total Decisions",
 
-            value = state.totalDecisions.toString()
+            value =
+                state.totalDecisions.toString()
 
         )
+
+
 
 
 
@@ -124,9 +173,13 @@ fun DashboardScreen(
             title = "Decision Split",
 
             value =
-                "BUY ${state.buyDecisions} | SELL ${state.sellDecisions} | HOLD ${state.holdDecisions}"
+                "BUY ${state.buyDecisions} | " +
+                "SELL ${state.sellDecisions} | " +
+                "HOLD ${state.holdDecisions}"
 
         )
+
+
 
 
 
@@ -144,6 +197,8 @@ fun DashboardScreen(
 
 
 }
+
+
 
 
 
@@ -177,7 +232,22 @@ private fun DashboardCard(
         ) {
 
 
-            Text(title)
+            Text(
+
+                text = title,
+
+                style = MaterialTheme.typography.labelLarge
+
+            )
+
+
+
+            Spacer(
+
+                modifier = Modifier.height(4.dp)
+
+            )
+
 
 
             Text(

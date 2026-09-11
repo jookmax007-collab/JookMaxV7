@@ -46,7 +46,7 @@ import com.jookmax.v7.data.local.entity.RewardExperienceEntity
 
     ],
 
-    version = 7,
+    version = 9,
 
     exportSchema = true
 )

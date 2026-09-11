@@ -41,9 +41,9 @@ class DashboardViewModel @Inject constructor(
         )
 
 
-
     val state: StateFlow<DashboardState> =
         _state.asStateFlow()
+
 
 
 
@@ -60,6 +60,9 @@ class DashboardViewModel @Inject constructor(
 
 
         observeMarket()
+
+
+        observeLatestDecision()
 
 
     }
@@ -135,10 +138,12 @@ class DashboardViewModel @Inject constructor(
                     _state.value =
                         _state.value.copy(
 
+
                             engineStatus =
                                 mapEngineState(
                                     engineState
                                 )
+
 
                         )
 
@@ -179,20 +184,25 @@ class DashboardViewModel @Inject constructor(
                         _state.value.copy(
 
 
+
                             totalDecisions =
                                 snapshot.totalDecisions,
+
 
 
                             buyDecisions =
                                 snapshot.buyDecisions,
 
 
+
                             sellDecisions =
                                 snapshot.sellDecisions,
 
 
+
                             holdDecisions =
                                 snapshot.holdDecisions,
+
 
 
                             averageDecisionConfidence =
@@ -208,6 +218,7 @@ class DashboardViewModel @Inject constructor(
                                             snapshot.sellDecisions &&
                                     snapshot.buyDecisions >
                                             snapshot.holdDecisions ->
+
                                         "BUY"
 
 
@@ -216,21 +227,94 @@ class DashboardViewModel @Inject constructor(
                                             snapshot.buyDecisions &&
                                     snapshot.sellDecisions >
                                             snapshot.holdDecisions ->
+
                                         "SELL"
 
 
 
                                     else ->
+
                                         "HOLD"
 
 
                                 },
 
 
-                            confidence =
-                                (snapshot.averageDecisionConfidence * 100)
-                                    .toInt()
 
+                            confidence =
+                                (
+                                    snapshot.averageDecisionConfidence * 100
+                                ).toInt()
+
+
+                        )
+
+
+                }
+
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+    private fun observeLatestDecision() {
+
+
+        viewModelScope.launch {
+
+
+            engineMonitor
+                .latestDecision
+                .collect { decision ->
+
+
+
+                    decision ?: return@collect
+
+
+
+                    _state.value =
+                        _state.value.copy(
+
+
+
+                            latestAction =
+                                decision.action,
+
+
+
+                            validationStatus =
+                                if(decision.approved)
+
+                                    "APPROVED"
+
+                                else
+
+                                    "REJECTED",
+
+
+
+                            validationScore =
+                                decision.validationScore,
+
+
+
+                            riskAllowed =
+                                decision.riskAllowed,
+
+
+
+                            learningReward =
+                                decision.learningReward
 
 
                         )
@@ -263,30 +347,43 @@ class DashboardViewModel @Inject constructor(
 
 
             EngineState.Idle ->
+
                 "IDLE"
 
 
+
             EngineState.Starting ->
+
                 "STARTING"
 
 
+
             EngineState.Running ->
+
                 "ONLINE"
 
 
+
             EngineState.Paused ->
+
                 "PAUSED"
 
 
+
             EngineState.Stopping ->
+
                 "STOPPING"
 
 
+
             EngineState.Stopped ->
+
                 "STOPPED"
 
 
+
             is EngineState.Error ->
+
                 "ERROR"
 
 

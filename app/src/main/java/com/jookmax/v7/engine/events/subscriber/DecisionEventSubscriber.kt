@@ -10,6 +10,8 @@ import com.jookmax.v7.core.logging.Logger
 import com.jookmax.v7.domain.analytics.DecisionAnalyticsRepository
 
 import com.jookmax.v7.monitoring.DecisionMetricsCollector
+import com.jookmax.v7.monitoring.EngineMonitor
+import com.jookmax.v7.monitoring.LatestBrainDecision
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,13 +37,13 @@ import javax.inject.Singleton
  * DecisionAnalytics        DecisionMetrics
  * Repository               Collector
  *
- * Metrics:
+ *        |
+ *        v
  *
- * Raw Decision
- * +
- * Intelligence Decision
- * +
- * Validation Result
+ * EngineMonitor
+ *        |
+ *        v
+ * Dashboard UI
  *
  */
 @Singleton
@@ -52,6 +54,9 @@ class DecisionEventSubscriber @Inject constructor(
 
 
     private val metricsCollector: DecisionMetricsCollector,
+
+
+    private val engineMonitor: EngineMonitor,
 
 
     private val logger: Logger
@@ -135,6 +140,8 @@ class DecisionEventSubscriber @Inject constructor(
 
 
 
+
+
         /*
          *
          * Raw Decision Metrics
@@ -159,6 +166,8 @@ class DecisionEventSubscriber @Inject constructor(
 
 
 
+
+
         /*
          *
          * Validation Intelligence Metrics
@@ -176,6 +185,83 @@ class DecisionEventSubscriber @Inject constructor(
 
 
         )
+
+
+
+
+
+
+
+
+
+        /*
+         *
+         * Publish latest AI Brain Decision
+         *
+         * Monitoring -> Dashboard
+         *
+         */
+
+
+        engineMonitor.updateLatestDecision(
+
+
+            LatestBrainDecision(
+
+
+                symbol =
+
+                    event.symbol.code,
+
+
+
+                action =
+
+                    event.decision.action.name,
+
+
+
+                confidence =
+
+                    event.decision.confidence,
+
+
+
+                approved =
+
+                    event.validatedDecision.approved,
+
+
+
+                validationScore =
+
+                    event.validatedDecision.validationScore,
+
+
+
+                marketScore =
+
+                    event.marketScore,
+
+
+
+                riskAllowed =
+
+                    event.riskAllowed,
+
+
+
+                learningReward =
+
+                    event.learningReward
+
+
+
+            )
+
+
+        )
+
 
 
 

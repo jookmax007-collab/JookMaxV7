@@ -19,17 +19,25 @@ class ConfidenceFusionEngine @Inject constructor(
 
     fun fuse(
 
+
         marketConfidence: Double,
+
 
         riskConfidence: Double,
 
-        learningConfidence: Double
+
+        learningConfidence: Double,
+
+
+        liquidityConfidence: Double
+
 
     ): ConfidenceModel {
 
 
 
         val baseConfidence =
+
 
             (
 
@@ -42,6 +50,10 @@ class ConfidenceFusionEngine @Inject constructor(
                 +
 
                 learningConfidence * LEARNING_WEIGHT
+
+                +
+
+                liquidityConfidence * LIQUIDITY_WEIGHT
 
             )
 
@@ -77,6 +89,7 @@ class ConfidenceFusionEngine @Inject constructor(
 
         val finalConfidence =
 
+
             (
 
                 baseConfidence *
@@ -93,13 +106,21 @@ class ConfidenceFusionEngine @Inject constructor(
 
         return ConfidenceModel(
 
+
             marketConfidence = marketConfidence,
+
 
             riskConfidence = riskConfidence,
 
+
             learningConfidence = learningConfidence,
 
+
+            liquidityConfidence = liquidityConfidence,
+
+
             finalConfidence = finalConfidence
+
 
         )
 
@@ -112,13 +133,18 @@ class ConfidenceFusionEngine @Inject constructor(
     companion object {
 
 
-        private const val MARKET_WEIGHT = 0.40
+
+        private const val MARKET_WEIGHT = 0.35
 
 
-        private const val RISK_WEIGHT = 0.35
+        private const val RISK_WEIGHT = 0.25
 
 
-        private const val LEARNING_WEIGHT = 0.25
+        private const val LEARNING_WEIGHT = 0.20
+
+
+        private const val LIQUIDITY_WEIGHT = 0.20
+
 
 
     }

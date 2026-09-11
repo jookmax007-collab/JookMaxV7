@@ -1,6 +1,8 @@
 package com.jookmax.v7.brain.decision
 
 
+import com.jookmax.v7.liquidity.model.LiquidityBias
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,11 +15,21 @@ class SignalAggregator @Inject constructor() {
 
     fun aggregate(
 
+
         marketScore: Double,
+
 
         riskAllowed: Boolean,
 
-        learningReward: Double
+
+        learningReward: Double,
+
+
+        liquidityScore: Double,
+
+
+        liquidityBias: LiquidityBias
+
 
     ): AggregatedSignal {
 
@@ -47,6 +59,14 @@ class SignalAggregator @Inject constructor() {
 
 
 
+        val safeLiquidityScore =
+
+            liquidityScore.coerceIn(0.0, 1.0)
+
+
+
+
+
         val riskScore =
 
             if (riskAllowed)
@@ -65,15 +85,19 @@ class SignalAggregator @Inject constructor() {
 
             (
 
-                safeMarketScore * 0.5
+                safeMarketScore * 0.40
 
                 +
 
-                riskScore * 0.3
+                riskScore * 0.25
 
                 +
 
-                learningScore * 0.2
+                learningScore * 0.15
+
+                +
+
+                safeLiquidityScore * 0.20
 
             )
 
@@ -87,7 +111,9 @@ class SignalAggregator @Inject constructor() {
 
             score = finalScore,
 
-            riskApproved = riskAllowed
+            riskApproved = riskAllowed,
+
+            liquidityBias = liquidityBias
 
         )
 
@@ -100,8 +126,14 @@ class SignalAggregator @Inject constructor() {
 
 data class AggregatedSignal(
 
+
     val score: Double,
 
-    val riskApproved: Boolean
+
+    val riskApproved: Boolean,
+
+
+    val liquidityBias: LiquidityBias
+
 
 )

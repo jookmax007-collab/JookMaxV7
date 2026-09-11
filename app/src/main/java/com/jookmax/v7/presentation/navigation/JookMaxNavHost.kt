@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
 
+import com.jookmax.v7.presentation.dashboard.DashboardScreen
 import com.jookmax.v7.presentation.market.ui.MarketScreen
 import com.jookmax.v7.presentation.monitoring.ui.MonitoringScreen
 import com.jookmax.v7.presentation.backtest.BacktestScreen
@@ -33,6 +34,26 @@ fun JookMaxNavHost(
         startDestination = ScreenRoute.Market.route
 
     ) {
+
+
+
+        composable(
+
+            route = ScreenRoute.Dashboard.route
+
+        ) {
+
+
+            DashboardScreen(
+
+                viewModel = hiltViewModel()
+
+            )
+
+
+        }
+
+
 
 
 
@@ -71,6 +92,7 @@ fun JookMaxNavHost(
 
 
         }
+
 
 
 

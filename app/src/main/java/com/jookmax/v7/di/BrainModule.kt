@@ -5,11 +5,12 @@ import com.jookmax.v7.brain.confidence.ConfidenceAnalytics
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackCollector
 import com.jookmax.v7.brain.confidence.ConfidenceFeedbackManager
 import com.jookmax.v7.brain.confidence.ConfidenceFusionEngine
+import com.jookmax.v7.brain.confidence.ConfidenceEngine
 import com.jookmax.v7.brain.confidence.LearningConfidenceCalculator
 import com.jookmax.v7.brain.confidence.MarketConfidenceCalculator
 import com.jookmax.v7.brain.confidence.RiskConfidenceCalculator
+import com.jookmax.v7.brain.confidence.LiquidityConfidenceCalculator
 
-import com.jookmax.v7.brain.decision.ConfidenceEngine
 import com.jookmax.v7.brain.decision.DecisionEngine
 import com.jookmax.v7.brain.decision.DecisionScoreCalculator
 import com.jookmax.v7.brain.decision.SignalAggregator
@@ -30,7 +31,6 @@ import com.jookmax.v7.brain.risk.RiskMultiplier
 import com.jookmax.v7.brain.risk.StopLossCalculator
 import com.jookmax.v7.brain.risk.TakeProfitCalculator
 
-
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,11 +39,9 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object BrainModule {
-
 
 
     // =========================
@@ -54,7 +52,6 @@ object BrainModule {
     @Provides
     @Singleton
     fun provideConfidenceFeedbackManager():
-
             ConfidenceFeedbackManager {
 
         return ConfidenceFeedbackManager()
@@ -62,30 +59,22 @@ object BrainModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideConfidenceFeedbackCollector(
-
         feedbackManager: ConfidenceFeedbackManager
-
     ): ConfidenceFeedbackCollector {
 
-
         return ConfidenceFeedbackCollector(
-
             feedbackManager = feedbackManager
-
         )
 
     }
 
 
-
     @Provides
     @Singleton
     fun provideConfidenceAnalytics():
-
             ConfidenceAnalytics {
 
         return ConfidenceAnalytics()
@@ -93,34 +82,24 @@ object BrainModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideConfidenceFusionEngine(
-
         feedbackManager: ConfidenceFeedbackManager,
-
         confidenceAnalytics: ConfidenceAnalytics
-
     ): ConfidenceFusionEngine {
 
-
         return ConfidenceFusionEngine(
-
             feedbackManager = feedbackManager,
-
             confidenceAnalytics = confidenceAnalytics
-
         )
 
     }
 
 
-
     @Provides
     @Singleton
     fun provideMarketConfidenceCalculator():
-
             MarketConfidenceCalculator {
 
         return MarketConfidenceCalculator()
@@ -128,11 +107,9 @@ object BrainModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideRiskConfidenceCalculator():
-
             RiskConfidenceCalculator {
 
         return RiskConfidenceCalculator()
@@ -140,17 +117,24 @@ object BrainModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideLearningConfidenceCalculator():
-
             LearningConfidenceCalculator {
 
         return LearningConfidenceCalculator()
 
     }
 
+
+    @Provides
+    @Singleton
+    fun provideLiquidityConfidenceCalculator():
+            LiquidityConfidenceCalculator {
+
+        return LiquidityConfidenceCalculator()
+
+    }
 
 
     @Provides
@@ -162,6 +146,8 @@ object BrainModule {
         riskConfidenceCalculator: RiskConfidenceCalculator,
 
         learningConfidenceCalculator: LearningConfidenceCalculator,
+
+        liquidityConfidenceCalculator: LiquidityConfidenceCalculator,
 
         confidenceFusionEngine: ConfidenceFusionEngine
 
@@ -176,13 +162,13 @@ object BrainModule {
 
             learningConfidenceCalculator = learningConfidenceCalculator,
 
+            liquidityConfidenceCalculator = liquidityConfidenceCalculator,
+
             confidenceFusionEngine = confidenceFusionEngine
 
         )
 
     }
-
-
 
 
 
@@ -194,7 +180,6 @@ object BrainModule {
     @Provides
     @Singleton
     fun provideSignalAggregator():
-
             SignalAggregator {
 
         return SignalAggregator()
@@ -202,17 +187,14 @@ object BrainModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideDecisionScoreCalculator():
-
             DecisionScoreCalculator {
 
         return DecisionScoreCalculator()
 
     }
-
 
 
     @Provides
@@ -241,9 +223,6 @@ object BrainModule {
     }
 
 
-
-
-
     // =========================
     // Risk Layer
     // =========================
@@ -251,137 +230,61 @@ object BrainModule {
 
     @Provides
     @Singleton
-    fun provideRiskBrain(
-
-        riskEngine: RiskEngine
-
-    ): RiskBrain {
-
-
-        return RiskBrain(
-
-            riskEngine = riskEngine
-
-        )
-
-    }
-
+    fun providePositionSizer() = PositionSizer()
 
 
     @Provides
     @Singleton
-    fun providePositionSizer():
-
-            PositionSizer {
-
-        return PositionSizer()
-
-    }
-
+    fun provideStopLossCalculator() = StopLossCalculator()
 
 
     @Provides
     @Singleton
-    fun provideStopLossCalculator():
-
-            StopLossCalculator {
-
-        return StopLossCalculator()
-
-    }
-
+    fun provideTakeProfitCalculator() = TakeProfitCalculator()
 
 
     @Provides
     @Singleton
-    fun provideTakeProfitCalculator():
-
-            TakeProfitCalculator {
-
-        return TakeProfitCalculator()
-
-    }
-
+    fun provideExposureManager() = ExposureManager()
 
 
     @Provides
     @Singleton
-    fun provideExposureManager():
-
-            ExposureManager {
-
-        return ExposureManager()
-
-    }
-
-
-
-    @Provides
-    @Singleton
-    fun provideRiskMultiplier():
-
-            RiskMultiplier {
-
-        return RiskMultiplier()
-
-    }
-
+    fun provideRiskMultiplier() = RiskMultiplier()
 
 
     @Provides
     @Singleton
     fun provideDynamicRiskManager(
-
         riskMultiplier: RiskMultiplier
-
     ): DynamicRiskManager {
 
-
         return DynamicRiskManager(
-
             riskMultiplier = riskMultiplier
-
         )
 
     }
-
 
 
     @Provides
     @Singleton
     fun provideRiskEngine(
-
         positionSizer: PositionSizer,
-
         stopLossCalculator: StopLossCalculator,
-
         takeProfitCalculator: TakeProfitCalculator,
-
         exposureManager: ExposureManager,
-
         dynamicRiskManager: DynamicRiskManager
-
     ): RiskEngine {
 
-
         return RiskEngine(
-
             positionSizer = positionSizer,
-
             stopLossCalculator = stopLossCalculator,
-
             takeProfitCalculator = takeProfitCalculator,
-
             exposureManager = exposureManager,
-
             dynamicRiskManager = dynamicRiskManager
-
         )
 
     }
-
-
-
 
 
     // =========================
@@ -393,15 +296,13 @@ object BrainModule {
     @Singleton
     fun provideLearningExperienceManager(
         learningRepository: com.jookmax.v7.domain.repository.LearningRepository
-    ):
-            LearningExperienceManager {
+    ): LearningExperienceManager {
 
         return LearningExperienceManager(
             repository = learningRepository
         )
 
     }
-
 
 
     @Provides
@@ -413,48 +314,36 @@ object BrainModule {
         return LearningPatternAnalyzer(
             learningRepository = learningRepository
         )
-    }
 
+    }
 
 
     @Provides
     @Singleton
     fun provideLearningBrain(
-
         experienceManager: LearningExperienceManager
-
     ): LearningBrain {
 
-
         return LearningBrain(
-
             experienceManager = experienceManager
-
         )
 
     }
 
 
 
-
-
     // =========================
-    // Intelligence Validation Layer
+    // Validation Layer
     // =========================
 
 
     @Provides
     @Singleton
     fun provideDecisionValidator():
-
             DecisionValidator {
-
 
         return IntelligenceDecisionValidator()
 
     }
 
-
 }
-
-

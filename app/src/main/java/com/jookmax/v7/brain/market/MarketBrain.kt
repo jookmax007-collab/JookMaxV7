@@ -5,6 +5,8 @@ import com.jookmax.v7.analysis.engine.TechnicalAnalyzer
 import com.jookmax.v7.analysis.model.MarketAnalysis
 import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.core.model.MarketPrice
+import com.jookmax.v7.structure.MarketStructureEngine
+import com.jookmax.v7.structure.model.MarketStructure
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,17 +23,26 @@ import javax.inject.Singleton
  *       v
  * MarketBrain
  *       |
- *       v
- * TechnicalAnalyzer
+ *       +----------------+
+ *       |                |
+ *       v                v
+ * TechnicalAnalyzer   MarketStructureEngine
+ *       |                |
+ *       v                v
+ * MarketAnalysis   MarketStructure
+ *
  *       |
  *       v
- * MarketAnalysis
+ *
+ * MarketContext
  *
  */
 @Singleton
 class MarketBrain @Inject constructor(
 
-    private val technicalAnalyzer: TechnicalAnalyzer
+    private val technicalAnalyzer: TechnicalAnalyzer,
+
+    private val marketStructureEngine: MarketStructureEngine
 
 ) {
 
@@ -47,7 +58,6 @@ class MarketBrain @Inject constructor(
 
 
 
-
     fun updateMarket(
 
         price: MarketPrice
@@ -57,9 +67,6 @@ class MarketBrain @Inject constructor(
         lastMarketPrice = price
 
     }
-
-
-
 
 
 
@@ -78,15 +85,6 @@ class MarketBrain @Inject constructor(
 
 
 
-        /*
-         * Keep analysis window stable
-         *
-         * 500 candles is enough for:
-         * RSI
-         * MA
-         * MACD
-         * ATR
-         */
         if (candles.size > 500) {
 
             candles.removeAt(0)
@@ -95,9 +93,6 @@ class MarketBrain @Inject constructor(
 
 
     }
-
-
-
 
 
 
@@ -113,11 +108,16 @@ class MarketBrain @Inject constructor(
 
 
 
+    
+    fun getCandles(): List<MarketCandle> {
 
 
+        return candles.toList()
 
 
-    fun analyze(): MarketAnalysis {
+    }
+
+fun analyze(): MarketAnalysis {
 
 
         return technicalAnalyzer.analyze(
@@ -131,6 +131,37 @@ class MarketBrain @Inject constructor(
 
 
 
+
+
+    fun analyzeStructure(): MarketStructure {
+
+
+        return marketStructureEngine.analyze(
+
+            candles.toList()
+
+        )
+
+
+    }
+
+
+
+
+
+    fun getMarketContext(): MarketContext {
+
+
+        return MarketContext(
+
+            analysis = analyze(),
+
+            structure = analyzeStructure()
+
+        )
+
+
+    }
 
 
 

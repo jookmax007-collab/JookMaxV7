@@ -1,7 +1,10 @@
 package com.jookmax.v7.brain.decision
 
 
+import com.jookmax.v7.brain.confidence.ConfidenceEngine
 import com.jookmax.v7.brain.risk.RiskDecision
+import com.jookmax.v7.liquidity.model.LiquidityBias
+import com.jookmax.v7.liquidity.model.LiquidityContext
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,6 +32,12 @@ class DecisionEngine @Inject constructor(
 
         learningReward: Double,
 
+        liquidityScore: Double,
+
+        liquidityBias: LiquidityBias,
+
+        liquidityContext: LiquidityContext,
+
         riskDecision: RiskDecision
 
     ): DecisionResult {
@@ -43,7 +52,11 @@ class DecisionEngine @Inject constructor(
 
                 riskAllowed = riskAllowed,
 
-                learningReward = learningReward
+                learningReward = learningReward,
+
+                liquidityScore = liquidityScore,
+
+                liquidityBias = liquidityBias
 
             )
 
@@ -73,7 +86,9 @@ class DecisionEngine @Inject constructor(
 
                 riskDecision = riskDecision,
 
-                learningReward = learningReward
+                learningReward = learningReward,
+
+                liquidityContext = liquidityContext
 
             )
 

@@ -22,6 +22,8 @@ import com.jookmax.v7.brain.risk.RiskEngine
 import com.jookmax.v7.brain.risk.RiskProfile
 
 import com.jookmax.v7.core.model.MarketCandle
+import com.jookmax.v7.liquidity.analyzer.LiquidityAnalyzer
+import com.jookmax.v7.liquidity.mapper.LiquidityContextMapper
 
 
 import javax.inject.Inject
@@ -60,7 +62,11 @@ class BrainPipeline @Inject constructor(
     private val decisionValidator: DecisionValidator,
 
 
-    private val marketContextMapper: MarketContextMapper
+    private val marketContextMapper: MarketContextMapper,
+
+    private val liquidityAnalyzer: LiquidityAnalyzer,
+
+    private val liquidityContextMapper: LiquidityContextMapper
 
 
 ) : BrainExecutor {
@@ -124,6 +130,12 @@ class BrainPipeline @Inject constructor(
                 riskAllowed = riskAllowed,
 
                 learningReward = context.learningReward,
+
+                liquidityScore = context.liquidityContext.liquidityScore,
+
+                liquidityBias = context.liquidityContext.liquidityBias,
+
+                liquidityContext = context.liquidityContext,
 
                 riskDecision = context.riskDecision
 
@@ -294,7 +306,9 @@ class BrainPipeline @Inject constructor(
 
 
 
+        val marketStructure =
 
+            marketBrain.analyzeStructure()
 
 
 
@@ -302,9 +316,33 @@ class BrainPipeline @Inject constructor(
 
             marketContextMapper.map(
 
-                analysis = marketAnalysis
+                analysis = marketAnalysis,
+
+                structure = marketStructure
 
             )
+        val liquidityAnalysis =
+
+            liquidityAnalyzer.analyze(
+
+                candles = marketBrain.getCandles(),
+
+                liquidityLevel = 0.0
+
+            )
+
+
+
+        val liquidityContext =
+
+            liquidityContextMapper.map(
+
+                result = liquidityAnalysis
+
+            )
+
+
+
 
 
 
@@ -360,9 +398,12 @@ class BrainPipeline @Inject constructor(
 
             marketAnalysis = marketAnalysis,
 
+            marketStructure = marketStructure,
+
 
             marketContext = marketContext,
 
+            liquidityContext = liquidityContext,
 
             riskDecision = riskDecision,
 
@@ -429,6 +470,11 @@ class BrainPipeline @Inject constructor(
 
 
 }
+
+
+
+
+
 
 
 

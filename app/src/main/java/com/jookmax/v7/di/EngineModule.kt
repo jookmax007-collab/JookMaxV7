@@ -21,6 +21,10 @@ import com.jookmax.v7.engine.manager.EngineManager
 import com.jookmax.v7.engine.runtime.EngineCoroutineScope
 import com.jookmax.v7.engine.runtime.EngineRuntimeTracker
 
+import com.jookmax.v7.structure.MarketStructureEngine
+import com.jookmax.v7.structure.detector.BOSDetector
+import com.jookmax.v7.structure.detector.CHoCHDetector
+import com.jookmax.v7.structure.detector.SwingDetector
 
 import dagger.Module
 import dagger.Provides
@@ -37,24 +41,14 @@ object EngineModule {
 
 
 
-
-
     @Provides
     @Singleton
     fun provideEngineRuntimeTracker()
             : EngineRuntimeTracker {
 
-
         return EngineRuntimeTracker()
 
-
     }
-
-
-
-
-
-
 
 
 
@@ -63,17 +57,62 @@ object EngineModule {
     fun provideEngineCoroutineScope()
             : EngineCoroutineScope {
 
-
         return EngineCoroutineScope()
-
 
     }
 
 
 
+    @Provides
+    @Singleton
+    fun provideSwingDetector(): SwingDetector {
+
+        return SwingDetector()
+
+    }
 
 
 
+    @Provides
+    @Singleton
+    fun provideBOSDetector(): BOSDetector {
+
+        return BOSDetector()
+
+    }
+
+
+
+    @Provides
+    @Singleton
+    fun provideCHoCHDetector(): CHoCHDetector {
+
+        return CHoCHDetector()
+
+    }
+
+
+
+    @Provides
+    @Singleton
+    fun provideMarketStructureEngine(
+
+        swingDetector: SwingDetector,
+        bosDetector: BOSDetector,
+        chochDetector: CHoCHDetector
+
+    ): MarketStructureEngine {
+
+
+        return MarketStructureEngine(
+
+            swingDetector,
+            bosDetector,
+            chochDetector
+
+        )
+
+    }
 
 
 
@@ -82,103 +121,69 @@ object EngineModule {
     fun provideJookMaxEngine(
 
 
-
         lifecycleManager: EngineLifecycleManager,
-
 
         runtimeTracker: EngineRuntimeTracker,
 
-
         coroutineScope: EngineCoroutineScope,
-
 
         brainManager: BrainManager,
 
-
         eventBus: EventBus,
-
 
         eventDispatcher: EventDispatcher,
 
-
         marketEventSubscriber: MarketEventSubscriber,
-
 
         engineEventSubscriber: EngineEventSubscriber,
 
-
         decisionEventSubscriber: DecisionEventSubscriber,
-
 
         engineMonitor: EngineMonitor,
 
-
         runtimeObserver: RuntimeObserver,
-
 
         metricsCollector: MetricsCollector,
 
         marketFeedManager: MarketFeedManager
 
 
-
     ): JookMaxEngine {
-
-
 
 
         return JookMaxEngine(
 
 
-
             lifecycleManager = lifecycleManager,
-
 
             runtimeTracker = runtimeTracker,
 
-
             coroutineScope = coroutineScope,
-
 
             brainManager = brainManager,
 
-
             eventBus = eventBus,
-
 
             eventDispatcher = eventDispatcher,
 
-
             marketEventSubscriber = marketEventSubscriber,
-
 
             engineEventSubscriber = engineEventSubscriber,
 
-
             decisionEventSubscriber = decisionEventSubscriber,
-
 
             engineMonitor = engineMonitor,
 
-
             runtimeObserver = runtimeObserver,
-
 
             metricsCollector = metricsCollector,
 
             marketFeedManager = marketFeedManager
 
 
-
         )
 
-
     }
-
-
-
-
-
 
 
 
@@ -187,27 +192,18 @@ object EngineModule {
     @Singleton
     fun provideEngineManager(
 
-
         engine: JookMaxEngine
-
 
     ): EngineManager {
 
 
-
         return EngineManager(
-
 
             engine = engine
 
-
         )
-
 
     }
 
 
-
 }
-
-

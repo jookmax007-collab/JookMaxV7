@@ -9,8 +9,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 
+import androidx.hilt.navigation.compose.hiltViewModel
+
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+
+
+import com.jookmax.v7.presentation.dashboard.DashboardScreen
+import com.jookmax.v7.presentation.market.ui.MarketScreen
+import com.jookmax.v7.presentation.monitoring.ui.MonitoringScreen
+import com.jookmax.v7.presentation.backtest.BacktestScreen
 
 
 
@@ -30,9 +40,14 @@ fun MainScaffold() {
 
         ScreenRoute.Monitoring,
 
-        ScreenRoute.Backtest
+        ScreenRoute.Risk,
+
+        ScreenRoute.Backtest,
+
+        ScreenRoute.Settings
 
     )
+
 
 
 
@@ -44,7 +59,6 @@ fun MainScaffold() {
 
 
             NavigationBar {
-
 
 
                 val backStackEntry by
@@ -81,14 +95,15 @@ fun MainScaffold() {
 
 
                             navController.navigate(
+
                                 screen.route
+
                             ) {
 
 
                                 launchSingleTop = true
 
                                 restoreState = true
-
 
                             }
 
@@ -106,23 +121,27 @@ fun MainScaffold() {
 
 
                                     ScreenRoute.Dashboard ->
-                                        "🏠"
+                                        "D"
 
 
                                     ScreenRoute.Market ->
-                                        "📈"
+                                        "M"
 
 
                                     ScreenRoute.Monitoring ->
-                                        "🖥"
+                                        "O"
+
+
+                                    ScreenRoute.Risk ->
+                                        "R"
 
 
                                     ScreenRoute.Backtest ->
-                                        "🧪"
+                                        "B"
 
 
-                                    else ->
-                                        ""
+                                    ScreenRoute.Settings ->
+                                        "S"
 
                                 }
 
@@ -138,34 +157,13 @@ fun MainScaffold() {
 
                             Text(
 
-                                text = when(screen) {
-
-
-                                    ScreenRoute.Dashboard ->
-                                        "Dashboard"
-
-
-                                    ScreenRoute.Market ->
-                                        "Market"
-
-
-                                    ScreenRoute.Monitoring ->
-                                        "Monitor"
-
-
-                                    ScreenRoute.Backtest ->
-                                        "Backtest"
-
-
-                                    else ->
-                                        ""
-
-                                }
+                                screen.route
 
                             )
 
 
                         }
+
 
 
                     )
@@ -174,24 +172,158 @@ fun MainScaffold() {
                 }
 
 
+
             }
+
 
 
         }
 
 
-    ) {
+
+    ) { padding ->
 
 
 
-        JookMaxNavHost(
 
-            navController = navController
 
-        )
+        NavHost(
+
+
+            navController = navController,
+
+
+            startDestination = ScreenRoute.Dashboard.route
+
+
+
+        ) {
+
+
+
+
+
+            composable(
+
+                ScreenRoute.Dashboard.route
+
+            ) {
+
+
+                DashboardScreen()
+
+
+            }
+
+
+
+
+
+
+            composable(
+
+                ScreenRoute.Market.route
+
+            ) {
+
+
+                MarketScreen(
+
+                    viewModel = hiltViewModel()
+
+                )
+
+
+            }
+
+
+
+
+
+
+            composable(
+
+                ScreenRoute.Monitoring.route
+
+            ) {
+
+
+                MonitoringScreen(
+
+                    viewModel = hiltViewModel()
+
+                )
+
+
+            }
+
+
+
+
+
+
+            composable(
+
+                ScreenRoute.Backtest.route
+
+            ) {
+
+
+                BacktestScreen()
+
+
+            }
+
+
+
+
+
+
+            composable(
+
+                ScreenRoute.Risk.route
+
+            ) {
+
+
+                Text(
+
+                    text = "Risk Screen"
+
+                )
+
+
+            }
+
+
+
+
+
+
+            composable(
+
+                ScreenRoute.Settings.route
+
+            ) {
+
+
+                Text(
+
+                    text = "Settings Screen"
+
+                )
+
+
+            }
+
+
+
+        }
+
 
 
     }
+
 
 
 }

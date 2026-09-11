@@ -23,6 +23,7 @@ import com.jookmax.v7.data.local.database.migration.MIGRATION_4_5
 import com.jookmax.v7.data.local.database.migration.MIGRATION_5_6
 import com.jookmax.v7.data.local.database.migration.MIGRATION_6_7
 import com.jookmax.v7.data.local.database.migration.MIGRATION_7_8
+import com.jookmax.v7.data.local.database.migration.MIGRATION_8_9
 
 
 import dagger.Module
@@ -73,7 +74,9 @@ object DatabaseModule {
 
                 MIGRATION_6_7,
 
-                MIGRATION_7_8
+                MIGRATION_7_8,
+
+                MIGRATION_8_9
 
             )
 
@@ -195,3 +198,4 @@ object DatabaseModule {
 
 
 }
+

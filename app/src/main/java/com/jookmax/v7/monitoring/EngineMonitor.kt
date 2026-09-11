@@ -22,15 +22,20 @@ import javax.inject.Singleton
  * - Performance history storage
  * - Decision metrics integration
  * - Latest market price monitoring
+ * - Latest brain decision monitoring
  */
 @Singleton
 class EngineMonitor @Inject constructor(
 
+
     private val metricsHistory: MetricsHistory,
+
 
     private val decisionMetricsCollector: DecisionMetricsCollector
 
+
 ) {
+
 
 
 
@@ -47,6 +52,7 @@ class EngineMonitor @Inject constructor(
 
 
 
+
     private val _latestSnapshot =
         MutableStateFlow<PerformanceSnapshot?>(null)
 
@@ -58,12 +64,29 @@ class EngineMonitor @Inject constructor(
 
 
 
+
     private val _marketPrice =
         MutableStateFlow<MarketPrice?>(null)
 
 
     val marketPrice: StateFlow<MarketPrice?>
         get() = _marketPrice.asStateFlow()
+
+
+
+
+
+
+    /**
+     * Latest AI Brain Decision
+     */
+    private val _latestDecision =
+        MutableStateFlow<LatestBrainDecision?>(null)
+
+
+    val latestDecision: StateFlow<LatestBrainDecision?>
+        get() = _latestDecision.asStateFlow()
+
 
 
 
@@ -84,6 +107,8 @@ class EngineMonitor @Inject constructor(
 
 
 
+
+
     fun updateMarketPrice(
 
         price: MarketPrice
@@ -91,6 +116,22 @@ class EngineMonitor @Inject constructor(
     ) {
 
         _marketPrice.value = price
+
+    }
+
+
+
+
+
+
+
+    fun updateLatestDecision(
+
+        decision: LatestBrainDecision
+
+    ) {
+
+        _latestDecision.value = decision
 
     }
 
@@ -229,13 +270,21 @@ class EngineMonitor @Inject constructor(
             EngineHealth.Offline
 
 
+
         _latestSnapshot.value = null
+
 
 
         _marketPrice.value = null
 
 
+
+        _latestDecision.value = null
+
+
+
         metricsHistory.clear()
+
 
 
         decisionMetricsCollector.reset()
