@@ -2,10 +2,8 @@ package com.jookmax.v7.brain.reward
 
 import com.jookmax.v7.brain.learning.LearningBrain
 import com.jookmax.v7.brain.learning.LearningExperience
-import com.jookmax.v7.brain.intelligence.memory.DecisionPattern
 import com.jookmax.v7.brain.reward.model.RewardExperience
 import com.jookmax.v7.brain.trading.model.TradeOutcome
-import com.jookmax.v7.domain.repository.PersistentDecisionMemoryRepository
 import com.jookmax.v7.domain.repository.RewardExperienceRepository
 
 import javax.inject.Inject
@@ -19,9 +17,7 @@ class RewardEngine @Inject constructor(
 
     private val learningBrain: LearningBrain,
 
-    private val rewardExperienceRepository: RewardExperienceRepository,
-
-    private val persistentDecisionMemoryRepository: PersistentDecisionMemoryRepository
+    private val rewardExperienceRepository: RewardExperienceRepository
 
 ) {
 
@@ -59,15 +55,6 @@ class RewardEngine @Inject constructor(
 
 
         saveLearningExperience(
-
-            outcome,
-
-            result
-
-        )
-
-
-        saveIntelligenceMemory(
 
             outcome,
 
@@ -196,52 +183,8 @@ class RewardEngine @Inject constructor(
 
         )
     }
-
-
-
-
-
-    private suspend fun saveIntelligenceMemory(
-
-        outcome: TradeOutcome,
-
-        result: RewardResult
-
-    ) {
-
-
-        val context = outcome.learningContext
-
-            ?: return
-
-
-
-        val pattern = DecisionPattern(
-
-            symbol = context.symbol,
-
-            trend = context.trend,
-
-            rsi = context.rsi,
-
-            volatility = context.volatility,
-
-            action = context.action,
-
-            confidence = context.confidence,
-
-            approved = true,
-
-            reward = result.reward
-
-        )
-
-
-        persistentDecisionMemoryRepository.save(
-
-            pattern
-
-        )
-    }
-
 }
+
+
+
+
