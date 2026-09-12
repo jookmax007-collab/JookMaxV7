@@ -5,9 +5,14 @@ import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.liquidity.model.LiquidityType
 import com.jookmax.v7.liquidity.model.LiquidityZone
 
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class EqualHighDetector {
+
+
+@Singleton
+class EqualHighDetector @Inject constructor() {
 
 
     fun detect(
@@ -116,3 +121,4 @@ class EqualHighDetector {
 
 
 }
+

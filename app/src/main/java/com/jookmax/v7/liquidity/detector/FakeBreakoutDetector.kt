@@ -2,11 +2,16 @@ package com.jookmax.v7.liquidity.detector
 
 
 import com.jookmax.v7.core.model.MarketCandle
+
+import javax.inject.Inject
+import javax.inject.Singleton
 import com.jookmax.v7.liquidity.model.LiquidityEvent
 
 
 
-class FakeBreakoutDetector {
+
+@Singleton
+class FakeBreakoutDetector @Inject constructor() {
 
 
 

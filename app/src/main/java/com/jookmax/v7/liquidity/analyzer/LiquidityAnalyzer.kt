@@ -10,24 +10,28 @@ import com.jookmax.v7.liquidity.detector.StopHuntDetector
 import com.jookmax.v7.liquidity.model.LiquidityEvent
 import com.jookmax.v7.liquidity.model.LiquidityAnalysisResult
 
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class LiquidityAnalyzer(
+
+@Singleton
+class LiquidityAnalyzer @Inject constructor(
 
 
-    private val equalHighDetector: EqualHighDetector = EqualHighDetector(),
+    private val equalHighDetector: EqualHighDetector,
 
 
-    private val equalLowDetector: EqualLowDetector = EqualLowDetector(),
+    private val equalLowDetector: EqualLowDetector,
 
 
-    private val liquiditySweepDetector: LiquiditySweepDetector = LiquiditySweepDetector(),
+    private val liquiditySweepDetector: LiquiditySweepDetector,
 
 
-    private val stopHuntDetector: StopHuntDetector = StopHuntDetector(),
+    private val stopHuntDetector: StopHuntDetector,
 
 
-    private val fakeBreakoutDetector: FakeBreakoutDetector = FakeBreakoutDetector()
+    private val fakeBreakoutDetector: FakeBreakoutDetector
 
 
 ) {

@@ -2,12 +2,18 @@ package com.jookmax.v7.liquidity.detector
 
 
 import com.jookmax.v7.core.model.MarketCandle
+
+import javax.inject.Inject
+import javax.inject.Singleton
 import com.jookmax.v7.liquidity.model.LiquidityType
+
 import com.jookmax.v7.liquidity.model.LiquidityZone
 
 
 
-class EqualLowDetector {
+
+@Singleton
+class EqualLowDetector @Inject constructor() {
 
 
     fun detect(

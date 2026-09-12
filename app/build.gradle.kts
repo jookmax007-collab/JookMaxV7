@@ -32,8 +32,9 @@ android {
 
         versionName = "1.0"
 
+
         testInstrumentationRunner =
-            "androidx.test.runner.AndroidJUnitRunner"
+            "com.jookmax.v7.HiltTestRunner"
 
     }
 
@@ -218,11 +219,21 @@ dependencies {
 
 
     // =========================
-    // Testing
+    // Unit Testing
     // =========================
 
     testImplementation(
         libs.junit
+    )
+
+
+
+    // =========================
+    // Android Instrumentation Testing
+    // =========================
+
+    androidTestImplementation(
+        libs.hilt.android.testing
     )
 
 
