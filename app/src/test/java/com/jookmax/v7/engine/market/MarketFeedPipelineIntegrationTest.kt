@@ -218,6 +218,16 @@ class FakeMarketRepository : MarketRepository {
 
 
 
+    override fun connectLiveFeed() {
+
+    }
+
+
+    override fun disconnectLiveFeed() {
+
+    }
+
+
     override suspend fun clearCache() {
 
     }
@@ -271,3 +281,5 @@ class FakeCandleRepository : CandleRepository {
 
 
 }
+
+

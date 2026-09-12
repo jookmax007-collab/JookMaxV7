@@ -92,6 +92,9 @@ class MarketFeedManager @Inject constructor(
         started = true
 
 
+        marketRepository.connectLiveFeed()
+
+
 
 
 
@@ -233,3 +236,6 @@ class MarketFeedManager @Inject constructor(
 
 
 }
+
+
+

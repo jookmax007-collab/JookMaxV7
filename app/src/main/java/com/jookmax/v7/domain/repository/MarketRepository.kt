@@ -1,4 +1,4 @@
-package com.jookmax.v7.domain.repository
+﻿package com.jookmax.v7.domain.repository
 
 
 import com.jookmax.v7.core.model.MarketHistory
@@ -31,8 +31,21 @@ interface MarketRepository {
     fun observeLiveTicks(): Flow<MarketTick>
 
 
+    /**
+     * Start realtime market stream.
+     */
+    fun connectLiveFeed()
+
+
+    /**
+     * Stop realtime market stream.
+     */
+    fun disconnectLiveFeed()
+
+
 
     suspend fun clearCache()
 
 
 }
+

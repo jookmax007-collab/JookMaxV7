@@ -1,4 +1,4 @@
-package com.jookmax.v7.data.repository
+﻿package com.jookmax.v7.data.repository
 
 
 import com.jookmax.v7.core.model.MarketHistory
@@ -181,6 +181,24 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 
+    override fun connectLiveFeed() {
+
+        (remoteDataSource as? com.jookmax.v7.data.remote.MarketRemoteDataSource)
+            ?.connectLiveFeed()
+
+    }
+
+
+
+    override fun disconnectLiveFeed() {
+
+        (remoteDataSource as? com.jookmax.v7.data.remote.MarketRemoteDataSource)
+            ?.disconnectLiveFeed()
+
+    }
+
+
+
     override suspend fun clearCache() {
 
 
@@ -191,3 +209,4 @@ class MarketRepositoryImpl @Inject constructor(
 
 
 }
+
