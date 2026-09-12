@@ -1,4 +1,6 @@
-package com.jookmax.v7.di
+﻿package com.jookmax.v7.di
+
+import com.jookmax.v7.BuildConfig
 
 import com.jookmax.v7.data.local.MarketLocalDataSource
 
@@ -175,7 +177,7 @@ object DataModule {
     ): MarketSocketClient {
 
         return MarketSocketClient(
-            apiKey = "",
+            apiKey = BuildConfig.MARKET_API_KEY,
             okHttpClient = okHttpClient
         )
 
@@ -218,3 +220,4 @@ object DataModule {
     }
 
 }
+

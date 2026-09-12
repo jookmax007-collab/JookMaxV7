@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
 
     alias(libs.plugins.android.application)
 
@@ -31,6 +31,11 @@ android {
         versionCode = 1
 
         versionName = "1.0"
+        buildConfigField(
+            "String",
+            "MARKET_API_KEY",
+            "\"${project.findProperty("MARKET_API_KEY") ?: ""}\""
+        )
 
 
         testInstrumentationRunner =
