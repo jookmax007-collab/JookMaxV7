@@ -1,4 +1,4 @@
-package com.jookmax.v7.engine.market
+﻿package com.jookmax.v7.engine.market
 
 
 import com.jookmax.v7.core.event.EventBus
@@ -7,7 +7,7 @@ import com.jookmax.v7.core.event.MarketEvent
 import com.jookmax.v7.domain.repository.CandleRepository
 import com.jookmax.v7.domain.repository.MarketRepository
 
-import com.jookmax.v7.engine.market.tick.TickEngine
+import com.jookmax.v7.engine.market.tick.TickProcessor
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
@@ -62,7 +62,7 @@ class MarketFeedManager @Inject constructor(
     private val eventBus: EventBus,
 
 
-    private val tickEngine: TickEngine
+    private val tickProcessor: TickProcessor
 
 
 ) {
@@ -177,7 +177,7 @@ class MarketFeedManager @Inject constructor(
 
                     val candles =
 
-                        tickEngine.process(tick)
+                        tickProcessor.process(tick)
 
 
 
