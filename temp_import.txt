@@ -1,0 +1,7 @@
+﻿package com.jookmax.v7.di
+
+import com.jookmax.v7.structure.MarketStructureEngine
+import com.jookmax.v7.structure.analyzer.SwingClassifier
+import com.jookmax.v7.structure.detector.BOSDetector
+import com.jookmax.v7.structure.detector.CHoCHDetector
+import com.jookmax.v7.structure.detector.SwingDetector

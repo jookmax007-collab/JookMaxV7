@@ -1,4 +1,4 @@
-package com.jookmax.v7.di
+﻿package com.jookmax.v7.di
 
 
 import com.jookmax.v7.brain.BrainManager
@@ -25,6 +25,7 @@ import com.jookmax.v7.structure.MarketStructureEngine
 import com.jookmax.v7.structure.detector.BOSDetector
 import com.jookmax.v7.structure.detector.CHoCHDetector
 import com.jookmax.v7.structure.detector.SwingDetector
+import com.jookmax.v7.structure.analyzer.SwingClassifier
 
 import dagger.Module
 import dagger.Provides
@@ -98,16 +99,23 @@ object EngineModule {
     fun provideMarketStructureEngine(
 
         swingDetector: SwingDetector,
-        bosDetector: BOSDetector,
-        chochDetector: CHoCHDetector
 
+        swingClassifier: SwingClassifier,
+
+        bosDetector: BOSDetector,
+
+        chochDetector: CHoCHDetector
     ): MarketStructureEngine {
 
 
         return MarketStructureEngine(
 
             swingDetector,
+
+            swingClassifier,
+
             bosDetector,
+
             chochDetector
 
         )
@@ -207,3 +215,6 @@ object EngineModule {
 
 
 }
+
+
+

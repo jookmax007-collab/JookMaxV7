@@ -1,7 +1,8 @@
-package com.jookmax.v7.structure
+﻿package com.jookmax.v7.structure
 
 
 import com.jookmax.v7.core.model.MarketCandle
+import com.jookmax.v7.structure.analyzer.SwingClassifier
 import com.jookmax.v7.structure.detector.BOSDetector
 import com.jookmax.v7.structure.detector.CHoCHDetector
 import com.jookmax.v7.structure.detector.SwingDetector
@@ -18,6 +19,9 @@ class MarketStructureEngine @Inject constructor(
 
 
     private val swingDetector: SwingDetector,
+
+
+    private val swingClassifier: SwingClassifier,
 
 
     private val bosDetector: BOSDetector,
@@ -41,6 +45,18 @@ class MarketStructureEngine @Inject constructor(
         val swings =
 
             swingDetector.detect(candles)
+
+
+
+
+
+        val swingClassification =
+
+            swingClassifier.classify(
+
+                swings
+
+            )
 
 
 
