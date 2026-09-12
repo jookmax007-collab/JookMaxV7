@@ -3,6 +3,9 @@
 
 import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.structure.analyzer.SwingClassifier
+import com.jookmax.v7.structure.analyzer.StructureAnalyzer
+import com.jookmax.v7.structure.analyzer.BreakQualityAnalyzer
+import com.jookmax.v7.structure.analyzer.SwingClassification
 import com.jookmax.v7.structure.detector.BOSDetector
 import com.jookmax.v7.structure.detector.CHoCHDetector
 import com.jookmax.v7.structure.detector.SwingDetector
@@ -23,6 +26,9 @@ class MarketStructureEngine @Inject constructor(
 
     private val swingClassifier: SwingClassifier,
 
+    private val structureAnalyzer: StructureAnalyzer,
+
+    private val breakQualityAnalyzer: BreakQualityAnalyzer,
 
     private val bosDetector: BOSDetector,
 
@@ -130,6 +136,19 @@ class MarketStructureEngine @Inject constructor(
             chochEvent != StructureEvent.NONE
 
 
+        val structureResult =
+
+            structureAnalyzer.analyze(
+
+                classification = swingClassification,
+
+                bosDetected = bos,
+
+                chochDetected = choch
+
+            )
+
+
 
 
 
@@ -165,6 +184,43 @@ class MarketStructureEngine @Inject constructor(
 
 
 
+
+        val breakSwing =
+
+            when (structureEvent) {
+
+                StructureEvent.BULLISH_BOS,
+                StructureEvent.BULLISH_CHOCH ->
+
+                    lastHigh
+
+
+                StructureEvent.BEARISH_BOS,
+                StructureEvent.BEARISH_CHOCH ->
+
+                    lastLow
+
+
+                else ->
+
+                    null
+
+            }
+
+
+
+        val breakQuality =
+
+            breakQualityAnalyzer.analyze(
+
+                candles = candles,
+
+                swing = breakSwing,
+
+                event = structureEvent
+
+            )
+
         val direction =
 
             when {
@@ -187,6 +243,22 @@ class MarketStructureEngine @Inject constructor(
                     StructureDirection.BEARISH
 
 
+
+
+
+                swingClassification == SwingClassification.HH ||
+
+                swingClassification == SwingClassification.HL ->
+
+                    StructureDirection.BULLISH
+
+
+
+                swingClassification == SwingClassification.LH ||
+
+                swingClassification == SwingClassification.LL ->
+
+                    StructureDirection.BEARISH
 
 
 
@@ -217,6 +289,13 @@ class MarketStructureEngine @Inject constructor(
 
             chochDetected = choch,
 
+            swingClassification = swingClassification,
+
+            pattern = structureResult.pattern,
+
+            strength = structureResult.strength,
+
+            breakQuality = breakQuality,
 
             structureEvent = structureEvent,
 
@@ -232,3 +311,21 @@ class MarketStructureEngine @Inject constructor(
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -26,6 +26,8 @@ import com.jookmax.v7.structure.detector.BOSDetector
 import com.jookmax.v7.structure.detector.CHoCHDetector
 import com.jookmax.v7.structure.detector.SwingDetector
 import com.jookmax.v7.structure.analyzer.SwingClassifier
+import com.jookmax.v7.structure.analyzer.BreakQualityAnalyzer
+import com.jookmax.v7.structure.analyzer.StructureAnalyzer
 
 import dagger.Module
 import dagger.Provides
@@ -102,7 +104,11 @@ object EngineModule {
 
         swingClassifier: SwingClassifier,
 
-        bosDetector: BOSDetector,
+        structureAnalyzer: StructureAnalyzer,
+
+breakQualityAnalyzer: BreakQualityAnalyzer,
+
+bosDetector: BOSDetector,
 
         chochDetector: CHoCHDetector
     ): MarketStructureEngine {
@@ -113,6 +119,10 @@ object EngineModule {
             swingDetector,
 
             swingClassifier,
+
+            structureAnalyzer,
+
+            breakQualityAnalyzer,
 
             bosDetector,
 
@@ -215,6 +225,13 @@ object EngineModule {
 
 
 }
+
+
+
+
+
+
+
 
 
 
