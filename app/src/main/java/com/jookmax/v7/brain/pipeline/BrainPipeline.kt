@@ -350,7 +350,9 @@ class BrainPipeline @Inject constructor(
 
                 analysis = marketAnalysis,
 
-                structure = marketStructure
+                structure = marketStructure,
+
+                price = marketBrain.getLatestMarketPrice()?.price ?: 0.0
 
             )
         val liquidityAnalysis =
@@ -502,6 +504,7 @@ class BrainPipeline @Inject constructor(
 
 
 }
+
 
 
 
