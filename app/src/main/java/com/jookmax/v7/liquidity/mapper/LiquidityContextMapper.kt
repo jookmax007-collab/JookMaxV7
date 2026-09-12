@@ -6,6 +6,7 @@ import com.jookmax.v7.liquidity.fusion.LiquidityBiasFusionEngine
 import com.jookmax.v7.liquidity.model.LiquidityAnalysisResult
 import com.jookmax.v7.liquidity.model.LiquidityBias
 import com.jookmax.v7.liquidity.model.LiquidityContext
+import com.jookmax.v7.liquidity.model.LiquidityLevel
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,9 +16,12 @@ import javax.inject.Singleton
 @Singleton
 class LiquidityContextMapper @Inject constructor(
 
+
     private val liquidityWeightCalculator: LiquidityWeightCalculator,
 
+
     private val liquidityBiasFusionEngine: LiquidityBiasFusionEngine
+
 
 ) {
 
@@ -25,7 +29,9 @@ class LiquidityContextMapper @Inject constructor(
 
     fun map(
 
-        result: LiquidityAnalysisResult
+        result: LiquidityAnalysisResult,
+
+        liquidityLevels: List<LiquidityLevel> = emptyList()
 
     ): LiquidityContext {
 
@@ -118,29 +124,25 @@ class LiquidityContextMapper @Inject constructor(
         return LiquidityContext(
 
 
-
             liquidityScore = liquidityScore,
-
 
 
             events = events,
 
 
+            liquidityLevels = liquidityLevels,
+
 
             hasSweep = hasSweep,
-
 
 
             hasStopHunt = hasStopHunt,
 
 
-
             hasFakeBreakout = hasFakeBreakout,
 
 
-
             liquidityBias = bias
-
 
 
         )
@@ -159,7 +161,9 @@ class LiquidityContextMapper @Inject constructor(
 
         hasSweep: Boolean,
 
+
         hasStopHunt: Boolean,
+
 
         hasFakeBreakout: Boolean
 
@@ -175,6 +179,7 @@ class LiquidityContextMapper @Inject constructor(
 
             hasSweep && hasStopHunt ->
 
+
                 LiquidityBias.BULLISH
 
 
@@ -182,6 +187,7 @@ class LiquidityContextMapper @Inject constructor(
 
 
             hasFakeBreakout ->
+
 
                 LiquidityBias.NEUTRAL
 
@@ -191,11 +197,13 @@ class LiquidityContextMapper @Inject constructor(
 
             else ->
 
+
                 LiquidityBias.NEUTRAL
 
 
 
         }
+
 
     }
 

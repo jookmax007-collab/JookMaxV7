@@ -10,6 +10,9 @@ data class LiquidityContext(
     val events: List<LiquidityEvent> = emptyList(),
 
 
+    val liquidityLevels: List<LiquidityLevel> = emptyList(),
+
+
     val hasSweep: Boolean = false,
 
 
