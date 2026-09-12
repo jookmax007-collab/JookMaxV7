@@ -1,4 +1,4 @@
-package com.jookmax.v7.brain.market
+﻿package com.jookmax.v7.brain.market
 
 
 import com.jookmax.v7.analysis.engine.TechnicalAnalyzer
@@ -143,31 +143,7 @@ fun analyze(): MarketAnalysis {
         )
 
 
-    }
-
-
-
-
-
-    fun getMarketContext(): MarketContext {
-
-
-        return MarketContext(
-
-            analysis = analyze(),
-
-            structure = analyzeStructure()
-
-        )
-
-
-    }
-
-
-
-
-
-    fun reset() {
+    }fun reset() {
 
 
         lastMarketPrice = null
@@ -181,3 +157,5 @@ fun analyze(): MarketAnalysis {
 
 
 }
+
+
