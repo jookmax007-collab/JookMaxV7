@@ -1,4 +1,4 @@
-package com.jookmax.v7.brain.pipeline
+﻿package com.jookmax.v7.brain.pipeline
 
 
 import com.jookmax.v7.analysis.model.MarketAnalysis
@@ -24,6 +24,7 @@ import com.jookmax.v7.brain.risk.RiskProfile
 import com.jookmax.v7.core.model.MarketCandle
 import com.jookmax.v7.liquidity.analyzer.LiquidityAnalyzer
 import com.jookmax.v7.liquidity.mapper.LiquidityContextMapper
+import com.jookmax.v7.engine.events.BrainDecisionEventPublisher
 
 
 import javax.inject.Inject
@@ -66,7 +67,9 @@ class BrainPipeline @Inject constructor(
 
     private val liquidityAnalyzer: LiquidityAnalyzer,
 
-    private val liquidityContextMapper: LiquidityContextMapper
+    private val liquidityContextMapper: LiquidityContextMapper,
+
+    private val brainDecisionEventPublisher: BrainDecisionEventPublisher
 
 
 ) : BrainExecutor {
@@ -218,6 +221,35 @@ class BrainPipeline @Inject constructor(
 
 
 
+
+
+
+
+        brainDecisionEventPublisher.publish(
+
+            result = BrainExecutionResult(
+
+                context = context.copy(
+
+                    decisionResult = decision
+
+                ),
+
+                decision = decision,
+
+                intelligenceDecision = intelligenceDecision,
+
+                validatedDecision = validatedDecision
+
+            ),
+
+            marketScore = marketScore,
+
+            riskAllowed = riskAllowed,
+
+            learningReward = context.learningReward
+
+        )
 
 
 
